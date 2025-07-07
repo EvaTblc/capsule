@@ -32,6 +32,8 @@ end
 
 # MY GEMS
 gem "simple_form"
+gem 'simple_form-tailwind'
 gem "sassc-rails"
 gem "tailwindcss-ruby", "~> 4.1"
 gem "tailwindcss-rails", "~> 4.3"
+gem "devise"
