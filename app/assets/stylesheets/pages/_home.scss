@@ -1,11 +1,12 @@
 // Specific CSS for your home-page
-h1 {
-  font-family: $main;
-  color: violet;
-  font-size: 10vh;
-}
 
 .home-infos {
   display: flex;
   flex-direction: column;
+  align-items: center;
+
+  button {
+    width: 30vh;
+    padding: 16px 18px 16px;
+  }
 }

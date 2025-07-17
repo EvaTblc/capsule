@@ -1,0 +1,11 @@
+<div class="container-scrollable">
+  <h2 class="style-title">Hello <%= current_user.username %></h2>
+
+  <div class="cards-wrapper">
+    <% @collections.each do |collection| %>
+      <div class="collection-card">
+        <%= link_to collection.name, collection_path(collection), class: "collection-link" %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,36 @@
+.form_devise {
+  width: 100%;
+  margin: 3vh;
+  label {
+    color: white
+  }
+  a {
+    color: #ff0066;
+    font-weight: bold;
+  }
+}
+
+.form-actions {
+  .btn-devise {
+    height: 6vh;
+    width: 100%;
+  }
+
+
+}
+  .btn-devise {
+    display: inline-block;
+    outline: 0;
+
+    border: 0;
+    font-size: 20px;
+    font-weight: 500;
+    color: #fff;
+    cursor: pointer;
+    background-image: linear-gradient(to right,#ff0066,violet)!important;
+    border-radius: 3px;
+
+    white-space: nowrap;
+    font-family: $main;
+
+  }

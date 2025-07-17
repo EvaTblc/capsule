@@ -1,0 +1,31 @@
+<% if user_signed_in? %>
+  <div class="navbar_pixl <%= "no-bg" if current_page?(organizations_path) %>">
+    <div class="footer-container">
+      <div class="nav-item icons <%= "active" if current_page?(organizations_path) %>">
+        <%= link_to "#" do %>
+          <i class="fi fi-br-list-check" style="color: #B197FC; font-size: 32px;"></i>
+        <% end %>
+      </div>
+      <div class="nav-item icons <%= "active" if current_page?(organizations_path) %>">
+        <%= link_to "#" do %>
+          <i class="fi fi-bs-daily-calendar" style="color: #B197FC; font-size: 32px;"></i>
+        <% end %>
+      </div>
+      <div class="nav-item icons <%= "active" if current_page?(organizations_path) %>">
+        <%= link_to "#" do %>
+          <i class="fi fi-ss-family" style="color: #B197FC; font-size: 32px;"></i>
+        <% end %>
+      </div>
+      <div class="nav-item icons <%= "active" if current_page?(organizations_path) %>">
+        <%= link_to "#" do %>
+          <i class="fi fi-br-phone-heart-message" style="color: #B197FC; font-size: 32px;"></i>
+        <% end %>
+      </div>
+        <div class="nav-item icons <%= "active" if current_page?(organizations_path) %>">
+          <%= link_to destroy_user_session_path, data: { turbo_method: :delete, turbo_confirm: "Voulez-vous vous déconnecter ?" } do %>
+            <i class="fi fi-br-sign-out-alt" style="color: #B197FC; font-size: 32px;"></i>
+          <% end %>
+        </div>
+    </div>
+  </div>
+<% end %>

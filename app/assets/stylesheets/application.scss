@@ -10,3 +10,33 @@
 // Your CSS partials
 @import "components/index";
 @import "pages/index";
+
+body {
+  height: 100vh;
+  background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), image-url("home-min.JPG");
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+}
+
+h1 {
+  font-family: $main;
+  color: violet;
+  font-size: 10vh;
+}
+
+h2 {
+  font-family: $main;
+  color: violet;
+  font-size: 6vh;
+}
+
+a {
+  text-decoration: none;
+}
+
+p {
+  color: white
+}

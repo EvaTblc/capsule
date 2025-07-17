@@ -2,17 +2,14 @@
   <div class="home-infos">
     <h1>CAPSULE</h1>
 
-    <div class="wrapper">
+    <div class="">
       <% if current_user  %>
-        <%= button_to "Commencer", root_path %>
-        <%= button_to "Déconnexion", destroy_user_session_path, data: { turbo_method: :delete, turbo_confirm: "Voulez-vous vous déconnecter ?" } %>
+        <%= button_to "Commencer", root_path, class: "btn-devise" %>
+        <%= link_to "Déconnexion", destroy_user_session_path, class: "btn-delete", html5: true, data: { turbo_method: :delete, turbo_confirm: "Voulez-vous vous déconnecter ?" } %>
       <% else %>
-        <%= button_to "Connexion", new_user_session_path  %>
+        <%= button_to "Connexion", new_user_session_path, class: "btn-devise" %>
       <% end %>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
+
     </div>
 
 
