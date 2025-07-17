@@ -1,0 +1,29 @@
+<div class="home-banner">
+  <div class="">
+    <h1>CAPSULE</h1>
+
+    <div class="wrapper">
+      <% if current_user  %>
+        <button>
+            <%= button_to "Commencer", root_path %>
+            <%= button_to "Déconnexion", destroy_user_session_path, data: { turbo_method: :delete, turbo_confirm: "Voulez-vous vous déconnecter ?" } %>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+      <% else %>
+        <button>
+          <%= button_to "Connexion", new_user_session_path  %>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      <% end %>
+    </div>
+
+
+  </div>
+</div>

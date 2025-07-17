@@ -1,0 +1,9 @@
+.home-banner {
+  height: 100vh;
+  background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), image-url("home.JPG");
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+}
