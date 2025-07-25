@@ -2,3 +2,6 @@
 import { application } from "controllers/application"
 import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"
 eagerLoadControllersFrom("controllers", application)
+
+import ScannerLoaderController from "./scanner_loader_controller"
+application.register("scanner-loader", ScannerLoaderController)

@@ -1,0 +1,31 @@
+<nav class="navbar-capsule">
+  <div class="nav-group left">
+    <%= link_to root_path, class: "nav-icon" do %>
+      <i class="fas fa-home"></i>
+      <span>Accueil</span>
+    <% end %>
+
+    <%= link_to "/", class: "nav-icon" do %>
+      <i class="fas fa-th-large"></i>
+      <span>Collections</span>
+    <% end %>
+  </div>
+
+  <div class="nav-group center">
+    <%= link_to "/", class: "nav-icon central-add" do %>
+      <i class="fas fa-plus"></i>
+    <% end %>
+  </div>
+
+  <div class="nav-group right">
+    <%= link_to "/", class: "nav-icon" do %>
+      <i class="fas fa-user"></i>
+      <span>Profil</span>
+    <% end %>
+
+    <%= link_to destroy_user_session_path, method: :delete, data: { turbo_confirm: "Se déconnecter ?" }, class: "nav-icon logout" do %>
+      <i class="fas fa-sign-out-alt"></i>
+      <span>Quitter</span>
+    <% end %>
+  </div>
+</nav>

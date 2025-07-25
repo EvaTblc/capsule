@@ -19,8 +19,14 @@
 
   <body>
     <%= yield %>
-    <% unless current_page?(root_path) %>
+    <% if current_user && !(controller_name == 'pages' && action_name == 'home') && controller_path.exclude?('devise') %>
       <%= render "shared/navbar" %>
     <% end %>
+    <div data-controller="scanner-loader"
+        data-scanner-loader-target="overlay"
+        id="scanner-loader"
+        class="scanner-hidden">
+      <div data-scanner-loader-target="bar" class="scanner-bar"></div>
+    </div>
   </body>
 </html>

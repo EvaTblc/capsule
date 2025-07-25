@@ -4,10 +4,14 @@
 
     <div class="">
       <% if current_user  %>
-        <%= button_to "Commencer", root_path, class: "btn-devise" %>
+        <div class= "btn-capsule">
+          <%= button_to "Commencer", root_path, class: "btn-devise" %>
+        </div>
         <%= link_to "Déconnexion", destroy_user_session_path, class: "btn-delete", html5: true, data: { turbo_method: :delete, turbo_confirm: "Voulez-vous vous déconnecter ?" } %>
       <% else %>
-        <%= button_to "Connexion", new_user_session_path, class: "btn-devise" %>
+        <div class= "btn-capsule">
+          <%= button_to "Connexion", new_user_session_path, class: "btn-devise" %>
+        </div>
       <% end %>
 
     </div>
