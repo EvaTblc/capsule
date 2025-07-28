@@ -5,3 +5,6 @@ eagerLoadControllersFrom("controllers", application)
 
 import ScannerLoaderController from "./scanner_loader_controller"
 application.register("scanner-loader", ScannerLoaderController)
+
+import PhotoModalController from "./photo_modal_controller"
+application.register("photo-modal", PhotoModalController)

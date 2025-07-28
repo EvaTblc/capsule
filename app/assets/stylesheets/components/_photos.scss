@@ -1,0 +1,38 @@
+.photo-hero {
+  margin-bottom: 16px;
+}
+
+.photo-hero-img {
+  width: 100%;
+  max-height: 360px;
+  object-fit: cover;     
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+
+.photo-hero-img:hover {
+  transform: scale(1.01);
+}
+
+.photo-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.photo-gallery-thumb {
+  width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.photo-gallery-thumb:hover {
+  transform: scale(1.03);
+}

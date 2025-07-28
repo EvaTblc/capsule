@@ -1,74 +1,69 @@
 require 'faker'
 
-puts "Cleaning database..."
+puts "🧹 Cleaning database..."
 ItemsTag.delete_all
 Item.delete_all
 Category.delete_all
 Collection.delete_all
 User.delete_all
 
-puts "Creating users..."
+puts "📸 Loading local photos..."
+photos_path = Rails.root.join('db/photos')
+photo_files = Dir[photos_path.join('seed*.jpg')]
 
-2.times do |u|
-  user = User.create!(
-    email: "user#{u + 1}@example.com",
-    password: "password",
-    username: "user#{u + 1}"
+puts "👤 Creating demo user..."
+
+user = User.create!(
+  email: "user1@example.com",
+  password: "password",
+  username: "user1"
+)
+puts "✅ User #{user.email} created"
+
+puts "📦 Creating collections, categories, items & attachments..."
+
+3.times do |c|
+  collection = Collection.create!(
+    name: "Collection #{c + 1} - #{user.username}",
+    user: user
   )
 
-  puts "Created #{user.email}"
-
-  12.times do |c|
-    collection = Collection.create!(
-      name: "Collection #{c + 1} - #{user.username}",
-      user: user
+  2.times do |cat_index|
+    category = Category.create!(
+      name: "Category #{cat_index + 1} - #{collection.name}",
+      collection: collection
     )
 
-    4.times do |cat_index|
-      category = Category.create!(
-        name: "Category #{cat_index + 1} for #{collection.name}",
+    6.times do
+      item = Item.create!(
+        name: Faker::Commerce.product_name,
+        possession: rand(0..1),
+        state: Item::STATE.sample,
+        category: category,
         collection: collection
       )
 
-      52.times do |i|
-        item = Item.create!(
-          name: Faker::Commerce.product_name,
-          possession: rand(0..1),
-          state: Item::STATE.sample,
-          category: category,
-          collection: collection
+      # Always attach 3 photos
+      3.times do
+        file_path = photo_files.sample
+        item.photos.attach(
+          io: File.open(file_path),
+          filename: File.basename(file_path),
+          content_type: 'image/jpeg'
         )
-
-        # To reach approx. 198 tags per user across all items, average ~4 tags per item
-        rand(2..5).times do
-          ItemsTag.create!(
-            year: rand(1900..2025),
-            name: Faker::Book.genre,
-            comments: Faker::Lorem.sentence(word_count: 6),
-            item: item
-          )
-        end
       end
-    end
-  end
 
-  # Ensure exactly 198 item_tags for each user
-  user_item_tags = ItemsTag.joins(item: { collection: :user }).where(collections: { user_id: user.id })
-  if user_item_tags.count > 198
-    excess = user_item_tags.count - 198
-    ItemsTag.where(id: user_item_tags.sample(excess).map(&:id)).destroy_all
-  elsif user_item_tags.count < 198
-    items = Item.joins(collection: :user).where(collections: { user_id: user.id })
-    (198 - user_item_tags.count).times do
-      item = items.sample
-      ItemsTag.create!(
-        year: rand(1900..2025),
-        name: Faker::Book.genre,
-        comments: Faker::Lorem.sentence(word_count: 6),
-        item: item
-      )
+      # 1 à 2 tags par item
+      rand(1..2).times do
+        ItemsTag.create!(
+          year: rand(1900..2025),
+          name: Faker::Book.genre,
+          comments: Faker::Lorem.sentence(word_count: 5),
+          item: item
+        )
+      end
     end
   end
 end
 
-puts "Seeding complete!"
+puts "✅ Seed complete! (Light mode)"

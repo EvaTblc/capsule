@@ -3,12 +3,13 @@
 
   <div class="cards-wrapper">
     <% @collections.each do |collection| %>
+      <%= link_to collection_path(collection) do %>
       <div class="collection-card" style="background-image: url(<%= collection.image_url.presence || asset_path('default_collection.jpg') %>)">
         <div class="collection-overlay">
           <h2><%= collection.name %></h2>
-          <%= link_to "Voir", collection_path(collection), class: "collection-button" %>
         </div>
       </div>
+      <% end %>
     <% end %>
 
   </div>

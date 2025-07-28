@@ -1,0 +1,16 @@
+<div class="container-scrollable">
+  <h2 class="style-title"><%= @collection.name %></h2>
+
+  <div class="cards-wrapper">
+    <% @collection.items.each do |item| %>
+      <%= link_to collection_item_path(@collection, item) do %>
+        <div class="collection-card" style="background-image: url('<%= item.photos.attached? ? url_for(item.photos.first) : asset_path('default_collection.jpg') %>')" %>)">
+          <div class="collection-overlay">
+            <h2><%= item.name %></h2>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
+  </div>
+</div>
