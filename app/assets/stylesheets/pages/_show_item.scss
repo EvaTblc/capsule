@@ -1,0 +1,34 @@
+.infos-tags {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  gap: 8px;
+  padding: 1rem 0;
+}
+
+.info-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 6px 12px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.85rem;
+  color: #f2f2f2;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.info-pill i {
+  color: #f78be2;
+}
+
+.info-pill.comment {
+  align-items: flex-start;
+  white-space: normal;
+}
+
+.infos-item {
+  display: flex;
+  justify-content: space-around;
+}

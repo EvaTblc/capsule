@@ -1,31 +1,46 @@
 <nav class="navbar-capsule">
-  <div class="nav-group left">
+  <div class="nav-group">
     <%= link_to root_path, class: "nav-icon" do %>
-      <i class="fas fa-home"></i>
-      <span>Accueil</span>
+      <i class="fas fa-home fa-xl"></i>
+      <span class="tooltip">Accueil</span>
     <% end %>
+
+    <%= link_to collections_path, class: "nav-icon" do %>
+      <i class="fas fa-th-large fa-xl"></i>
+      <span class="tooltip">Collections</span>
+    <% end %>
+
+    <div class="nav-icon spacer"></div>
 
     <%= link_to "/", class: "nav-icon" do %>
-      <i class="fas fa-th-large"></i>
-      <span>Collections</span>
-    <% end %>
-  </div>
-
-  <div class="nav-group center">
-    <%= link_to "/", class: "nav-icon central-add" do %>
-      <i class="fas fa-plus"></i>
-    <% end %>
-  </div>
-
-  <div class="nav-group right">
-    <%= link_to "/", class: "nav-icon" do %>
-      <i class="fas fa-user"></i>
-      <span>Profil</span>
+      <i class="fas fa-user fa-xl"></i>
+      <span class="tooltip">Profil</span>
     <% end %>
 
     <%= link_to destroy_user_session_path, method: :delete, data: { turbo_confirm: "Se déconnecter ?" }, class: "nav-icon logout" do %>
-      <i class="fas fa-sign-out-alt"></i>
-      <span>Quitter</span>
+      <i class="fas fa-sign-out-alt fa-xl"></i>
+      <span class="tooltip">Quitter</span>
+    <% end %>
+  </div>
+
+  <div class="nav-center-button">
+    <% if (controller_name == 'collections' && action_name == 'index') %>
+      <%= link_to new_collection_path, class: "nav-icon central-add" do %>
+        <i class="fas fa-plus"></i>
+      <% end %>
+    <% elsif (controller_name == 'collections' && action_name == 'show') %>
+      <%= link_to "/", class: "nav-icon central-add" do %>
+        <i class="fas fa-plus"></i>
+      <% end %>
+    <% elsif (controller_name == 'items' && action_name == 'show') %>
+      <%= link_to "/", class: "nav-icon central-add" do %>
+        <i class="fas fa-plus"></i>
+      <% end %>
+    <% else %>
+    <%# PREVOIR UNE PAGE LISTING DES AJOUTS AU CAS OU %>
+      <%= link_to "/", class: "nav-icon central-add" do %>
+        <i class="fas fa-plus"></i>
+      <% end %>
     <% end %>
   </div>
 </nav>

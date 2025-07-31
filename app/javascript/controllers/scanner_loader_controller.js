@@ -4,7 +4,11 @@ export default class extends Controller {
   static targets = ["overlay", "bar"]
 
   connect() {
-    document.addEventListener("turbo:load", () => this.show())
+    document.addEventListener("turbo:load", () => {
+      if (window.location.pathname !== "/") {
+        this.show()
+      }
+    })
   }
 
   show() {

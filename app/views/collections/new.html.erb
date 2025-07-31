@@ -1,0 +1,10 @@
+<div class="container-scrollable">
+  <h2 class="style-title">Nouvelle collection</h2>
+  <%= simple_form_for (@collection) do |f| %>
+    <%= f.input :name %>
+    <%= f.input :image,
+                as: :file,
+                required: true %>
+    <%= f.submit %>
+  <% end %>
+</div>

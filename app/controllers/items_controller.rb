@@ -1,6 +1,7 @@
 class ItemsController < ApplicationController
   def show
     @item = Item.find(params[:id])
+    @collection = Collection.find(params[:collection_id])
     @tags = ItemsTag.where(item: @item)
   end
   private

@@ -30,7 +30,7 @@ puts "📦 Creating collections, categories, items & attachments..."
 
   2.times do |cat_index|
     category = Category.create!(
-      name: "Category #{cat_index + 1} - #{collection.name}",
+      name: Category::NAME.sample,
       collection: collection
     )
 

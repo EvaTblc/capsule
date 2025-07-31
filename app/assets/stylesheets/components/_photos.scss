@@ -5,7 +5,7 @@
 .photo-hero-img {
   width: 100%;
   max-height: 360px;
-  object-fit: cover;     
+  object-fit: cover;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   cursor: pointer;
@@ -26,6 +26,7 @@
 
 .photo-gallery-thumb {
   width: 100%;
+  height: 8rem;
   border-radius: 8px;
   object-fit: cover;
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
@@ -35,4 +36,18 @@
 
 .photo-gallery-thumb:hover {
   transform: scale(1.03);
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 9999;
+}
+
+.hidden {
+  display: none;
 }
