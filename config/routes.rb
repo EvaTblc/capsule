@@ -14,8 +14,10 @@ Rails.application.routes.draw do
   root "pages#home"
 
   resources :collections do
-    resources :categories
-    resources :items
-    resources :items_tags
+    resources :categories do
+      resources :items do
+        resources :items_tags
+      end
+    end
   end
 end

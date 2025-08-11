@@ -21,10 +21,10 @@
     </div>
   </div>
 
-<div class="item-actions">
-    <%= link_to "← Retour", collection_path(@collection), class: "btn-action" %>
-    <%= link_to "✏️ Modifier", edit_collection_item_path(@collection, @item), class: "btn-action" %>
-    <%= link_to "🗑️ Supprimer", collection_item_path(@collection, @item),
+  <div class="item-actions">
+    <%= link_to "← Retour", collection_category_items_path(@collection, @category), class: "btn-action" %>
+    <%= link_to "✏️ Modifier", edit_collection_category_item_path(@collection, @category, @item), class: "btn-action" %>
+    <%= link_to "🗑️ Supprimer", collection_category_item_path(@collection, @category, @item),
         method: :delete, data: { turbo_confirm: "Supprimer cet item ?" }, class: "btn-action delete" %>
   </div>
   <div data-controller="photo-modal">

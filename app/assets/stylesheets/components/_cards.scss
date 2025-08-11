@@ -47,3 +47,26 @@
   font-size: 1.2rem;
   text-shadow: none;
 }
+
+.collection-card { position: relative; }
+.stretched-link{
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  text-decoration: none;
+  color: transparent;
+}
+
+.collection-overlay-categories {
+  position: relative;
+  z-index: 2;
+  background-color: transparent;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+}
+
+.edit-btn, .form-capsule { position: relative; z-index: 3; }

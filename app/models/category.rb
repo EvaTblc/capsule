@@ -2,6 +2,8 @@ class Category < ApplicationRecord
   belongs_to :collection
   has_many :items
 
-  NAME = [ "Livre", "Jouet", "Film", "Jeux Vidéo", "Objet", "Autres" ]
-  validates :name, inclusion: { in: Category::NAME}
+  has_one_attached :photo
+
+  NAME = [ "Livre", "Jouet", "Film", "Jeux Vidéo", "Autres" ]
+  # validates :name, inclusion: { in: Category::NAME }
 end

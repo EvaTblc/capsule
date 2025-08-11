@@ -1,0 +1,65 @@
+<div class="container-scrollable"
+     data-controller="image-preview"
+>
+  <h2 class="style-title"><%= @item.name %></h2>
+
+  <%= form_with model: [@collection, @category, @item],
+                url: collection_category_item_path(@collection, @category, @item),
+                method: :patch,
+                class: "form-capsule",
+                data: { turbo_frame: "_top" } do |f| %>
+
+    <!-- Champs Item -->
+    <%= f.text_field :name, placeholder: @item.name, class: "input-form" %>
+    <%= f.number_field :possession, placeholder: "Nombre possédé", class: "input-form" %>
+    <%= f.select :state, Item::STATE, { selected: @item.state }, class: "select-form" %>
+
+    <!-- Tags -->
+    <div class="tags-fields">
+      <%= f.fields_for :items_tags do |tag_form| %>
+        <div class="tag-block">
+          <%= tag_form.text_field :name, placeholder: "Nom du tag", class: "input-form" %>
+          <%= tag_form.number_field :year, placeholder: "Année", class: "input-form" %>
+          <%= tag_form.text_area :comments, placeholder: "Commentaires", class: "input-form" %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Upload nouvelles photos -->
+    <label for="item_photos" class="image-upload-label">
+      <span data-image-preview-target="newImage">Choisir une image</span>
+      <%= f.file_field :photos,
+            id: "item_photos",
+            multiple: true,
+            accept: "image/*",
+            class: "image-input",
+            data: { action: "change->image-preview#update", image_preview_target: "input" } %>
+    </label>
+
+    <!-- Prévisualisation des nouvelles images (gérées en JS) -->
+    <div data-image-preview-target="list" class="preview-grid hidden"></div>
+
+    <!-- Photos existantes (cliquables pour marquer à supprimer) -->
+    <% if @item.photos.attached? %>
+      <div class="preview-grid" style="margin-top: 12px;">
+        <% @item.photos.each do |photo| %>
+          <button type="button"
+                  class="preview-card existing"
+                  data-action="click->image-preview#toggleExisting"
+                  data-photo-id="<%= photo.id %>">
+            <%= image_tag photo.variant(resize_to_limit: [110,110]) %>
+            <span class="badge">Suppr.</span>
+          </button>
+        <% end %>
+      </div>
+      <!-- sac pour les inputs hidden (ids à supprimer) -->
+      <div data-image-preview-target="hiddenBag"></div>
+    <% end %>
+
+    <!-- Actions -->
+    <div class="actions-save">
+      <%= link_to "← Retour", collections_path, class: "btn-action" %>
+      <%= f.submit "Sauvegarder", class: "btn-action" %>
+    </div>
+  <% end %>
+</div>

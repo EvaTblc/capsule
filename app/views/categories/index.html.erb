@@ -1,0 +1,47 @@
+<div class="container-scrollable">
+  <h2 class="style-title"><%= @collection.name %></h2>
+  <div class="category-actions">
+    <%= link_to "← Retour", collections_path, class: "btn-action" %>
+    <%= link_to "Modifier", edit_collection_path(@collection), data: { turbo_frame: "modal_content" }, class: "btn-action" %>
+    <%= link_to "🗑️ Supprimer", collection_path(@collection),
+        method: :delete, data: { turbo_confirm: "Supprimer cette collection ?" }, class: "btn-action delete" %>
+  </div>
+
+  <div class="cards-wrapper">
+    <% @categories.each do |category| %>
+      <div class="collection-card" style="background-image: url('<%= category.photo.attached? ? url_for(category.photo) : asset_path('default_collection.jpg') %>')">
+
+      <%= link_to "", collection_category_items_path(@collection, category),
+                  class: "stretched-link",
+                  aria: { label: "Voir la catégorie" } %>
+
+      <div class="collection-overlay-categories" data-controller="toggle">
+        <h2 data-toggle-target="name"><%= category.name %></h2>
+
+
+        <button type="button"
+                class="btn-action"
+                data-toggle-target="button"
+                data-action="click->toggle#toggle">
+          <i class="fa-regular fa-xl fa-pen-to-square" style="color: #f2f0f3ff; margin-top: 2%;"></i>
+        </button>
+
+
+        <div data-toggle-target="div" class="d-none" style="position: relative; z-index: 3;">
+          <%= form_with model: [@collection, category], class: "form-capsule" do |f| %>
+            <%= f.text_field :name, class: "input-form" %>
+            <div class="actions-save">
+              <%= link_to "← Retour", :back, class: "btn-action" %>
+              <%= f.submit "Sauvegarder", class: "btn-action" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+      <% end %>
+
+
+  </div>
+
+</div>
