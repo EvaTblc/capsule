@@ -26,25 +26,19 @@ class ItemsController < ApplicationController
     @category = @collection.categories.find(params[:category_id])
     @item = @category.items.find(params[:id])
 
-    # Si photos vide => on ne touche pas à l'existant
-    permitted = item_params
-    permitted.delete(:photos) if permitted[:photos].blank?
+    attrs = item_params.dup
+    attrs.delete(:photos) if attrs[:photos].blank? || attrs[:photos].all?(&:blank?)
 
-    if @item.update(permitted)
-      # Suppression des photos marquées
-      if params[:remove_photo_ids].present?
-        @item.photos.where(id: params[:remove_photo_ids]).each(&:purge_later)
-      end
+    if params[:item][:photos].present?
+      @item.photos.attach(params[:item][:photos])
+    end
 
-      # Ajout des nouvelles photos
-      if params.dig(:item, :photos).present?
-        @item.photos.attach(params[:item][:photos])
-      end
-
-      redirect_to collection_category_item_path(@collection, @category, @item), notice: "Item mis à jour."
+    if @item.update(item_params.except(:photos))
+      redirect_to collection_category_item_path(@collection, @category, @item)
     else
       render :edit, status: :unprocessable_entity
     end
+
   end
 
 

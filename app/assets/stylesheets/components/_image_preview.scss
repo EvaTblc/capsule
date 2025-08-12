@@ -49,6 +49,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
   gap: 12px;
+  margin-top: 12px;
 }
 
 .preview-card {
@@ -56,6 +57,7 @@
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0,0,0,.35);
+  background: rgba(0,0,0,.15);
 }
 
 .preview-card img {
@@ -65,15 +67,14 @@
   display: block;
 }
 
-.preview-card .remove-btn,
-.preview-card .badge {
+.remove-btn {
   position: absolute;
   top: 6px;
   right: 6px;
+  width: 32px;
+  height: 32px;
   border: 0;
-  border-radius: 999px;
-  width: 30px;
-  height: 30px;
+  border-radius: 50%;
   background: linear-gradient(145deg, #f78be2, #ff974c);
   color: #1a1a1a;
   font-weight: 700;
@@ -83,18 +84,12 @@
   cursor: pointer;
 }
 
-.preview-card .badge {
-  width: auto;
-  height: auto;
-  padding: 2px 8px;
-  font-size: 0.7rem;
+.remove-btn.active {
+  background: #ff5050;      /* état “marqué pour suppression” */
   color: #fff;
-  background: rgba(255, 80, 80, 0.95);
 }
 
-.preview-card.existing.to-remove img {
+.preview-card.to-remove img {
   filter: grayscale(1) brightness(.6);
   outline: 2px solid #ff5050;
 }
-
-.hidden { display: none; }

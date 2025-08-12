@@ -1,23 +1,20 @@
+// app/javascript/controllers/image_preview_controller.js
 import { Controller } from "@hotwired/stimulus"
-
-// Gère:
-// - l'aperçu des nouvelles images sélectionnées (et suppression locale)
-// - le marquage des photos existantes à supprimer (hidden inputs)
 
 export default class extends Controller {
   static targets = ["input", "list", "newImage", "hiddenBag"]
 
-  // ---- Nouvelles images (input file) ----
+  // Nouvelles images (préviews locales)
   update() {
     const files = Array.from(this.inputTarget.files || []).filter(f => f.type.startsWith("image/"))
     if (!files.length) return this.clearList()
 
-    this.renderNewPreviews(files)
+    this.renderPreviews(files)
     this.listTarget.classList.remove("hidden")
     if (this.hasNewImageTarget) this.newImageTarget.textContent = "Ajouter d'autres images"
   }
 
-  renderNewPreviews(files) {
+  renderPreviews(files) {
     this.listTarget.innerHTML = ""
     files.forEach((file, idx) => {
       const card = document.createElement("div")
@@ -47,17 +44,11 @@ export default class extends Controller {
     const current = Array.from(this.inputTarget.files || [])
     const kept = current.filter((_, i) => i !== indexToRemove)
 
-    // Reconstruit la FileList sans le fichier cliqué
     const dt = new DataTransfer()
     kept.forEach(f => dt.items.add(f))
     this.inputTarget.files = dt.files
 
-    // Re-render
-    if (kept.length) {
-      this.renderNewPreviews(kept)
-    } else {
-      this.clearList()
-    }
+    kept.length ? this.renderPreviews(kept) : this.clearList()
   }
 
   clearList() {
@@ -66,31 +57,28 @@ export default class extends Controller {
     if (this.hasNewImageTarget) this.newImageTarget.textContent = "Choisir une image"
   }
 
-  // ---- Photos existantes (côté serveur) ----
-  // bouton: <button data-action="click->image-preview#toggleExisting" data-photo-id="...">
   toggleExisting(e) {
-    const btn = e.currentTarget
-    const photoId = btn.dataset.photoId
-    if (!photoId) return
+    const btn  = e.currentTarget
+    const card = btn.closest(".preview-card")
+    const id   = btn.dataset.photoId
+    if (!id || !card) return
 
-    const selected = btn.classList.toggle("to-remove")
+    const selected = card.classList.toggle("to-remove")
+    btn.classList.toggle("active", selected)
 
-    // badge visuel
-    const badge = btn.querySelector(".badge")
-    if (badge) badge.textContent = selected ? "À supprimer" : "Suppr."
-
-    // ajoute/retire un input hidden remove_photo_ids[]
-    const selector = `input[type="hidden"][name="remove_photo_ids[]"][value="${photoId}"]`
-    const existing = this.hiddenBagTarget.querySelector(selector)
+    // Gère l’input hidden remove_photo_ids[]
+    const selector = `input[type="hidden"][name="remove_photo_ids[]"][value="${id}"]`
+    const existing = this.hiddenBagTarget?.querySelector(selector)
 
     if (selected && !existing) {
       const input = document.createElement("input")
       input.type = "hidden"
       input.name = "remove_photo_ids[]"
-      input.value = photoId
+      input.value = id
       this.hiddenBagTarget.appendChild(input)
     } else if (!selected && existing) {
       existing.remove()
     }
   }
+
 }
