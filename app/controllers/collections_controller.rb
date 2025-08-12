@@ -4,19 +4,17 @@ class CollectionsController < ApplicationController
     @collections = Collection.all.where(user: current_user)
   end
 
-  def show
-  end
-
   def new
     @collection = Collection.new
   end
+
   def create
     @collection = Collection.new(collection_params)
     @collection.user = current_user
     if @collection.save!
-      redirect_to collection_path(@collection)
+      redirect_to collection_categories_path(@collection)
     else
-      render :new
+      render :new, status: :see_other
     end
   end
 
@@ -33,7 +31,11 @@ class CollectionsController < ApplicationController
   end
 
   def destroy
-
+    if @collection.destroy
+      redirect_to collections_path
+    else
+      render :show, status: :see_other
+    end
   end
 
   private

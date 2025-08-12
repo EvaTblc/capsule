@@ -1,17 +1,28 @@
 class CategoriesController < ApplicationController
-  before_action :set_category, except: [:index]
+  before_action :set_category, except: [:index, :create]
+  before_action :set_collection
 
   def index
-    @collection = Collection.find(params[:collection_id])
-    @categories = Category.where(collection: @collection)
+    if @collection.categories.empty?
+      @category = Category.new
+    else
+      @categories = Category.where(collection: @collection)
+    end
   end
 
-
+  def create
+    @category = Category.new(category_params)
+    @category.collection = @collection
+    if @category.save!
+      redirect_to collection_categories_path(@collection)
+    else
+      render :index, status: :see_other
+    end
+  end
 
   def update
-    @collection = Collection.find(params[:collection_id])
     if @category.update(category_params)
-      redirect_to collection_categories_path(Collection.find(params[:collection_id]))
+      redirect_to collection_categories_path(@collection)
     else
       render :edit, status: :unprocessable_entity
     end
@@ -23,7 +34,11 @@ class CategoriesController < ApplicationController
     @category = Category.find(params[:id])
   end
 
+  def set_collection
+    @collection = Collection.find(params[:collection_id])
+  end
+
   def category_params
-    params.require(:category).permit(:name)
+    params.require(:category).permit(:name, :photo)
   end
 end

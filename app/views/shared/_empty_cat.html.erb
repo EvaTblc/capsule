@@ -1,6 +1,5 @@
 <div class="container-scrollable">
-  <h2 class="style-title">Nouvelle collection</h2>
-  <%= form_with model:@collection do |f| %>
+  <%= form_with model: [collection, category] do |f| %>
     <%= f.text_field :name, label: false, class: "input-form" %>
     <label for="collection_image">
       <span>Choisir une image</span>
@@ -11,6 +10,9 @@
                         required: true,
                         data: { action: "change->image-preview#update", image_preview_target: "input" } %>
     </label>
+
+    <div class="preview-grid new-grid" data-image-preview-target="list"></div>
+
     <div class="actions-save">
       <%= link_to "← Retour", collections_path, class: "btn-action" %>
       <%= f.submit "Sauvegarder", class: "btn-action" %>

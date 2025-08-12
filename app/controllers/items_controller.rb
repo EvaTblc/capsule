@@ -41,6 +41,13 @@ class ItemsController < ApplicationController
 
   end
 
+  def destroy
+    if @item.destroy
+      redirect_to  collection_category_items_path
+    else
+      render :show, status: :see_other
+    end
+  end
 
   private
 

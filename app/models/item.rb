@@ -2,7 +2,7 @@ class Item < ApplicationRecord
 
   belongs_to :category
   belongs_to :collection
-  has_many :items_tags
+  has_many :items_tags, dependent: :destroy
 
   accepts_nested_attributes_for :items_tags, allow_destroy: true
 
