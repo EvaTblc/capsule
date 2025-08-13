@@ -1,0 +1,24 @@
+<div
+  data-controller="barcode"
+  data-barcode-intake-url-value="<%= intake_collection_category_items_path(@collection, @category) %>"
+  class="scanner-container"
+>
+  <video data-barcode-target="video" playsinline muted autoplay style="width:100%;max-width:520px;border-radius:12px;"></video>
+
+  <div style="margin-top:12px; display:flex; gap:8px;">
+    <button type="button" data-action="click->barcode#startScan">📷 Démarrer</button>
+    <button type="button" data-action="click->barcode#stopScan">⏹️ Stop</button>
+    <button type="button" data-action="click->barcode#submit" data-barcode-target="submitButton" disabled>
+      Envoyer vers intake (POST)
+    </button>
+  </div>
+
+  <pre data-barcode-target="output" style="white-space:pre-wrap;margin-top:12px;">En attente…</pre>
+
+  <%= form_with url: intake_collection_category_items_path(@collection, @category),
+                method: :post, local: true do %>
+    <%= label_tag :barcode, "Entrer un code-barres" %>
+    <%= text_field_tag :barcode, nil, placeholder: "9782070368228" %>
+    <%= submit_tag "POST /intake" %>
+  <% end %>
+</div>

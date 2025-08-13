@@ -16,6 +16,10 @@ Rails.application.routes.draw do
   resources :collections do
     resources :categories do
       resources :items do
+        collection do
+          get :scan
+          post :intake
+        end
         resources :items_tags
       end
     end

@@ -10,7 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_31_140023) do
+ActiveRecord::Schema[7.2].define(version: 2025_08_13_092004) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -41,7 +44,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_31_140023) do
 
   create_table "categories", force: :cascade do |t|
     t.string "name"
-    t.integer "collection_id", null: false
+    t.bigint "collection_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["collection_id"], name: "index_categories_on_collection_id"
@@ -49,7 +52,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_31_140023) do
 
   create_table "collections", force: :cascade do |t|
     t.string "name"
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_collections_on_user_id"
@@ -59,19 +62,34 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_31_140023) do
     t.string "name"
     t.integer "possession"
     t.string "state"
-    t.integer "category_id", null: false
-    t.integer "collection_id", null: false
+    t.bigint "category_id", null: false
+    t.bigint "collection_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "type"
+    t.string "barcode"
+    t.string "barcode_type"
+    t.string "brand"
+    t.string "platform"
+    t.string "language"
+    t.date "released_on"
+    t.string "source"
+    t.string "source_id"
+    t.jsonb "metadata", default: {}
+    t.jsonb "raw", default: {}
+    t.index ["barcode"], name: "index_items_on_barcode"
     t.index ["category_id"], name: "index_items_on_category_id"
+    t.index ["collection_id", "barcode"], name: "index_items_on_collection_id_and_barcode"
     t.index ["collection_id"], name: "index_items_on_collection_id"
+    t.index ["metadata"], name: "index_items_on_metadata", using: :gin
+    t.index ["type"], name: "index_items_on_type"
   end
 
   create_table "items_tags", force: :cascade do |t|
     t.integer "year"
     t.string "name"
     t.string "comments"
-    t.integer "item_id", null: false
+    t.bigint "item_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["item_id"], name: "index_items_tags_on_item_id"

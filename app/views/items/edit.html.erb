@@ -11,13 +11,13 @@
     <%= f.text_field   :name,        placeholder: @item.name,        class: "input-form" %>
     <%= f.number_field :possession,  placeholder: "Nombre possédé",  class: "input-form" %>
     <%= f.select       :state, Item::STATE, { selected: @item.state }, class: "select-form" %>
+    <%= f.date_field   :released_on,     placeholder: "Année",            class: "input-form" if @item.type == BookItem%>
 
     <!-- Tags imbriqués -->
     <div class="tags-fields">
       <%= f.fields_for :items_tags do |tag_form| %>
         <div class="tag-block">
           <%= tag_form.text_field   :name,     placeholder: "Nom du tag",       class: "input-form" %>
-          <%= tag_form.number_field :year,     placeholder: "Année",            class: "input-form" %>
           <%= tag_form.text_area    :comments, placeholder: "Commentaires",     class: "input-form" %>
         </div>
       <% end %>

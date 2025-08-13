@@ -32,8 +32,8 @@
       <%= link_to "/", class: "nav-icon central-add" do %>
         <i class="fas fa-plus"></i>
       <% end %>
-    <% elsif (controller_name == 'items' && action_name == 'show') %>
-      <%= link_to "/", class: "nav-icon central-add" do %>
+    <% elsif (controller_name == 'items' && action_name == 'index') %>
+      <%= link_to scan_collection_category_items_path(@collection, @category), class: "nav-icon central-add" do %>
         <i class="fas fa-plus"></i>
       <% end %>
     <% else %>

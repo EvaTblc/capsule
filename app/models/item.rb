@@ -9,6 +9,6 @@ class Item < ApplicationRecord
   has_many_attached :photos
 
   STATE = [ "Neuf", "Très bon état", "Bon état", "Occasion", "Abimé" ]
-  validates :state, inclusion: { in: Item::STATE }
+  # validates :state, inclusion: { in: Item::STATE }
 
 end

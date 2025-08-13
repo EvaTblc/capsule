@@ -1,0 +1,64 @@
+<!doctype html>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Scanner un code‑barres</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 20px; }
+  video { width: 100%; max-width: 520px; border-radius: 12px; }
+  .out { margin-top: 12px; white-space: pre-wrap; }
+</style>
+
+<h1>Scanner un code‑barres</h1>
+<p>Vise l’ISBN (EAN‑13). Le résultat s’affiche ci‑dessous.</p>
+<video id="preview" playsinline muted></video>
+<div class="out" id="out">En attente…</div>
+<button id="stop" disabled>Arrêter</button>
+
+<script type="module">
+  import { BrowserMultiFormatReader, BarcodeFormat, DecodeHintType }
+    from "https://cdn.jsdelivr.net/npm/@zxing/library@0.21.2/+esm";
+
+  const hints = new Map();
+  // On se concentre sur les formats utiles pour livres/produits.
+  hints.set(DecodeHintType.POSSIBLE_FORMATS, [
+    BarcodeFormat.EAN_13, BarcodeFormat.EAN_8, BarcodeFormat.UPC_A
+  ]);
+
+  const reader = new BrowserMultiFormatReader(hints);
+  const video = document.getElementById("preview");
+  const out = document.getElementById("out");
+  const stopBtn = document.getElementById("stop");
+  let running = false;
+
+  function log(msg){ out.textContent = msg; }
+
+  async function start() {
+    if (running) return;
+    running = true; stopBtn.disabled = false; log("Initialisation caméra…");
+    // Essaie la caméra arrière quand dispo
+    const devices = await reader.listVideoInputDevices();
+    const backCam = devices.find(d => /back|arrière|rear|environment/i.test(d.label)) || devices[0];
+    if (!backCam) return log("Aucune caméra détectée.");
+
+    reader.decodeFromVideoDevice(backCam.deviceId, video, (result, err) => {
+      if (result) {
+        const raw = result.text;
+        const digits = raw.replace(/\D/g,""); // normalisation
+        log(`Détecté : ${raw}\nNormalisé : ${digits}`);
+        // 👉 ici tu as ta STRING de code‑barres (digits)
+        // Ex: envoie vers ton backend:
+        // fetch("/books/intake",{method:"POST",headers:{'Content-Type':'application/json'},body:JSON.stringify({barcode:digits,lang:'fr'})})
+        stop();
+      }
+      // err => bruit normal pendant le scan; on ignore.
+    });
+  }
+
+  function stop() {
+    if (!running) return;
+    reader.reset();
+    running = false; stopBtn.disabled = true;
+  }
+
+  stopBtn.onclick = stop;
+  start();
+</script>
