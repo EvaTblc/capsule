@@ -46,7 +46,6 @@ class ItemsController < ApplicationController
   end
 
   def scan
-
   end
 
   def intake
@@ -63,11 +62,13 @@ class ItemsController < ApplicationController
     )
 
     if item.new_record?
-      api_book_item(item) if klass == BookItem
+      begin
+        api_book_item(item) if klass == BookItem
+      rescue => e
+        Rails.logger.warn("[intake] enrichment failed: #{e.class} #{e.message}")
+        # pas bloquant : on continue avec le minimum
+      end
       item.name ||= "Nouvel objet"
-    else
-      # si déjà existant, tu peux renvoyer ce qu’on a en base
-      # (optionnel: surcharger item.name/metadata si tu veux rafraîchir)
     end
 
     render json: {
@@ -79,6 +80,7 @@ class ItemsController < ApplicationController
       metadata: item.metadata
     }, status: :ok
   end
+
 
   def new
     @collection = Collection.find(params[:collection_id])
