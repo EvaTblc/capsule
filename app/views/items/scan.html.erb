@@ -1,6 +1,7 @@
 <div
   data-controller="barcode"
   data-barcode-intake-url-value="<%= intake_collection_category_items_path(@collection, @category) %>"
+  data-barcode-new-url-value="<%= new_collection_category_item_path(@collection, @category) %>"
   class="scanner-container"
 >
   <video data-barcode-target="video" playsinline muted autoplay style="width:100%;max-width:520px;border-radius:12px;"></video>

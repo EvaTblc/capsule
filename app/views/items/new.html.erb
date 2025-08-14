@@ -1,4 +1,4 @@
-<%= form_with model: @item, url: collection_category_items_path(@collection, @category) do |f| %>
+<%= form_with model: @item, url: collection_category_items_path(@collection, @category), scope: :item do |f| %>
   <%= f.hidden_field :type %>
   <%= f.hidden_field :source %>
   <%= f.hidden_field :source_id %>

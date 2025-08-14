@@ -21,7 +21,6 @@ class ItemsController < ApplicationController
   def edit
     @collection = Collection.find(params[:collection_id])
     @category   = Category.find(params[:category_id])
-raise
 
     @item.items_tags.build if @item.items_tags.empty?
   end
@@ -33,7 +32,7 @@ raise
 
     attrs = item_params.dup
     attrs.delete(:photos) if attrs[:photos].blank? || attrs[:photos].all?(&:blank?)
-raise
+
     if params[:item][:photos].present?
       @item.photos.attach(params[:item][:photos])
     end
@@ -71,29 +70,41 @@ raise
     if item.new_record?
       case klass.name
       when "BookItem" then api_book_item(item)
-      # when "GameItem" ... etc.
+      # TODO +> Ajouter les différents type d'ITEM au fur et à mesure
       end
 
       item.name ||= "Nouvel objet"
-      session[:scanned_item] = item.attributes
-      redirect_to  new_collection_category_item_path(@collection, @category)
+      render json: {
+          name: item.name,
+          barcode: item.barcode,
+          type: klass.name,
+          source: item.source,
+          source_id: item.source_id,
+          metadata: item.metadata
+        }
     end
   end
 
   def new
-    @item = Item.new(collection: @collection, category: @category)
-    data = session[:scanned_item] if session[:scanned_item].present?
-    if data
-      @item.name     = data["name"]
-      @item.barcode  = data["barcode"]
-      @item.source   = data["source"]
-      @item.source_id= data["source_id"]
-      @item.type     = data["type"] if data["type"].present? 
-      @item.metadata = data["metadata"] if data["metadata"].is_a?(Hash)
-      @item.raw = data["raw"] if data["raw"].is_a?(Hash)
+    @collection = Collection.find(params[:collection_id])
+    @category   = @collection.categories.find(params[:category_id])
+
+    prefill = {}
+    if params[:prefill].present?
+      prefill = JSON.parse(Base64.decode64(params[:prefill])) rescue {}
     end
 
+    @item = @category.items.build(
+      name:      prefill["name"],
+      barcode:   prefill["barcode"],
+      type:      prefill["type"],
+      source:    prefill["source"],
+      source_id: prefill["source_id"],
+      metadata:  prefill["metadata"]
+    )
+
   end
+
 
   def create
     @item = Item.new(item_params)
@@ -126,10 +137,8 @@ raise
   end
 
   def item_params
-    p = params.require(:item).permit(:name, :possession, :state, :type, :barcode, :source, :source_id, :metadata, :raw, photos: [])
-    if p[:metadata].is_a?(String)
-      p[:metadata] = JSON.parse(p[:metadata]) rescue {}
-    end
+    p = params.require(:item).permit(:name, :possession, :state, :type, :barcode, :source, :source_id, :metadata, photos: [])
+    p[:metadata] = JSON.parse(p[:metadata]) rescue {} if p[:metadata].is_a?(String)
     p
   end
 

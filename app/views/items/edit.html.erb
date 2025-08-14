@@ -5,7 +5,8 @@
                 url: collection_category_item_path(@collection, @category, @item),
                 method: :patch,
                 class: "form-capsule",
-                data: { turbo_frame: "_top" } do |f| %>
+                data: { turbo_frame: "_top" },
+                scope: :item do |f| %>
 
     <!-- Champs Item -->
     <%= f.text_field   :name,        placeholder: @item.name,        class: "input-form" %>
