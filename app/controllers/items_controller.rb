@@ -79,6 +79,14 @@ class ItemsController < ApplicationController
       source_id: item.source_id,
       metadata: item.metadata
     }, status: :ok
+
+    respond_to do |format|
+      format.json { render json: payload, status: :ok }  # appels fetch()
+      format.html do                                    # soumission formulaire
+        prefill = Base64.strict_encode64(payload.to_json)
+        redirect_to new_collection_category_item_path(@collection, @category, prefill: prefill)
+      end
+    end
   end
 
 
