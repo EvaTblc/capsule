@@ -52,14 +52,9 @@ class ItemsController < ApplicationController
   def intake
     barcode = params[:barcode].presence || params.dig(:item, :barcode).to_s
     barcode = barcode.strip
-
     return render(json: { error: "Barcode manquant" }, status: :unprocessable_entity) if barcode.blank?
 
-    klass = if barcode.start_with?("978", "979") && barcode.length == 13
-              BookItem
-            else
-              Item
-            end
+    klass = (barcode.start_with?("978","979") && barcode.length == 13) ? BookItem : Item
 
     item = klass.find_or_initialize_by(
       collection_id: @collection.id,
@@ -68,21 +63,21 @@ class ItemsController < ApplicationController
     )
 
     if item.new_record?
-      case klass.name
-      when "BookItem" then api_book_item(item)
-      # TODO +> Ajouter les différents type d'ITEM au fur et à mesure
-      end
-
+      api_book_item(item) if klass == BookItem
       item.name ||= "Nouvel objet"
-      render json: {
-          name: item.name,
-          barcode: item.barcode,
-          type: klass.name,
-          source: item.source,
-          source_id: item.source_id,
-          metadata: item.metadata
-        }
+    else
+      # si déjà existant, tu peux renvoyer ce qu’on a en base
+      # (optionnel: surcharger item.name/metadata si tu veux rafraîchir)
     end
+
+    render json: {
+      name: item.name,
+      barcode: item.barcode,
+      type: klass.name,
+      source: item.source,
+      source_id: item.source_id,
+      metadata: item.metadata
+    }, status: :ok
   end
 
   def new

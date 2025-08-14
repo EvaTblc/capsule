@@ -80,27 +80,39 @@ export default class extends Controller {
         },
         body: JSON.stringify({ barcode: code })
       })
-
-      const ct = r.headers.get("content-type") || ""
-      if (!r.ok) {
-        const err = ct.includes("json") ? (await r.json()).error : (await r.text()).slice(0,200)
-        this.output(`❌ ${r.status} ${err || "Erreur"}`)
-        return
-      }
       const payload = ct.includes("json") ? await r.json() : {}
 
-      // ➜ redirection vers /new avec prefill (base64) via **newUrlValue**
       const prefill = btoa(JSON.stringify(payload))
       const url = `${this.newUrlValue}?prefill=${encodeURIComponent(prefill)}`
       if (window.Turbo) { Turbo.visit(url) } else { window.location.href = url }
     } catch (e) {
       this.output(`❌ Réseau: ${e.message}`)
     }
-    const ct = r.headers.get("content-type") || ""
-    if (!r.ok) {
-      const err = ct.includes("json") ? (await r.json()).error : (await r.text()).slice(0,200)
-      this.output(`❌ ${r.status} ${err || "Erreur"}`)
-      return
+  }
+
+  async decodeFile(event) {
+    const file = event.target.files[0]
+    if (!file) return
+
+    const url = URL.createObjectURL(file)
+    const img = document.createElement("img")
+    img.src = url
+    img.style.display = "none"
+    document.body.appendChild(img)
+
+    try {
+      const reader = new BrowserMultiFormatReader()
+      const result = await reader.decodeFromImage(img)
+      const code = result.getText().replace(/\D/g, "")
+      if (!code) { this.output("❌ Aucun code détecté dans l’image"); return }
+      this.output(`✅ Code détecté (image) : ${code}`)
+      await this.postToIntake(code)
+    } catch (e) {
+      this.output(`❌ Impossible de lire le code dans l’image`)
+      console.error(e)
+    } finally {
+      URL.revokeObjectURL(url)
+      img.remove()
     }
   }
 
