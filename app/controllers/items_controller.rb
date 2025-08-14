@@ -70,14 +70,14 @@ class ItemsController < ApplicationController
       item.name ||= "Nouvel objet"
     end
 
-    render json: {
+    payload = {
       name: item.name,
       barcode: item.barcode,
       type: klass.name,
       source: item.source,
       source_id: item.source_id,
       metadata: item.metadata
-    }, status: :ok
+    }
 
     if request.format.json?
       render json: payload, status: :ok
@@ -86,6 +86,7 @@ class ItemsController < ApplicationController
       redirect_to new_collection_category_item_path(@collection, @category, prefill: prefill)
     end
   end
+
 
 
   def new
