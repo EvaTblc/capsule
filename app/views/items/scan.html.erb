@@ -19,9 +19,10 @@
   <pre data-barcode-target="output" style="white-space:pre-wrap;margin-top:12px;">En attente…</pre>
 
   <%= form_with url: intake_collection_category_items_path(@collection, @category),
-                method: :post, local: true do %>
+              method: :post, local: true, data: { turbo: false } do %>
     <%= label_tag :barcode, "Entrer un code-barres" %>
     <%= text_field_tag :barcode, nil, placeholder: "9782070368228" %>
     <%= submit_tag "POST /intake" %>
   <% end %>
+
 </div>

@@ -72,45 +72,32 @@ export default class extends Controller {
 
   async postToIntake(code) {
     try {
-      this.output(`➡️ POST intake avec code: ${code}`)
       const r = await fetch(this.intakeUrlValue, {
         method: "POST",
-        credentials: "same-origin",           // ✅ cookies Devise en prod
-        redirect: "follow",                   // laisse suivre mais on détecte le HTML
+        credentials: "same-origin",
+        redirect: "follow",
         headers: {
           "Content-Type": "application/json",
+          "Accept": "application/json",                  // ✅ force JSON
           "X-CSRF-Token": document.querySelector("meta[name='csrf-token']")?.content || ""
         },
         body: JSON.stringify({ barcode: code })
       })
 
-      this.output(`⬅️ HTTP ${r.status} (${r.statusText})`)
       const ct = (r.headers.get("content-type") || "").toLowerCase()
-
       if (!ct.includes("application/json")) {
-        // Très utile pour voir si on a reçu une page HTML (login, erreur, etc.)
         const txt = await r.text()
         this.output(`⚠️ Réponse non-JSON (${ct || "unknown"})\n${txt.slice(0, 400)}…`)
-        // Si c'est une page de login, on redirige l'utilisateur dessus
-        if (/sign_in|log in|csrf/i.test(txt)) {
-          window.location.href = r.url
-          return
-        }
-        // Fallback : on va sur /new sans prefill
+        if (/sign_in|log in|csrf/i.test(txt)) { window.location.href = r.url; return }
         window.location.href = this.newUrlValue
         return
       }
 
       const payload = await r.json()
-      if (!r.ok) {
-        this.output(`❌ ${r.status} ${payload?.error || "Erreur"}`)
-        return
-      }
+      if (!r.ok) { this.output(`❌ ${r.status} ${payload?.error || "Erreur"}`); return }
 
-      // Redirection vers /new avec prefill (base64)
       const prefill = btoa(JSON.stringify(payload))
       const url = `${this.newUrlValue}?prefill=${encodeURIComponent(prefill)}`
-      this.output(`➡️ Redirection vers ${url}`)
       if (window.Turbo) { Turbo.visit(url) } else { window.location.href = url }
     } catch (e) {
       this.output(`❌ Réseau/JS: ${e.message}`)
