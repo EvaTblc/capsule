@@ -14,6 +14,8 @@
     </button>
   </div>
 
+  <input type="file" accept="image/*" capture="environment" data-action="change->barcode#decodeFile">
+
   <pre data-barcode-target="output" style="white-space:pre-wrap;margin-top:12px;">En attente…</pre>
 
   <%= form_with url: intake_collection_category_items_path(@collection, @category),

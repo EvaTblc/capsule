@@ -23,3 +23,27 @@
 #   # Report violations without enforcing the policy.
 #   # config.content_security_policy_report_only = true
 # end
+
+Rails.application.configure do
+  config.content_security_policy do |p|
+    p.default_src :self
+    p.script_src  :self, "https://cdn.jsdelivr.net"
+    p.connect_src :self
+    p.img_src     :self, :data, :blob
+    p.media_src   :self, :blob
+    p.style_src   :self, :unsafe_inline
+    p.frame_ancestors :self
+    p.object_src  :none
+    p.base_uri    :self
+    # p.report_uri "/csp-violation" # optionnel
+  end
+
+  # Autoriser la caméra
+  config.permissions_policy do |p|
+    p.camera :self
+    # p.microphone :none
+  end
+
+  # En prod, active le nonce si tu veux (optionnel)
+  # config.content_security_policy_nonce_generator = -> request { SecureRandom.base64(16) }
+end

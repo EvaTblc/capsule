@@ -12,31 +12,56 @@ export default class extends Controller {
     this.reader = new BrowserMultiFormatReader(hints)
     this.running = false
     this.lastDecodedAt = 0
+    window.addEventListener("error", (e) => this.output(`❌ JS: ${e.message}`))
+    window.addEventListener("unhandledrejection", (e) => this.output(`❌ Promise: ${e.reason}`))
   }
 
   async startScan() {
     if (this.running) return
     this.running = true
     this.output("Initialisation caméra…")
+
     try {
+      // 1) iOS: déclenche le prompt permission AVANT ZXing
+      await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } } })
+
+      // 2) Essai 1 — via constraints (meilleure compat iOS)
+      try {
+        await this.reader.decodeFromConstraints(
+          { video: { facingMode: "environment" } }, // arrière
+          this.videoTarget,
+          (res, err) => this._onDecode(res, err)
+        )
+        return
+      } catch (_) {
+        // continue vers Essai 2
+      }
+
+      // 3) Essai 2 — via deviceId (Android/desktop)
       const devices = await this.reader.listVideoInputDevices()
       if (!devices.length) throw new Error("Pas de caméra détectée")
       const back = devices.find(d => /back|rear|environment|arrière/i.test(d.label)) || devices[0]
-      this.reader.decodeFromVideoDevice(back.deviceId, this.videoTarget, (res) => {
-        if (!res) return
-        const now = Date.now()
-        if (now - this.lastDecodedAt < 1200) return // anti-doublon
-        this.lastDecodedAt = now
 
-        const code = res.getText().replace(/\D/g, "")
-        if (!code) return
-        this.output(`✅ Code détecté: ${code}`)
-        this.stopScan()
-        this.postToIntake(code)
-      })
+      this.reader.decodeFromVideoDevice(back.deviceId, this.videoTarget, (res, err) => this._onDecode(res, err))
+
     } catch (e) {
-      this.output(`❌ ${e.message}`); this.running = false
+      this.output(`❌ Caméra: ${e.message}`)
+      this.running = false
     }
+  }
+
+  _onDecode(res, err) {
+    if (!res) return
+    const now = Date.now()
+    this.lastDecodedAt ||= 0
+    if (now - this.lastDecodedAt < 1200) return
+    this.lastDecodedAt = now
+
+    const code = res.getText().replace(/\D/g, "")
+    if (!code) return
+    this.output(`✅ Code détecté: ${code}`)
+    this.stopScan()
+    this.postToIntake(code)
   }
 
   stopScan() {
@@ -70,6 +95,12 @@ export default class extends Controller {
       if (window.Turbo) { Turbo.visit(url) } else { window.location.href = url }
     } catch (e) {
       this.output(`❌ Réseau: ${e.message}`)
+    }
+    const ct = r.headers.get("content-type") || ""
+    if (!r.ok) {
+      const err = ct.includes("json") ? (await r.json()).error : (await r.text()).slice(0,200)
+      this.output(`❌ ${r.status} ${err || "Erreur"}`)
+      return
     }
   }
 
