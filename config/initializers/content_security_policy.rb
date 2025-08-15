@@ -50,4 +50,5 @@ Rails.application.configure do
 
   # En prod, active le nonce si tu veux (optionnel)
   # config.content_security_policy_nonce_generator = -> request { SecureRandom.base64(16) }
+  config.content_security_policy_report_only = true
 end
