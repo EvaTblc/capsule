@@ -27,7 +27,7 @@
 Rails.application.configure do
   config.content_security_policy do |p|
     p.default_src :self
-    p.script_src  :self, "https://cdn.jsdelivr.net"
+    p.script_src  :self, "https://cdn.jsdelivr.net"   # pas d'unsafe-inline ici
     p.connect_src :self
     p.img_src     :self, :data, :blob
     p.media_src   :self, :blob
@@ -37,18 +37,13 @@ Rails.application.configure do
     p.frame_ancestors :self
     p.object_src  :none
     p.base_uri    :self
-    # p.report_uri "/csp-violation" # optionnel
   end
 
+  # ✅ indispensable pour l’importmap inline
   config.content_security_policy_nonce_generator  = ->(request) { SecureRandom.base64(16) }
   config.content_security_policy_nonce_directives = %w(script-src)
-  # Autoriser la caméra
+
   config.permissions_policy do |p|
     p.camera :self
-    # p.microphone :none
   end
-
-  # En prod, active le nonce si tu veux (optionnel)
-  # config.content_security_policy_nonce_generator = -> request { SecureRandom.base64(16) }
-  config.content_security_policy_report_only = true
 end
