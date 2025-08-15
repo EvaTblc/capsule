@@ -1,4 +1,3 @@
-// app/javascript/controllers/barcode_controller.js
 import { Controller } from "@hotwired/stimulus"
 import { BrowserMultiFormatReader, DecodeHintType, BarcodeFormat } from "https://cdn.jsdelivr.net/npm/@zxing/library@0.21.2/+esm"
 
@@ -7,44 +6,41 @@ export default class extends Controller {
   static targets = ["video", "output"]
 
   connect() {
-    const hints = new Map()
-    hints.set(DecodeHintType.POSSIBLE_FORMATS, [BarcodeFormat.EAN_13, BarcodeFormat.EAN_8, BarcodeFormat.UPC_A])
-    this.reader = new BrowserMultiFormatReader(hints)
-    this.running = false
-    this.lastDecodedAt = 0
-    window.addEventListener("error", (e) => this.output(`❌ JS: ${e.message}`))
-    window.addEventListener("unhandledrejection", (e) => this.output(`❌ Promise: ${e.reason}`))
-    this.output("[barcode] connect OK")
+    try {
+      const hints = new Map()
+      hints.set(DecodeHintType.POSSIBLE_FORMATS, [BarcodeFormat.EAN_13, BarcodeFormat.EAN_8, BarcodeFormat.UPC_A])
+      this.reader = new BrowserMultiFormatReader(hints)
+      this.running = false
+      this.lastDecodedAt = 0
+
+      this.output("[barcode] connect OK")   // 👈 visible dans la page
+      window.addEventListener("error", (e) => this.output(`❌ JS: ${e.message}`))
+      window.addEventListener("unhandledrejection", (e) => this.output(`❌ Promise: ${e.reason}`))
+    } catch (e) {
+      this.output(`❌ connect error: ${e.message}`)
+    }
   }
 
   async startScan() {
+    this.output("[barcode] startScan clicked")   // 👈 trace le clic
     if (this.running) return
     this.running = true
     this.output("Initialisation caméra…")
-
     try {
-      // 1) iOS: déclenche le prompt permission AVANT ZXing
       await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } } })
-
-      // 2) Essai 1 — via constraints (meilleure compat iOS)
       try {
         await this.reader.decodeFromConstraints(
-          { video: { facingMode: "environment" } }, // arrière
+          { video: { facingMode: "environment" } },
           this.videoTarget,
           (res, err) => this._onDecode(res, err)
         )
         return
-      } catch (_) {
-        // continue vers Essai 2
-      }
+      } catch (_) {}
 
-      // 3) Essai 2 — via deviceId (Android/desktop)
       const devices = await this.reader.listVideoInputDevices()
       if (!devices.length) throw new Error("Pas de caméra détectée")
       const back = devices.find(d => /back|rear|environment|arrière/i.test(d.label)) || devices[0]
-
       this.reader.decodeFromVideoDevice(back.deviceId, this.videoTarget, (res, err) => this._onDecode(res, err))
-
     } catch (e) {
       this.output(`❌ Caméra: ${e.message}`)
       this.running = false
@@ -66,6 +62,7 @@ export default class extends Controller {
   }
 
   stopScan() {
+    this.output("[barcode] stopScan clicked")
     if (!this.running) return
     this.reader.reset()
     this.running = false
@@ -73,22 +70,23 @@ export default class extends Controller {
 
   async postToIntake(code) {
     try {
+      this.output(`➡️ POST intake avec code: ${code}`)
       const r = await fetch(this.intakeUrlValue, {
         method: "POST",
         credentials: "same-origin",
-        redirect: "follow",
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json",                  // ✅ force JSON
+          "Accept": "application/json",
           "X-CSRF-Token": document.querySelector("meta[name='csrf-token']")?.content || ""
         },
         body: JSON.stringify({ barcode: code })
       })
 
+      this.output(`⬅️ HTTP ${r.status}`)
       const ct = (r.headers.get("content-type") || "").toLowerCase()
       if (!ct.includes("application/json")) {
         const txt = await r.text()
-        this.output(`⚠️ Réponse non-JSON (${ct || "unknown"})\n${txt.slice(0, 400)}…`)
+        this.output(`⚠️ Réponse non-JSON (${ct || "unknown"})\n${txt.slice(0,400)}…`)
         if (/sign_in|log in|csrf/i.test(txt)) { window.location.href = r.url; return }
         window.location.href = this.newUrlValue
         return
@@ -99,23 +97,21 @@ export default class extends Controller {
 
       const prefill = btoa(JSON.stringify(payload))
       const url = `${this.newUrlValue}?prefill=${encodeURIComponent(prefill)}`
+      this.output(`➡️ Redirection vers ${url}`)
       if (window.Turbo) { Turbo.visit(url) } else { window.location.href = url }
     } catch (e) {
       this.output(`❌ Réseau/JS: ${e.message}`)
     }
   }
 
-
   async decodeFile(event) {
     const file = event.target.files[0]
     if (!file) return
-
     const url = URL.createObjectURL(file)
     const img = document.createElement("img")
     img.src = url
     img.style.display = "none"
     document.body.appendChild(img)
-
     try {
       const reader = new BrowserMultiFormatReader()
       const result = await reader.decodeFromImage(img)
@@ -132,5 +128,5 @@ export default class extends Controller {
     }
   }
 
-  output(text) { if (this.hasOutputTarget) this.outputTarget.textContent = text }
+  output(text) { if (this.hasOutputTarget) this.outputTarget.textContent = String(text) }
 }

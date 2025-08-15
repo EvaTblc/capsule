@@ -3,3 +3,7 @@ import "@hotwired/turbo-rails"
 import "controllers"
 import "bootstrap"
 import "@popperjs/core"
+
+window.__BarcodeStimulusApp__ ||= Application.start()
+window.__BarcodeStimulusApp__.register("barcode", BarcodeController)
+console.log("[app] Stimulus boot forced, barcode controller registered")
