@@ -14,6 +14,7 @@ export default class extends Controller {
     this.lastDecodedAt = 0
     window.addEventListener("error", (e) => this.output(`❌ JS: ${e.message}`))
     window.addEventListener("unhandledrejection", (e) => this.output(`❌ Promise: ${e.reason}`))
+    this.output("[barcode] connect OK")
   }
 
   async startScan() {
