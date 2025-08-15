@@ -31,7 +31,9 @@ Rails.application.configure do
     p.connect_src :self
     p.img_src     :self, :data, :blob
     p.media_src   :self, :blob
-    p.style_src   :self, :unsafe_inline
+    p.style_src   :self, :unsafe_inline, "https://fonts.googleapis.com"
+    p.font_src    :self, :data, "https://fonts.gstatic.com"
+    p.worker_src  :self, :blob
     p.frame_ancestors :self
     p.object_src  :none
     p.base_uri    :self
