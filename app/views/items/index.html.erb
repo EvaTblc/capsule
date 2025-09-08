@@ -6,16 +6,20 @@
         method: :delete, data: { turbo_confirm: "Supprimer cette collection ?" }, class: "btn-action delete" %>
   </div>
 
-  <div class="cards-wrapper">
-    <% @collection.items.each do |item| %>
-      <%= link_to collection_category_item_path(@collection, @category, item) do %>
-        <div class="collection-card" style="background-image: url('<%= item.photos.attached? ? url_for(item.photos.first) : asset_path('default_collection.jpg') %>')">
-          <div class="collection-overlay">
-            <h2><%= item.name %></h2>
+  <% if @category.items.nil? %>
+    <p>Ajouter un item</p>
+  <% else %>
+    <div class="cards-wrapper">
+      <% @collection.items.each do |item| %>
+        <%= link_to collection_category_item_path(@collection, @category, item) do %>
+          <div class="collection-card" style="background-image: url('<%= item.photos.attached? ? url_for(item.photos.first) : asset_path('default_collection.jpg') %>')">
+            <div class="collection-overlay">
+              <h2><%= item.name %></h2>
+            </div>
           </div>
-        </div>
+        <% end %>
       <% end %>
-    <% end %>
+  <% end %>
 
   </div>
 </div>
