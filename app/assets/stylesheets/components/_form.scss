@@ -73,3 +73,26 @@ label span:hover {
   font-family: 'Orbitron', sans-serif;
   color: #000;
 }
+
+.label-form {
+  color: white;
+  font-weight: italic;
+}
+
+.form-scan {
+  margin-top: 70px;
+}
+
+input[type="submit"] {
+  display: block;
+  cursor: pointer;
+  background: linear-gradient(135deg, #a9118d, #ff6e3d);
+  color: white;
+  text-align: center;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+  height: 10%;
+  margin-left: 15px;
+}

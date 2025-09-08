@@ -8,6 +8,8 @@ class Item < ApplicationRecord
 
   has_many_attached :photos
 
+  enum status: { owned: 0, wanted: 1}
+
   STATE = [ "Neuf", "Très bon état", "Bon état", "Occasion", "Abimé" ]
   # validates :state, inclusion: { in: Item::STATE }
 

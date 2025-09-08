@@ -9,9 +9,6 @@ application.register("hello", HelloController)
 import ImagePreviewController from "controllers/image_preview_controller"
 application.register("image-preview", ImagePreviewController)
 
-import ModalController from "controllers/modal_controller"
-application.register("modal", ModalController)
-
 import PhotoModalController from "controllers/photo_modal_controller"
 application.register("photo-modal", PhotoModalController)
 
