@@ -1,17 +1,17 @@
-<div class="container-scrollable">
+<div class="user-head">
   <h2 class="style-title">Hello <%= current_user.username %></h2>
+  <%= cl_image_tag current_user.avatar.key, class:"avatar" %>
+</div>
 
-  <div class="cards-wrapper">
-    <% @collections.each do |collection| %>
-      <%= link_to collection_categories_path(collection) do %>
-      <div class="collection-card" style="background-image: url(<%= collection.image.attached? ? cl_image_path(collection.image.key) : asset_path('default_collection.jpg') %>)">
-        <div class="collection-overlay">
-          <h2><%= collection.name %></h2>
-        </div>
+<div class="cards-wrapper">
+  <% @collections.each do |collection| %>
+    <%= link_to collection_categories_path(collection) do %>
+    <div class="collection-card" style="background-image: url(<%= collection.image.attached? ? cl_image_path(collection.image.key) : asset_path('default_collection.jpg') %>)">
+      <div class="collection-overlay">
+        <h2><%= collection.name %></h2>
       </div>
-      <% end %>
+    </div>
     <% end %>
+  <% end %>
 
-  </div>
-  
 </div>

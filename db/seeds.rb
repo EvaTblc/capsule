@@ -7,10 +7,6 @@ Category.delete_all
 Collection.delete_all
 User.delete_all
 
-puts "📸 Loading local photos..."
-photos_path = Rails.root.join('db/photos')
-photo_files = Dir[photos_path.join('seed*.jpg')]
-
 puts "👤 Creating demo user..."
 
 user = User.create!(
@@ -18,6 +14,10 @@ user = User.create!(
   password: "password",
   username: "user1"
 )
+
+file = File.open(Rails.root.join("db/photos/seed1.jpg"))
+user.avatar.attach(io: file, filename: "avatar.jpg", content_type: "image/jpeg")
+
 puts "✅ User #{user.email} created"
 
 puts "📦 Creating collections"

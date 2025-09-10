@@ -19,17 +19,6 @@
   animation: neon-glow 3s ease-in-out infinite alternate;
 }
 
-@keyframes neon-glow {
-  from {
-    box-shadow: 0 -2px 12px rgba(247, 139, 226, 0.8),
-                0 -4px 24px rgba(255, 151, 76, 0.6);
-  }
-  to {
-    box-shadow: 0 -2px 20px rgba(255, 151, 76, 1),
-                0 -6px 32px rgba(247, 139, 226, 1);
-  }
-}
-
 .nav-group {
   display: flex;
   justify-content: space-between;
