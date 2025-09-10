@@ -13,14 +13,12 @@
   border-top-right-radius: 20px;
   z-index: 1000;
 
-  /* Bordure néon en haut */
   border-top: 2px solid #f78be2;
   box-shadow: 0 -2px 12px rgba(247, 139, 226, 0.8),
               0 -4px 24px rgba(255, 151, 76, 0.6);
   animation: neon-glow 3s ease-in-out infinite alternate;
 }
 
-/* Animation du glow néon */
 @keyframes neon-glow {
   from {
     box-shadow: 0 -2px 12px rgba(247, 139, 226, 0.8),
