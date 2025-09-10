@@ -1,24 +1,24 @@
 <nav class="navbar-capsule">
   <div class="nav-group">
     <%= link_to root_path, class: "nav-icon" do %>
-      <i class="fas fa-home fa-xl"></i>
+      <i class="fas fa-home"></i>
       <span class="tooltip">Accueil</span>
     <% end %>
 
     <%= link_to collections_path, class: "nav-icon" do %>
-      <i class="fas fa-th-large fa-xl"></i>
+      <i class="fas fa-book-bookmark"></i>
       <span class="tooltip">Collections</span>
     <% end %>
 
     <div class="nav-icon spacer"></div>
 
     <%= link_to "/", class: "nav-icon" do %>
-      <i class="fas fa-user fa-xl"></i>
+      <i class="fas fa-user"></i>
       <span class="tooltip">Profil</span>
     <% end %>
 
     <%= link_to destroy_user_session_path, method: :delete, data: { turbo_confirm: "Se déconnecter ?" }, class: "nav-icon logout" do %>
-      <i class="fas fa-sign-out-alt fa-xl"></i>
+      <i class="fas fa-sign-out-alt"></i>
       <span class="tooltip">Quitter</span>
     <% end %>
   </div>
