@@ -3,33 +3,33 @@
   bottom: 0;
   left: 0;
   right: 0;
-
-  margin-bottom: env(safe-area-inset-bottom, 12px);
-
   height: 70px;
   background: #111;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0 24px;
-
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   z-index: 1000;
 
-  box-shadow: 0 -20px 20px rgba(0, 0, 0, 0.8);
+  /* Bordure néon en haut */
+  border-top: 2px solid #f78be2;
+  box-shadow: 0 -2px 12px rgba(247, 139, 226, 0.8),
+              0 -4px 24px rgba(255, 151, 76, 0.6);
+  animation: neon-glow 3s ease-in-out infinite alternate;
 }
 
-body::after {
-  content: "";
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: env(safe-area-inset-bottom, 16px);
-  background: linear-gradient(to bottom, rgba(17, 17, 17, 0.9), #000);
-  pointer-events: none;
-  z-index: 999;
+/* Animation du glow néon */
+@keyframes neon-glow {
+  from {
+    box-shadow: 0 -2px 12px rgba(247, 139, 226, 0.8),
+                0 -4px 24px rgba(255, 151, 76, 0.6);
+  }
+  to {
+    box-shadow: 0 -2px 20px rgba(255, 151, 76, 1),
+                0 -6px 32px rgba(247, 139, 226, 1);
+  }
 }
 
 .nav-group {
