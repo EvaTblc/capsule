@@ -33,6 +33,7 @@
     <div class="photo-hero">
       <%= cl_image_tag photos[0].key,
             class: "photo-hero-img",
+            resource_type: :image,
             alt: @item.name,
             data: {
               action: "click->photo-modal#show",
@@ -46,6 +47,7 @@
       <% photos[1..].each do |photo| %>
         <%= cl_image_tag photo.key,
               class: "photo-gallery-thumb",
+              resource_type: :image,
               alt: @item.name,
               data: {
                 action: "click->photo-modal#show",
