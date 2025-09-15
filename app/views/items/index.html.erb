@@ -11,7 +11,8 @@
   <div class="cards-wrapper">
     <% @collection.items.each do |item| %>
       <%= link_to collection_category_item_path(@collection, @category, item) do %>
-        <div class="collection-card" style="background-image: url('<%= item.photos.attached? ? url_for(item.photos.first) : asset_path('default_collection.jpg') %>')">
+        <div class="collection-card"
+            style="background-image: url('<%= item.photos.attached? ? cl_image_path(item.photos.first.key) : asset_path('default_collection.jpg') %>')">
           <div class="collection-overlay">
             <h2><%= item.name %></h2>
           </div>
