@@ -29,6 +29,18 @@
   width: 40%;
 }
 
+.image-upload-label-nrm {
+  display: block;
+  cursor: pointer;
+  background: linear-gradient(135deg, #a9118d, #ff6e3d);
+  color: white;
+  text-align: center;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+
 .image-upload-label:hover {
   background: linear-gradient(135deg, #ff9ee6, #ffb078);
 }

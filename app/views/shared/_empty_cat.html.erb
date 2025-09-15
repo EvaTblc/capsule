@@ -1,18 +1,6 @@
 <div class="container-scrollable">
   <%= form_with model: [collection, category] do |f| %>
     <%= f.text_field :name, label: false, class: "input-form" %>
-    <label for="collection_image">
-      <span>Choisir une image</span>
-      <%= f.file_field :image,
-                        id: "collection_image",
-                        label: false,
-                        as: :file,
-                        required: true,
-                        data: { action: "change->image-preview#update", image_preview_target: "input" } %>
-    </label>
-
-    <div class="preview-grid new-grid" data-image-preview-target="list"></div>
-
     <div class="actions-save">
       <%= link_to "← Retour", collections_path, class: "btn-action" %>
       <%= f.submit "Sauvegarder", class: "btn-action" %>

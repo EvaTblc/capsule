@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Compresse une image en JPEG
+// Compression d’image
 function compressImage(file, quality = 0.7, maxWidth = 1920, maxHeight = 1080) {
   return new Promise(resolve => {
     const img = new Image()
@@ -32,26 +32,36 @@ function compressImage(file, quality = 0.7, maxWidth = 1920, maxHeight = 1080) {
 }
 
 export default class extends Controller {
-  static targets = ["input", "list"]
+  static targets = ["master", "list"]
 
-  async update(e) {
-    const input = e.target
-    let files = Array.from(input.files || [])
+  async addFiles(event) {
+    const newFiles = Array.from(event.target.files || [])
+    if (!newFiles.length) return
 
-    if (!files.length) return this.clearList()
+    // 🔄 Compression
+    const compressedFiles = await Promise.all(newFiles.map(f => compressImage(f)))
 
-    // 🔄 Compression avant upload
-    const compressedFiles = await Promise.all(
-      files.map(f => compressImage(f))
-    )
+    // Fichiers déjà présents
+    const currentFiles = Array.from(this.masterTarget.files || [])
 
-    // Injecter les fichiers compressés dans l’input
+    // Fusion + dédoublonnage
+    const merged = [...currentFiles, ...compressedFiles]
+    const seen = new Set()
+    const unique = merged.filter(f => {
+      const key = `${f.name}-${f.size}-${f.lastModified}`
+      if (seen.has(key)) return false
+      seen.add(key)
+      return true
+    })
+
+    // Injection dans l’input maître
     const dt = new DataTransfer()
-    compressedFiles.forEach(f => dt.items.add(f))
-    input.files = dt.files
+    unique.forEach(f => dt.items.add(f))
+    this.masterTarget.files = dt.files
 
-    // ✅ Utiliser les fichiers compressés pour prévisualisation
-    this.renderPreviews(compressedFiles)
+    event.target.value = ""
+    // Prévisualisation
+    this.renderPreviews(unique)
   }
 
   renderPreviews(files) {
@@ -61,7 +71,7 @@ export default class extends Controller {
       card.className = "preview-card"
 
       const img = document.createElement("img")
-      img.src = URL.createObjectURL(file) // ← preview fiable
+      img.src = URL.createObjectURL(file)
       card.appendChild(img)
 
       const btn = document.createElement("button")
@@ -78,12 +88,12 @@ export default class extends Controller {
 
   removeAt(e) {
     const indexToRemove = Number(e.currentTarget.dataset.index)
-    const current = Array.from(this.inputTarget.files || [])
+    const current = Array.from(this.masterTarget.files || [])
     const kept = current.filter((_, i) => i !== indexToRemove)
 
     const dt = new DataTransfer()
     kept.forEach(f => dt.items.add(f))
-    this.inputTarget.files = dt.files
+    this.masterTarget.files = dt.files
 
     kept.length ? this.renderPreviews(kept) : this.clearList()
   }

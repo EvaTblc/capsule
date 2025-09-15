@@ -29,22 +29,18 @@ class ItemsController < ApplicationController
 
   def update
     @collection = Collection.find(params[:collection_id])
-    @category = @collection.categories.find(params[:category_id])
-    @item = @category.items.find(params[:id])
+    @category   = @collection.categories.find(params[:category_id])
+    @item       = @category.items.find(params[:id])
 
     attrs = item_params.dup
-    attrs.delete(:photos) if attrs[:photos].blank? || attrs[:photos].all?(&:blank?)
+    files = attrs.delete(:photos) # idem : on enlève du hash
 
-    if params[:item][:photos].present?
-      @item.photos.attach(params[:item][:photos])
-    end
-
-    if @item.update(item_params.except(:photos))
+    if @item.update(attrs)
+      @item.photos.attach(files.reject(&:blank?)) if files.present?
       redirect_to collection_category_item_path(@collection, @category, @item)
     else
       render :edit, status: :unprocessable_entity
     end
-
   end
 
   def scan
@@ -116,15 +112,20 @@ class ItemsController < ApplicationController
 
 
   def create
-    @item = @category.items.new(item_params)
+    attrs = item_params.dup
+    files = attrs.delete(:photos) # on sort les fichiers du hash
+
+    @item = @category.items.new(attrs)
     @item.collection = @collection
 
     if @item.save
-      redirect_to collection_category_item_path(@collection, @category, @item), notice: "Objet créé"
+      @item.photos.attach(files.reject(&:blank?)) if files.present?
+      redirect_to collection_category_item_path(@collection, @category, @item)
     else
       render :new, status: :unprocessable_entity
     end
   end
+
 
   def destroy
     if @item.destroy
@@ -147,7 +148,7 @@ class ItemsController < ApplicationController
 
   def item_params
     p = params.require(:item).permit(:name, :possession, :state, :type, :barcode, :source, :source_id, :price,
-    metadata: [:authors, :publisher, :language, :published_date, :description],
+    metadata: [:authors, :publisher, :language, :published_date, :description, :currency],
     photos: [])
     p[:metadata] = JSON.parse(p[:metadata]) rescue {} if p[:metadata].is_a?(String)
     p

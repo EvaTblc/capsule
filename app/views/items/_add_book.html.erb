@@ -11,19 +11,35 @@
     <%= f.hidden_field :source_id %>
     <%= f.hidden_field :barcode %>
 
-    <!-- Bouton d’upload -->
+    <!-- Input maître caché (seul utilisé par Rails) -->
+    <%= f.file_field :photos,
+          multiple: true,
+          accept: "image/*",
+          class: "hidden",
+          data: { image_preview_target: "master" } %>
+
+    <!-- Boutons séparés -->
     <div class="buttons-upload">
       <label class="image-upload-label">
         Prendre une photo
-        <%= f.file_field :photos, accept: "image/*", capture: "environment", class: "hidden", multiple: true, class: "image-input", data: { action: "change->image-preview#update", image_preview_target: "input" } %>
+        <input type="file"
+               accept="image/*"
+               capture="environment"
+               class="hidden"
+               data-action="change->image-preview#addFiles">
       </label>
 
       <label class="image-upload-label">
         Choisir depuis la galerie
-        <%= f.file_field :photos, accept: "image/*", class: "hidden", multiple: true, class: "image-input", data: { action: "change->image-preview#update", image_preview_target: "input" } %>
+        <input type="file"
+               accept="image/*"
+               multiple
+               class="hidden"
+               data-action="change->image-preview#addFiles">
       </label>
     </div>
-    <!-- Grille des nouvelles images -->
+
+    <!-- Prévisualisation -->
     <div class="preview-grid new-grid mb-3" data-image-preview-target="list"></div>
 
     <!-- Champ Nom -->
@@ -37,13 +53,21 @@
     <!-- Prix -->
     <div class="label_add">
       <%= f.label :price, "Prix" %>
-      <%= f.number_field :price, step: 0.01, class: "input-form" %>
+      <div class="price-with-currency">
+        <%= f.number_field :price, step: 0.01, placeholder: 0.01, class: "input-form" %>
+
+        <%= select_tag "item[metadata][currency]",
+              options_for_select([["€ Euro", "EUR"], ["$ Dollar", "USD"], ["£ Livre", "GBP"], ["¥ Yen", "JPY"]],
+                                item.metadata["currency"] || "EUR"),
+              class: "input-form" %>
+      </div>
     </div>
+
 
     <!-- Nombre -->
     <div class="label_add">
       <%= f.label :possession, "Nombre" %>
-      <%= f.number_field :possession, class: "input-form" %>
+      <%= f.number_field :possession, placeholder: 1, class: "input-form" %>
     </div>
 
     <!-- Champs metadata -->
@@ -59,12 +83,16 @@
 
     <div class="label_add">
       <%= f.label :metadata_language, "Langue" %>
-      <%= text_field_tag "item[metadata][language]", item.metadata["language"], class: "input-form" %>
+      <%= select_tag "item[metadata][language]",
+            options_for_select(ItemsHelper::LANGUAGE_NAMES.map { |k,v| [v, k] }, item.metadata["language"]),
+            class: "input-form" %>
     </div>
 
     <div class="label_add">
       <%= f.label :metadata_published_date, "Année de publication" %>
-      <%= text_field_tag "item[metadata][published_date]", item.metadata["published_date"], class: "input-form" %>
+      <%= text_field_tag "item[metadata][published_date]",
+                        (Date.parse(item.metadata["published_date"]).strftime("%d-%m-%Y") rescue item.metadata["published_date"]),
+                        class: "input-form" %>
     </div>
 
     <div class="label_add">
