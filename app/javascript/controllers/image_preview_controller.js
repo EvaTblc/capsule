@@ -1,37 +1,72 @@
+// app/javascript/controllers/image_preview_controller.js
 import { Controller } from "@hotwired/stimulus"
 
+// Compresse une image en JPEG
+async function compressImage(file, quality = 0.8, maxWidth = 1920, maxHeight = 1080) {
+  return new Promise(resolve => {
+    const img = new Image()
+    img.src = URL.createObjectURL(file)
+
+    img.onload = () => {
+      const canvas = document.createElement("canvas")
+      let { width, height } = img
+
+      if (width > maxWidth || height > maxHeight) {
+        const ratio = Math.min(maxWidth / width, maxHeight / height)
+        width *= ratio
+        height *= ratio
+      }
+
+      canvas.width = width
+      canvas.height = height
+      canvas.getContext("2d").drawImage(img, 0, 0, width, height)
+
+      canvas.toBlob(
+        blob => {
+          resolve(new File([blob], file.name, { type: "image/jpeg" }))
+        },
+        "image/jpeg",
+        quality
+      )
+    }
+  })
+}
+
 export default class extends Controller {
-  static targets = ["input", "list"]
+  static targets = ["input", "list", "hiddenBag"]
 
-  connect() {
-    this.files = [] // mémoire locale
-  }
+  // 🔄 Quand un input file change (caméra ou galerie)
+  async update(e) {
+    const input = e.target
+    let files = Array.from(input.files || []).filter(f => f.type.startsWith("image/"))
 
-  update() {
-    // Nouveaux fichiers sélectionnés
-    const newFiles = Array.from(this.inputTarget.files)
+    if (!files.length) return
 
-    // Cumuler avec ceux déjà en mémoire
-    this.files = [...this.files, ...newFiles]
+    // Compression en parallèle
+    files = await Promise.all(files.map(f => compressImage(f, 0.7)))
 
-    // Recréer le FileList avec tous les fichiers cumulés
+    // Fusionner tous les fichiers des inputs (caméra + galerie)
+    const allFiles = Array.from(this.inputTargets)
+      .flatMap(input => Array.from(input.files || []))
+      .concat(files)
+
+    // Remplacer les fichiers de l’input courant par les compressés
     const dt = new DataTransfer()
-    this.files.forEach(file => dt.items.add(file))
-    this.inputTarget.files = dt.files
+    files.forEach(f => dt.items.add(f))
+    input.files = dt.files
 
-    // Rafraîchir la prévisualisation
-    this.renderPreviews()
+    this.renderPreviews(allFiles)
+    this.listTarget.classList.remove("hidden")
   }
 
-  renderPreviews() {
+  // 🖼️ Affiche les prévisualisations
+  renderPreviews(files) {
     this.listTarget.innerHTML = ""
-
-    this.files.forEach((file, index) => {
+    files.forEach((file, idx) => {
       const card = document.createElement("div")
       card.className = "preview-card"
 
       const img = document.createElement("img")
-      img.alt = file.name
       const reader = new FileReader()
       reader.onload = e => (img.src = e.target.result)
       reader.readAsDataURL(file)
@@ -39,9 +74,10 @@ export default class extends Controller {
       const btn = document.createElement("button")
       btn.type = "button"
       btn.className = "remove-btn"
+      btn.setAttribute("aria-label", "Retirer cette image")
       btn.innerHTML = "🗑️"
-      btn.dataset.index = index
-      btn.addEventListener("click", this.remove.bind(this))
+      btn.dataset.index = String(idx)
+      btn.addEventListener("click", this.removeNewAt.bind(this))
 
       card.appendChild(img)
       card.appendChild(btn)
@@ -49,15 +85,49 @@ export default class extends Controller {
     })
   }
 
-  remove(e) {
-    const index = parseInt(e.currentTarget.dataset.index, 10)
-    this.files.splice(index, 1)
+  // ❌ Supprime une image de la liste
+  removeNewAt(e) {
+    const indexToRemove = Number(e.currentTarget.dataset.index)
 
-    // Recréer la FileList après suppression
+    // Fusionner tous les fichiers actuels
+    const allFiles = Array.from(this.inputTargets).flatMap(input => Array.from(input.files || []))
+    const kept = allFiles.filter((_, i) => i !== indexToRemove)
+
+    // Réinjecter les fichiers conservés dans le premier input
     const dt = new DataTransfer()
-    this.files.forEach(file => dt.items.add(file))
-    this.inputTarget.files = dt.files
+    kept.forEach(f => dt.items.add(f))
+    this.inputTargets[0].files = dt.files
 
-    this.renderPreviews()
+    kept.length ? this.renderPreviews(kept) : this.clearList()
+  }
+
+  // 🔄 Reset
+  clearList() {
+    this.listTarget.innerHTML = ""
+    this.listTarget.classList.add("hidden")
+  }
+
+  // ✅ Gère la suppression d’images existantes en mode édition
+  toggleExisting(e) {
+    const btn = e.currentTarget
+    const card = btn.closest(".preview-card")
+    const id = btn.dataset.photoId
+    if (!id || !card) return
+
+    const selected = card.classList.toggle("to-remove")
+    btn.classList.toggle("active", selected)
+
+    const selector = `input[type="hidden"][name="remove_photo_ids[]"][value="${id}"]`
+    const existing = this.hiddenBagTarget?.querySelector(selector)
+
+    if (selected && !existing) {
+      const input = document.createElement("input")
+      input.type = "hidden"
+      input.name = "remove_photo_ids[]"
+      input.value = id
+      this.hiddenBagTarget.appendChild(input)
+    } else if (!selected && existing) {
+      existing.remove()
+    }
   }
 }
