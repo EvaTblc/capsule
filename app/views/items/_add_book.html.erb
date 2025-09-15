@@ -34,7 +34,7 @@
 
     <div class="label_add">
       <%= f.label :metadata_authors, "Auteur(s)" %>
-      <%= text_field_tag "item[metadata][authors]", item.metadata["authors"]&.join(", "), class: "input-form" %>
+      <%= text_field_tag "item[metadata][authors]", item.metadata["authors"], class: "input-form" %>
     </div>
 
     <div class="label_add">
