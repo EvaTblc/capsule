@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_04_133553) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_15_082026) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -78,6 +78,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_04_133553) do
     t.jsonb "metadata", default: {}
     t.jsonb "raw", default: {}
     t.integer "status"
+    t.float "price"
     t.index ["barcode"], name: "index_items_on_barcode"
     t.index ["category_id"], name: "index_items_on_category_id"
     t.index ["collection_id", "barcode"], name: "index_items_on_collection_id_and_barcode"

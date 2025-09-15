@@ -3,5 +3,5 @@ class Collection < ApplicationRecord
   has_many :items
   has_many :categories
 
-  has_one_attached :image
+  # has_one_attached :image
 end

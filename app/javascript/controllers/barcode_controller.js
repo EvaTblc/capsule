@@ -56,9 +56,15 @@ export default class extends Controller {
 
     const code = res.getText().replace(/\D/g, "")
     if (!code) return
+
     this.output(`✅ Code détecté: ${code}`)
     this.stopScan()
-    this.postToIntake(code)
+
+    const input = document.querySelector("input[name='barcode']")
+    if (input) {
+      input.value = code
+      input.form.submit()   // Rails enverra le POST vers /intake et fera le redirect_to
+    }
   }
 
   stopScan() {
@@ -66,42 +72,6 @@ export default class extends Controller {
     if (!this.running) return
     this.reader.reset()
     this.running = false
-  }
-
-  async postToIntake(code) {
-    try {
-      this.output(`➡️ POST intake avec code: ${code}`)
-      const r = await fetch(this.intakeUrlValue, {
-        method: "POST",
-        credentials: "same-origin",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          "X-CSRF-Token": document.querySelector("meta[name='csrf-token']")?.content || ""
-        },
-        body: JSON.stringify({ barcode: code })
-      })
-
-      this.output(`⬅️ HTTP ${r.status}`)
-      const ct = (r.headers.get("content-type") || "").toLowerCase()
-      if (!ct.includes("application/json")) {
-        const txt = await r.text()
-        this.output(`⚠️ Réponse non-JSON (${ct || "unknown"})\n${txt.slice(0,400)}…`)
-        if (/sign_in|log in|csrf/i.test(txt)) { window.location.href = r.url; return }
-        window.location.href = this.newUrlValue
-        return
-      }
-
-      const payload = await r.json()
-      if (!r.ok) { this.output(`❌ ${r.status} ${payload?.error || "Erreur"}`); return }
-
-      const prefill = btoa(JSON.stringify(payload))
-      const url = `${this.newUrlValue}?prefill=${encodeURIComponent(prefill)}`
-      this.output(`➡️ Redirection vers ${url}`)
-      if (window.Turbo) { Turbo.visit(url) } else { window.location.href = url }
-    } catch (e) {
-      this.output(`❌ Réseau/JS: ${e.message}`)
-    }
   }
 
   async decodeFile(event) {

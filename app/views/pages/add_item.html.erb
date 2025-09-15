@@ -1,38 +1,36 @@
-<div class="container-scrollable">
-  <h2 class="style-title"><%= @collection.name %> - <%= @category.name %></h2>
-  <div class="item-actions">
-    <%= link_to "← Retour", collection_category_items_path(@collection, @category), class: "btn-action" %>
-    <%= link_to "🗑️ Supprimer", collection_path(@collection),
-        method: :delete, data: { turbo_confirm: "Supprimer cette collection ?" }, class: "btn-action delete" %>
-  </div>
-
-  <%= link_to scan_collection_category_items_path(@collection, @category) do %>
-    <div class="categories-title">
-      <h2>Livre</h2>
-    </div>
-  <% end %>
-
-  <%= link_to "/" do %>
-    <div class="categories-title">
-      <h2>Jouet</h2>
-    </div>
-  <% end %>
-
-  <%= link_to "/" do %>
-    <div class="categories-title">
-      <h2>Films</h2>
-    </div>
-  <% end %>
-
-  <%= link_to "/" do %>
-    <div class="categories-title">
-      <h2>Jeux Vidéos</h2>
-    </div>
-  <% end %>
-
-  <%= link_to "/" do %>
-    <div class="categories-title">
-      <h2>Autres</h2>
-    </div>
-  <% end %>
+<h2 class="style-title"><%= @collection.name %> - <%= @category.name %></h2>
+<div class="item-actions">
+  <%= link_to "← Retour", collection_category_items_path(@collection, @category), class: "btn-action" %>
+  <%= link_to "🗑️ Supprimer", collection_path(@collection),
+      method: :delete, data: { turbo_confirm: "Supprimer cette collection ?" }, class: "btn-action delete" %>
 </div>
+
+<%= link_to scan_collection_category_items_path(@collection, @category) do %>
+  <div class="categories-title">
+    <h2>Livre</h2>
+  </div>
+<% end %>
+
+<%= link_to "/" do %>
+  <div class="categories-title">
+    <h2>Jouet</h2>
+  </div>
+<% end %>
+
+<%= link_to "/" do %>
+  <div class="categories-title">
+    <h2>Films</h2>
+  </div>
+<% end %>
+
+<%= link_to "/" do %>
+  <div class="categories-title">
+    <h2>Jeux Vidéos</h2>
+  </div>
+<% end %>
+
+<%= link_to "/" do %>
+  <div class="categories-title">
+    <h2>Autres</h2>
+  </div>
+<% end %>

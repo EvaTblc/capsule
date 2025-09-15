@@ -1,25 +1,23 @@
-<div class="container-scrollable">
-  <h2 class="style-title"><%= @collection.name %> - <%= @category.name %></h2>
-  <div class="item-actions">
-    <%= link_to "← Retour", collection_categories_path, class: "btn-action" %>
-    <%= link_to "🗑️ Supprimer", collection_path(@collection),
-        method: :delete, data: { turbo_confirm: "Supprimer cette collection ?" }, class: "btn-action delete" %>
-  </div>
+<h2 class="style-title"><%= @collection.name %> - <%= @category.name %></h2>
+<div class="item-actions">
+  <%= link_to "← Retour", collection_categories_path, class: "btn-action" %>
+  <%= link_to "🗑️ Supprimer", collection_path(@collection),
+      method: :delete, data: { turbo_confirm: "Supprimer cette collection ?" }, class: "btn-action delete" %>
+</div>
 
-  <% if @category.items.nil? %>
-    <p>Ajouter un item</p>
-  <% else %>
-    <div class="cards-wrapper">
-      <% @collection.items.each do |item| %>
-        <%= link_to collection_category_item_path(@collection, @category, item) do %>
-          <div class="collection-card" style="background-image: url('<%= item.photos.attached? ? url_for(item.photos.first) : asset_path('default_collection.jpg') %>')">
-            <div class="collection-overlay">
-              <h2><%= item.name %></h2>
-            </div>
+<% if @category.items.nil? %>
+  <p>Ajouter un item</p>
+<% else %>
+  <div class="cards-wrapper">
+    <% @collection.items.each do |item| %>
+      <%= link_to collection_category_item_path(@collection, @category, item) do %>
+        <div class="collection-card" style="background-image: url('<%= item.photos.attached? ? url_for(item.photos.first) : asset_path('default_collection.jpg') %>')">
+          <div class="collection-overlay">
+            <h2><%= item.name %></h2>
           </div>
-        <% end %>
+        </div>
       <% end %>
-  <% end %>
+    <% end %>
+<% end %>
 
-  </div>
 </div>

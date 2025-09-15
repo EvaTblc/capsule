@@ -78,8 +78,10 @@ class ItemsController < ApplicationController
       type: klass.name,
       source: item.source,
       source_id: item.source_id,
-      metadata: item.metadata
+      metadata: item.metadata.presence || {}
     }
+
+    Rails.logger.debug("[intake] item après enrichment: #{item.inspect}")
 
     if request.format.json?
       render json: payload, status: :ok
@@ -87,6 +89,7 @@ class ItemsController < ApplicationController
       prefill = Base64.strict_encode64(payload.to_json)
       redirect_to new_collection_category_item_path(@collection, @category, prefill: prefill)
     end
+
   end
 
 
@@ -143,7 +146,9 @@ class ItemsController < ApplicationController
   end
 
   def item_params
-    p = params.require(:item).permit(:name, :possession, :state, :type, :barcode, :source, :source_id, :metadata, photos: [])
+    p = params.require(:item).permit(:name, :possession, :state, :type, :barcode, :source, :source_id, :price,
+    metadata: [:authors, :publisher, :language, :published_date, :description],
+    photos: [])
     p[:metadata] = JSON.parse(p[:metadata]) rescue {} if p[:metadata].is_a?(String)
     p
   end
@@ -153,15 +158,22 @@ class ItemsController < ApplicationController
     item_serialized = URI.parse(url).read
     data = JSON.parse(item_serialized)
 
-    if (info = data.dig("items", 0, "volumeInfo"))
-      item.name = info["title"]
-      item.metadata = {
-        isbn_13: item.barcode,
-        authors: info["authors"],
-        publisher: info["publisher"],
-        published_date: info["publishedDate"]
-      }
-      item.raw = info
-    end
+    volume  = data.dig("items", 0) || {}
+    info    = volume["volumeInfo"] || {}
+    snippet = volume.dig("searchInfo", "textSnippet")
+
+    return if info.blank?
+
+    item.name = info["title"]
+
+    item.metadata = {
+      isbn_13:        item.barcode,
+      authors:        info["authors"],       # peut être nil si absent
+      publisher:      info["publisher"],
+      published_date: info["publishedDate"],
+      language:       info["language"],
+      description:    info["description"] || snippet
+    }.compact  # enlève juste les nil
+    item.raw = volume
   end
 end

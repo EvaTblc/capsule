@@ -4,10 +4,13 @@ class BookItem < Item
   before_create :publishing_date
 
   def publishing_date
-    if self.metadata["published_date"].chars.include?("-")
-      self.released_on = Date.strptime(self.metadata["published_date"])
+    date_str = metadata["published_date"].presence
+      return unless date_str
+
+    if date_str.include?("-")
+      self.released_on = Date.strptime(date_str, "%Y-%m-%d") rescue nil
     else
-      self.released_on = DateTime.new(self.metadata["published_date"].to_i, 1, 1)
+      self.released_on = Date.new(date_str.to_i, 1, 1) rescue nil
     end
   end
 

@@ -6,7 +6,7 @@
 <div class="cards-wrapper">
   <% @collections.each do |collection| %>
     <%= link_to collection_categories_path(collection) do %>
-    <div class="collection-card" style="background-image: url(<%= collection.image.attached? ? cl_image_path(collection.image.key) : asset_path('default_collection.jpg') %>)">
+    <div class="collection-card" style="background-image: url(<%= asset_path('default_collection.jpg') %>)">
       <div class="collection-overlay">
         <h2><%= collection.name %></h2>
       </div>
