@@ -1,6 +1,6 @@
 <div class="user-head">
   <h2 class="style-title">Hello <%= current_user.username %></h2>
-  <%= cl_image_tag current_user.avatar.key, class:"avatar" %>
+  <%= cl_image_tag current_user.avatar.key, class:"avatar" if current_user.avatar.present? %>
 </div>
 
 <div class="cards-wrapper">
