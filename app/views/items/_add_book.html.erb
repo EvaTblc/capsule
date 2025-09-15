@@ -12,17 +12,17 @@
     <%= f.hidden_field :barcode %>
 
     <!-- Bouton d’upload -->
-    <%= f.file_field :photos,
-          id: "item_photos",
-          multiple: true,
-          accept: "image/*",
-          
-          class: "image-input",
-          data: { action: "change->image-preview#update", image_preview_target: "input" } %>
-    <label for="item_photos" class="image-upload-label">
-      Choisir des images
-    </label>
+    <div class="buttons-upload">
+      <label class="image-upload-label">
+        Prendre une photo
+        <%= f.file_field :photos, accept: "image/*", capture: "environment", class: "hidden", multiple: true, class: "image-input", data: { action: "change->image-preview#update", image_preview_target: "input" } %>
+      </label>
 
+      <label class="image-upload-label">
+        Choisir depuis la galerie
+        <%= f.file_field :photos, accept: "image/*", class: "hidden", multiple: true, class: "image-input", data: { action: "change->image-preview#update", image_preview_target: "input" } %>
+      </label>
+    </div>
     <!-- Grille des nouvelles images -->
     <div class="preview-grid new-grid mb-3" data-image-preview-target="list"></div>
 

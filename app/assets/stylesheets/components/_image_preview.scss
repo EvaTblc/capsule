@@ -11,6 +11,11 @@
   object-fit: cover;
 }
 
+.buttons-upload {
+  display: flex !important;
+  justify-content: space-between;
+}
+
 .image-upload-label {
   display: block;
   cursor: pointer;
@@ -21,6 +26,7 @@
   border-radius: 12px;
   font-weight: bold;
   transition: all 0.3s ease-in-out;
+  width: 40%;
 }
 
 .image-upload-label:hover {
