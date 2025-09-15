@@ -35,33 +35,38 @@ export default class extends Controller {
   static targets = ["master", "list"]
 
   async addFiles(event) {
-    const newFiles = Array.from(event.target.files || [])
-    if (!newFiles.length) return
+    const files = Array.from(event.target.files || [])
+    if (!files.length) return
 
-    // 🔄 Compression
-    const compressedFiles = await Promise.all(newFiles.map(f => compressImage(f)))
+    // ⚡ Mode avatar = single file
+    if (this.masterTarget.name === "user[avatar]") {
+      const dt = new DataTransfer()
+      dt.items.add(files[0]) // garde uniquement le premier
+      this.masterTarget.files = dt.files
+      this.renderPreviews([files[0]])
+      return
+    }
 
-    // Fichiers déjà présents
+    // ⚡ Mode items = multiple files
     const currentFiles = Array.from(this.masterTarget.files || [])
+    const merged = [...currentFiles, ...files]
 
-    // Fusion + dédoublonnage
-    const merged = [...currentFiles, ...compressedFiles]
-    const seen = new Set()
-    const unique = merged.filter(f => {
-      const key = `${f.name}-${f.size}-${f.lastModified}`
-      if (seen.has(key)) return false
-      seen.add(key)
-      return true
-    })
-
-    // Injection dans l’input maître
     const dt = new DataTransfer()
-    unique.forEach(f => dt.items.add(f))
+    merged.forEach(f => dt.items.add(f))
     this.masterTarget.files = dt.files
 
-    event.target.value = ""
-    // Prévisualisation
-    this.renderPreviews(unique)
+    this.renderPreviews(merged)
+  }
+
+  renderPreviews(files) {
+    this.listTarget.innerHTML = ""
+    files.forEach(file => {
+      const img = document.createElement("img")
+      img.src = URL.createObjectURL(file)
+      img.className = "preview-avatar"
+
+      this.listTarget.appendChild(img)
+    })
   }
 
   renderPreviews(files) {

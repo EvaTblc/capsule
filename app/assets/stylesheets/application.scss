@@ -36,10 +36,18 @@ h2 {
 
 a {
   text-decoration: none;
+  color: rgba(248, 188, 236, 0.8);
+  &:hover {
+    color: #f41068;
+  }
 }
 
 p {
   color: white
+}
+
+label {
+  color: white;
 }
 
 .style-title {
@@ -81,4 +89,8 @@ p {
     box-shadow: 0 -2px 8px rgba(255, 151, 76, 1),
                 0 -6px 16px rgba(247, 139, 226, 1);
   }
+}
+
+.home-banner {
+  margin-top: 75%;
 }

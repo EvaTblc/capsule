@@ -1,0 +1,58 @@
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  color: #fff;
+}
+
+.empty-robot {
+  width: 120px;
+  height: auto;
+  margin-bottom: 1rem;
+  image-rendering: pixelated; /* garde l'effet rétro */
+}
+
+.empty-text {
+  font-size: 1.5rem;
+  font-family: 'Press Start 2P', cursive; /* police arcade */
+  color: #ff66cc;
+  text-shadow: 0 0 8px #ff66cc, 0 0 15px #ff33aa;
+  margin-bottom: 0.5rem;
+}
+
+.empty-sub {
+  font-size: 1rem;
+  font-family: 'Press Start 2P', cursive;
+  color: #66ccff;
+  text-shadow: 0 0 6px #66ccff, 0 0 10px #3399ff;
+}
+
+.plus-sign {
+  font-size: 1.5rem;
+  color: #ffcc00;
+  text-shadow: 0 0 8px #ffcc00, 0 0 15px #ffaa00;
+}
+
+.mascotte-wrapper {
+  position: relative;
+  display: inline-block;
+  padding: 1.5rem;
+  border-radius: 12px;
+}
+
+.mascotte-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0; /* couvre toute la zone */
+  background: rgba(255, 255, 255, 0.4); /* noir 40% transparent */
+  border-radius: 12px; /* optionnel, coins arrondis */
+  z-index: 0; /* derrière la mascotte */
+}
+
+.mascotte-wrapper img {
+  position: relative;
+  z-index: 1; /* au-dessus du fond */
+}

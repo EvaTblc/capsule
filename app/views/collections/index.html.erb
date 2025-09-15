@@ -14,4 +14,15 @@
     <% end %>
   <% end %>
 
+<% if @collections.empty? %>
+  <div class="empty-state">
+    <div class="mascotte-wrapper">
+      <%= image_tag "mascotte.png", class: "empty-robot", alt: "Mascotte robot" %>
+      <p class="empty-text">Ta capsule est vide…</p>
+      <p class="empty-sub">Clique sur <span class="plus-sign">+</span> pour créer ta première collection</p>
+
+    </div>
+  </div>
+<% end %>
+
 </div>
