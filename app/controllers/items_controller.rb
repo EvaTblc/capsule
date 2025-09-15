@@ -103,10 +103,6 @@ class ItemsController < ApplicationController
       prefill = JSON.parse(Base64.decode64(params[:prefill])) rescue {}
     end
 
-    if params[:item][:photos].present?
-      @item.photos.attach(params[:item][:photos].reject(&:blank?))
-    end
-
     @item = @category.items.build(
       name:      prefill["name"],
       barcode:   prefill["barcode"],
@@ -123,6 +119,13 @@ class ItemsController < ApplicationController
     @item = Item.new(item_params)
     @item.collection = @collection
     @item.category = @category
+
+
+    if params[:item][:photos].present?
+      @item.photos.attach(params[:item][:photos].reject(&:blank?))
+    end
+
+    
     if @item.save!
       redirect_to collection_category_item_path(@collection, @category, @item)
     else
