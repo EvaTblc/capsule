@@ -1,37 +1,52 @@
 <div data-controller="image-preview">
-  <%= form_with model: item, url: collection_category_items_path(collection, category), scope: :item do |f| %>
+  <%= form_with model: item,
+                url: collection_category_items_path(collection, category),
+                scope: :item,
+                class: "form-capsule",
+                data: { turbo_frame: "_top" } do |f| %>
+
+    <!-- Champs cachés -->
     <%= f.hidden_field :type %>
     <%= f.hidden_field :source %>
     <%= f.hidden_field :source_id %>
     <%= f.hidden_field :barcode %>
 
+    <!-- Bouton d’upload -->
     <%= f.file_field :photos,
-            id: "item_photos",
-            multiple: true,
-            capture: "environment",
-            accept: "image/*",
-            class: "image-input",
-            data: { action: "change->image-preview#update", image_preview_target: "input" } %>
-    <label for="item_photos" class="image-upload-label">Choisir une image</label>
-    <div class="preview-grid new-grid mb-3" data-image-preview-target="list"></div>
-    <div>
-      <%= f.text_field :name, class: "input-form" %>
-    </div>
+          id: "item_photos",
+          multiple: true,
+          accept: "image/*",
+          capture: "environment",
+          class: "image-input",
+          data: { action: "change->image-preview#update", image_preview_target: "input" } %>
+    <label for="item_photos" class="image-upload-label">
+      Choisir des images
+    </label>
 
-    <div class= "select-form">
+    <!-- Grille des nouvelles images -->
+    <div class="preview-grid new-grid mb-3" data-image-preview-target="list"></div>
+
+    <!-- Champ Nom -->
+    <%= f.text_field :name, class: "input-form" %>
+
+    <!-- Etat -->
+    <div class="select-form">
       <%= f.select :state, options_for_select(%w[Neuf Bon Moyen Mauvais], item.state) %>
     </div>
 
+    <!-- Prix -->
     <div class="label_add">
-      <%= f.label :prix %>
+      <%= f.label :price, "Prix" %>
       <%= f.number_field :price, step: 0.01, class: "input-form" %>
     </div>
 
+    <!-- Nombre -->
     <div class="label_add">
-      <%= f.label :nombres %>
+      <%= f.label :possession, "Nombre" %>
       <%= f.number_field :possession, class: "input-form" %>
     </div>
 
+    <!-- Champs metadata -->
     <div class="label_add">
       <%= f.label :metadata_authors, "Auteur(s)" %>
       <%= text_field_tag "item[metadata][authors]", item.metadata["authors"], class: "input-form" %>
@@ -57,6 +72,7 @@
       <%= text_area_tag "item[metadata][description]", item.metadata["description"], rows: 6, class: "input-form" %>
     </div>
 
+    <!-- Bouton submit -->
     <%= f.submit "Créer l’objet", class: "submit-form mb-5" %>
   <% end %>
 </div>

@@ -116,18 +116,11 @@ class ItemsController < ApplicationController
 
 
   def create
-    @item = Item.new(item_params)
+    @item = @category.items.new(item_params)
     @item.collection = @collection
-    @item.category = @category
 
-
-    if params[:item][:photos].present?
-      @item.photos.attach(params[:item][:photos].reject(&:blank?))
-    end
-
-    
-    if @item.save!
-      redirect_to collection_category_item_path(@collection, @category, @item)
+    if @item.save
+      redirect_to collection_category_item_path(@collection, @category, @item), notice: "Objet créé"
     else
       render :new, status: :unprocessable_entity
     end
