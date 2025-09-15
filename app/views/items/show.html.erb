@@ -31,7 +31,7 @@
 
   <% if photos[0] %>
     <div class="photo-hero">
-      <%= image_tag url_for(photos.first),
+      <%= cl_image_tag photos[0].key,
             class: "photo-hero-img",
             resource_type: :image,
             alt: @item.name,
@@ -45,7 +45,7 @@
   <% if photos.size > 1 %>
     <div class="photo-gallery">
       <% photos[1..].each do |photo| %>
-        <%= image_tag url_for(photo),
+        <%= cl_image_tag photo.key,
               class: "photo-gallery-thumb",
               resource_type: :image,
               alt: @item.name,
