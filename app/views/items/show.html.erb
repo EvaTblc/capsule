@@ -1,17 +1,16 @@
 <div class="style-title">
   <h2><%= @item.name %></h2>
-    <div class="infos-item">
+  <div class="infos-item">
 
-      <div class="info-pill">
-        <i class="fas fa-layer-group"></i>
-        <span><%= @item.category.name %></span>
-      </div>
+    <div class="info-pill">
+      <i class="fas fa-layer-group"></i>
+      <span><%= @item.category.name %></span>
+    </div>
 
-      <div class="info-pill">
-        <i class="fas fa-star-half-alt"></i>
-        <span><%= @item.state %></span>
-      </div>
-
+    <div class="info-pill">
+      <i class="fas fa-star-half-alt"></i>
+      <span><%= @item.state %></span>
+    </div>
 
     <div class="info-pill">
       <i class="fas fa-cube"></i>
@@ -26,29 +25,32 @@
   <%= link_to "🗑️ Supprimer", collection_category_item_path(@collection, @category, @item),
       data: { turbo_method: :delete, turbo_confirm: "Supprimer cet item ?" }, class: "btn-action delete" %>
 </div>
+
 <div data-controller="photo-modal">
   <% photos = @item.photos.to_a %>
 
   <% if photos[0] %>
     <div class="photo-hero">
-      <%= cl_image_tag(photos[0].key,
+      <%= cl_image_tag photos[0].key,
             class: "photo-hero-img",
+            alt: @item.name,
             data: {
               action: "click->photo-modal#show",
               photo_modal_url_value: cl_image_path(photos[0].key)
-            }) %>
+            } %>
     </div>
   <% end %>
 
   <% if photos.size > 1 %>
     <div class="photo-gallery">
       <% photos[1..].each do |photo| %>
-        <%= cl_image_tag(photo.key,
+        <%= cl_image_tag photo.key,
               class: "photo-gallery-thumb",
+              alt: @item.name,
               data: {
                 action: "click->photo-modal#show",
                 photo_modal_url_value: cl_image_path(photo.key)
-              }) %>
+              } %>
       <% end %>
     </div>
   <% end %>
@@ -71,7 +73,6 @@
 <% end %>
 
 <div class="infos-tags">
-
   <% @tags.each do |tag| %>
     <div class="info-pill">
       <i class="fas fa-tag"></i>
