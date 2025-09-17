@@ -1,0 +1,3 @@
+class ToyItem < Item
+  
+end

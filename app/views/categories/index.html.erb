@@ -6,7 +6,9 @@
       data: { turbo_method: :delete, turbo_confirm: "Supprimer cette collection ?" }, class: "btn-action delete" %>
 </div>
 <% if @collection.categories.empty? %>
-  <%= render "shared/empty_cat", collection: @collection, category: @category %>
+  <div class= "mt-4">
+    <%= render "shared/empty_cat", collection: @collection, category: @category %>
+  </div>
 <% else %>
   <div class="cards-wrapper">
     <% @categories.each do |category| %>

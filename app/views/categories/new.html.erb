@@ -1,0 +1,6 @@
+<h2 class="style-title"><%= @collection.name %></h2>
+<div class="item-actions">
+  <%= link_to "← Retour", collections_path, class: "btn-action" %>
+</div>
+
+<%= render "shared/empty_cat", collection: @collection, category: @category %>

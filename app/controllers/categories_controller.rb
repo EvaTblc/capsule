@@ -1,5 +1,5 @@
 class CategoriesController < ApplicationController
-  before_action :set_category, except: [:index, :create]
+  before_action :set_category, except: [:index, :create, :new]
   before_action :set_collection
 
   def index
@@ -8,6 +8,10 @@ class CategoriesController < ApplicationController
     else
       @categories = Category.where(collection: @collection)
     end
+  end
+
+  def new
+    @category = Category.new
   end
 
   def create

@@ -1,0 +1,3 @@
+class MoveItem < Item
+  
+end

@@ -9,8 +9,6 @@ class ItemsController < ApplicationController
     @collection = Collection.find(params[:collection_id])
     @category = Category.find(params[:category_id])
     @items = Item.where(collection: @collection, category: @category)
-    session[:collection] = @collection
-    session[:category] = @category
   end
   def show
     @collection = Collection.find(params[:collection_id])
@@ -88,8 +86,6 @@ class ItemsController < ApplicationController
 
   end
 
-
-
   def new
     @collection = Collection.find(params[:collection_id])
     @category   = @collection.categories.find(params[:category_id])
@@ -109,7 +105,6 @@ class ItemsController < ApplicationController
     )
 
   end
-
 
   def create
     attrs = item_params.dup

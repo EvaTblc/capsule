@@ -2,7 +2,7 @@
     data-barcode-new-url-value="<%= new_collection_category_item_path(@collection, @category) %>">
 
   <h2 class="style-title">J'ajoute un livre:</h2>
-  <div class="buttons-select">
+  <div data-toggle-target="controls" class="buttons-select">
     <div class="d-flex m-2 align-items-baseline">
       <button class="image-upload-label-nrm" data-toggle-target="checkPossess" data-action="click->toggle#toggleCheckbox click->barcode#startScan">Que j'ai déjà</button>
     </div>
@@ -33,7 +33,7 @@
         <em><%= label_tag :barcode, "Si le scan ne reconnait pas le livre, entrez un code-barre ici", class: "label-form" %></em>
         <div class="d-flex">
           <%= text_field_tag :barcode, nil, placeholder: "9782070368228", class: "input-form" %>
-          <%= submit_tag "Ajouter" %>
+          <%= submit_tag "Ajouter", class: "image-upload-label h-50 ms-2" %>
         </div>
       <% end %>
     </div>

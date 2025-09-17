@@ -1,9 +1,9 @@
-<div class="container-scrollable">
-  <%= form_with model: [collection, category] do |f| %>
-    <%= f.text_field :name, label: false, class: "input-form" %>
-    <div class="actions-save">
-      <%= link_to "← Retour", collections_path, class: "btn-action" %>
-      <%= f.submit "Sauvegarder", class: "btn-action" %>
-    </div>
-  <% end %>
-</div>
+<%= form_with model: [collection, category] do |f| %>
+  <div class="select-form">
+    <%= f.select :name, options_for_select(Category::NAME) %>
+  </div>
+  <div class="actions-save">
+    <%= link_to "← Retour", collections_path, class: "btn-action" %>
+    <%= f.submit "Sauvegarder", class: "btn-action" %>
+  </div>
+<% end %>

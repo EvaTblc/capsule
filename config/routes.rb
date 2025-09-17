@@ -12,7 +12,6 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "pages#home"
-  get "add_items", to: "pages#add_item"
 
   resources :collections do
     resources :categories do

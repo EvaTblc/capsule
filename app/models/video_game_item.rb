@@ -1,0 +1,3 @@
+class VideoGameItem < Item
+  
+end
