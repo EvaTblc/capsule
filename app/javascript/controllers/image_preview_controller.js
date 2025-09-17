@@ -60,24 +60,20 @@ export default class extends Controller {
 
   renderPreviews(files) {
     this.listTarget.innerHTML = ""
-    files.forEach(file => {
-      const img = document.createElement("img")
-      img.src = URL.createObjectURL(file)
-      img.className = "preview-avatar"
 
-      this.listTarget.appendChild(img)
-    })
-  }
-
-  renderPreviews(files) {
-    this.listTarget.innerHTML = ""
     files.forEach((file, idx) => {
       const card = document.createElement("div")
       card.className = "preview-card"
 
       const img = document.createElement("img")
-      img.src = URL.createObjectURL(file)
       card.appendChild(img)
+
+      // ✅ Prévisualisation compatible mobile
+      const reader = new FileReader()
+      reader.onload = e => {
+        img.src = e.target.result
+      }
+      reader.readAsDataURL(file)
 
       const btn = document.createElement("button")
       btn.type = "button"
@@ -90,6 +86,7 @@ export default class extends Controller {
       this.listTarget.appendChild(card)
     })
   }
+
 
   removeAt(e) {
     const indexToRemove = Number(e.currentTarget.dataset.index)
