@@ -1,3 +1,3 @@
-class MoveItem < Item
-  
+class MovieItem < Item
+
 end
