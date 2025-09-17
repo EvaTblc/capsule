@@ -1,15 +1,39 @@
+<h2 class="style-title"><%= @collection.name %> - <%= @category.name %></h2>
+<div class="item-actions">
+  <%= link_to "← Retour", collection_categories_path, class: "btn-action" %>
+  <%= link_to "🗑️ Supprimer", collection_path(@collection),
+      method: :delete, data: { turbo_confirm: "Supprimer cette collection ?" }, class: "btn-action delete" %>
+</div>
+
 <div data-controller="toggle barcode" data-barcode-intake-url-value="<%= intake_collection_category_items_path(@collection, @category) %>"
     data-barcode-new-url-value="<%= new_collection_category_item_path(@collection, @category) %>">
 
-  <h2 class="style-title">J'ajoute un livre:</h2>
-  <div data-toggle-target="controls" class="buttons-select">
-    <div class="d-flex m-2 align-items-baseline">
-      <button class="image-upload-label-nrm" data-toggle-target="checkPossess" data-action="click->toggle#toggleCheckbox click->barcode#startScan">Que j'ai déjà</button>
-    </div>
-    <div class="d-flex m-2 align-items-baseline">
-      <button class="image-upload-label-nrm" data-toggle-target="checkSearch" data-action="click->toggle#toggleCheckbox">Que je recherche</button>
+
+
+  <h2 class="add-title">J'ajoute un livre</h2>
+
+  <div class="action-group d-none" data-toggle-target="oups">
+    <div class="buttons-select action-buttons">
+      <div class="d-flex m-2 align-items-baseline">
+        <button class="image-upload-label-nrm d-none" data-toggle-target="oupsHaveIt">Oups... Je l'ai déjà</button>
+      </div>
+      <div class="d-flex m-2 align-items-baseline">
+        <button class="image-upload-label-nrm d-none" data-toggle-target="oupsFindIt">Oups... Je le recherche</button>
+      </div>
     </div>
   </div>
+
+  <div class="action-group" data-toggle-target="controls">
+    <div class="buttons-select action-buttons">
+      <div class="d-flex m-2 align-items-baseline">
+        <button class="image-upload-label-nrm" data-toggle-target="checkPossess" data-action="click->toggle#toggleCheckbox click->barcode#startScan">Que j'ai déjà</button>
+      </div>
+      <div class="d-flex m-2 align-items-baseline">
+        <button class="image-upload-label-nrm" data-toggle-target="checkSearch" data-action="click->toggle#toggleCheckbox">Que je recherche</button>
+      </div>
+    </div>
+  </div>
+
 
   <div
     data-toggle-target="scan"

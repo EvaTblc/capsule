@@ -9,6 +9,12 @@ class ItemsController < ApplicationController
     @collection = Collection.find(params[:collection_id])
     @category = Category.find(params[:category_id])
     @items = Item.where(collection: @collection, category: @category)
+    @item = Item.new
+
+    if @category.items.empty? && @category.name == "Livre"
+      redirect_to scan_collection_category_items_path(@collection, @category)
+    end
+    
   end
   def show
     @collection = Collection.find(params[:collection_id])

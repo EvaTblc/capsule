@@ -5,8 +5,17 @@
       method: :delete, data: { turbo_confirm: "Supprimer cette collection ?" }, class: "btn-action delete" %>
 </div>
 
-<% if @category.items.nil? %>
-  <p>Ajouter un item</p>
+<% if @category.items.empty? %>
+  <% case @category.name %>
+  <% when "Jeux Vidéo" %>
+    <%= render "add_videogame", collection: @collection, category: @category, item: @item %>
+  <% when "Film" %>
+    <%= render "add_movie", collection: @collection, category: @category, item: @item %>
+  <% when "Figurine" %>
+    <%= render "add_toy", collection: @collection, category: @category, item: @item %>
+  <% when "Autres" %>
+    <%= render "add_item", collection: @collection, category: @category, item: @item %>
+  <% end %>
 <% else %>
   <div class="cards-wrapper">
     <% @category.items.each do |item| %>

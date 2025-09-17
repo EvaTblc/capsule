@@ -2,3 +2,36 @@
   display: flex;
   justify-content: space-between;
 }
+
+.action-group {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(0,0,0,0.5);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.action-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  margin-bottom: 0.8rem;
+  color: #ffcc00;
+  text-shadow: 0 0 6px #ffaa00;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.btn-gradient {
+  background: linear-gradient(135deg, #ff3366, #ff9933);
+  padding: 0.7rem 1.2rem;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #fff;
+  box-shadow: 0 0 8px rgba(255, 102, 204, 0.6);
+  border: none;
+}

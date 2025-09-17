@@ -20,13 +20,4 @@ user.avatar.attach(io: file, filename: "avatar.jpg", content_type: "image/jpeg")
 
 puts "✅ User #{user.email} created"
 
-puts "📦 Creating collections"
-
-3.times do |c|
-  collection = Collection.create!(
-    name: "Collection #{c + 1} - #{user.username}",
-    user: user
-  )
-end
-
 puts "✅ Seed complete! (Light mode)"

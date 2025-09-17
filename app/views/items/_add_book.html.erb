@@ -19,24 +19,26 @@
           data: { image_preview_target: "master" } %>
 
     <!-- Boutons séparés -->
-    <div class="buttons-upload">
-      <label class="image-upload-label">
-        Prendre une photo
-        <input type="file"
-               accept="image/*"
-               capture="environment"
-               class="hidden"
-               data-action="change->image-preview#addFiles">
-      </label>
+    <div class="action-buttons">
+      <div class="buttons-upload action-buttons">
+        <label class="image-upload-label">
+          Prendre une photo
+          <input type="file"
+                accept="image/*"
+                capture="environment"
+                class="hidden"
+                data-action="change->image-preview#addFiles">
+        </label>
 
-      <label class="image-upload-label">
-        Choisir depuis la galerie
-        <input type="file"
-               accept="image/*"
-               multiple
-               class="hidden"
-               data-action="change->image-preview#addFiles">
-      </label>
+        <label class="image-upload-label">
+          Choisir depuis la galerie
+          <input type="file"
+                accept="image/*"
+                multiple
+                class="hidden"
+                data-action="change->image-preview#addFiles">
+        </label>
+      </div>
     </div>
 
     <!-- Prévisualisation -->
@@ -47,7 +49,7 @@
 
     <!-- Etat -->
     <div class="select-form">
-      <%= f.select :state, options_for_select(%w[Neuf Bon Moyen Mauvais], item.state) %>
+      <%= f.select :state, options_for_select(%w[Neuf Bon Moyen Mauvais]) %>
     </div>
 
     <!-- Prix -->
