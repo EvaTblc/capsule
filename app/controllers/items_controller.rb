@@ -14,7 +14,7 @@ class ItemsController < ApplicationController
     if @category.items.empty? && @category.name == "Livre"
       redirect_to scan_collection_category_items_path(@collection, @category)
     end
-    
+
   end
   def show
     @collection = Collection.find(params[:collection_id])
@@ -107,7 +107,7 @@ class ItemsController < ApplicationController
       type:      prefill["type"],
       source:    prefill["source"],
       source_id: prefill["source_id"],
-      metadata:  prefill["metadata"]
+      metadata:  prefill["metadata"] || {}
     )
 
   end
@@ -149,7 +149,7 @@ class ItemsController < ApplicationController
 
   def item_params
     p = params.require(:item).permit(:name, :possession, :state, :type, :barcode, :source, :source_id, :price,
-    metadata: [:authors, :publisher, :language, :published_date, :description, :currency],
+      metadata: {},
     photos: [])
     p[:metadata] = JSON.parse(p[:metadata]) rescue {} if p[:metadata].is_a?(String)
     p

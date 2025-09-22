@@ -1,0 +1,5 @@
+meta_product_name: "Capsule"
+meta_title: "Capsule - Vos collections au fond de votre poche."
+meta_description: "Fini de se perdre dans vos collections, Capsule vous permet d'avoir la liste de vos collections répertorier en 1 seul endroit !"
+meta_image: "cover.png" # should exist in `app/assets/images/`
+# twitter_account: "@product_twitter_account" # required for Twitter Cards

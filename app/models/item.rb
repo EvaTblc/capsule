@@ -1,5 +1,5 @@
 class Item < ApplicationRecord
-
+  before_validation :ensure_metadata
   belongs_to :category
   belongs_to :collection
   has_many :items_tags, dependent: :destroy
@@ -15,4 +15,7 @@ class Item < ApplicationRecord
   STATE = [ "Neuf", "Très bon état", "Bon état", "Occasion", "Abimé" ]
   # validates :state, inclusion: { in: Item::STATE }
 
+  def ensure_metadata
+    self.metadata ||= {}
+  end
 end

@@ -60,7 +60,7 @@
 
         <%= select_tag "item[metadata][currency]",
               options_for_select([["€ Euro", "EUR"], ["$ Dollar", "USD"], ["£ Livre", "GBP"], ["¥ Yen", "JPY"]],
-                                item.metadata["currency"] || "EUR"),
+                                (item.metadata || {})["currency"] || "EUR"),
               class: "input-form" %>
       </div>
     </div>

@@ -7,6 +7,8 @@
 
 <% if @category.items.empty? %>
   <% case @category.name %>
+  <% when "Livre" %>
+    <%= render "add_book", collection: @collection, category: @category, item: @item %>
   <% when "Jeux Vidéo" %>
     <%= render "add_videogame", collection: @collection, category: @category, item: @item %>
   <% when "Film" %>

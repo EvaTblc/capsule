@@ -1,6 +1,7 @@
 require "date"
 
 class BookItem < Item
+  validate :check_metadata_keys
   before_create :publishing_date
 
   def publishing_date
@@ -16,5 +17,12 @@ class BookItem < Item
 
   def isbn_13
     metadata["isbn_13"]
+  end
+
+  def check_metadata_keys
+    allowed = [:authors, :publisher, :language, :published_date, :description, :currency]
+    unless metadata.keys.all? { |key| allowed.include?(key) }
+      errors.add(:metadata, "clés non autorisées")
+    end
   end
 end
