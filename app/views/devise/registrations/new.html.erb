@@ -5,6 +5,7 @@
               scope: resource_name,
               url: registration_path(resource_name),
               local: true,
+              authenticity_token: true,
               class: "form-capsule" do |f| %>
 
   <% if resource.errors.any? %>

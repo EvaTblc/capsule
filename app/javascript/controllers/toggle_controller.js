@@ -1,10 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["checkSearch", "checkPossess", "scan", "addBook", "controls", "oups", "oupsHaveIt", "oupsFindIt"]
+  static targets = ["checkSearch", "checkPossess", "scan", "addBook", "controls", "oups", "oupsHaveIt", "oupsFindIt", "numberCopies", "displayCopies"]
 
   connect() {
-
   }
 
   toggleCheckbox(event) {
@@ -24,11 +23,9 @@ export default class extends Controller {
         this.oupsHaveItTarget.classList.remove("d-none")
       }
     }
-
-
   }
 
-  oupsButtons() {
-
+  displayInfosCopies() {
+    this.displayCopiesTarget.classList.toggle("d-none")
   }
 }

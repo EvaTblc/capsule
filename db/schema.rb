@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_15_082026) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_25_094528) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -56,6 +56,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_15_082026) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_collections_on_user_id"
+  end
+
+  create_table "item_copies", force: :cascade do |t|
+    t.bigint "item_id", null: false
+    t.string "state"
+    t.decimal "price"
+    t.date "purchase_date"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_item_copies_on_item_id"
   end
 
   create_table "items", force: :cascade do |t|
@@ -106,14 +117,20 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_15_082026) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "username"
+    t.string "provider"
+    t.string "uid"
+    t.string "full_name"
+    t.string "avatar_url"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["uid"], name: "index_users_on_uid"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "categories", "collections"
   add_foreign_key "collections", "users"
+  add_foreign_key "item_copies", "items"
   add_foreign_key "items", "categories"
   add_foreign_key "items", "collections"
   add_foreign_key "items_tags", "items"

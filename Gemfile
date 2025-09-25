@@ -39,12 +39,15 @@ gem "bootsnap", require: false
 gem "bootstrap", "~> 5.3"
 gem "simple_form"
 gem "sassc-rails"
-gem "devise"
 gem "font-awesome-sass", "~> 6.1"
 gem "dotenv-rails"
 gem "cloudinary"
 gem 'faker'
 
+gem "devise"
+gem "omniauth"
+gem "omniauth-google-oauth2" 
+# gem "omniauth-rails_csrf_protection"  # Disabled - causing CSRF conflicts
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

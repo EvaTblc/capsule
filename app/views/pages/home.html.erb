@@ -1,8 +1,6 @@
 <div class="home-banner">
   <div class="home-infos">
     <h1>CAPSULE</h1>
-
-    <div class="">
       <% if current_user  %>
         <div class= "btn-capsule">
           <%= link_to "Commencer", collections_path, class: "btn-devise" %>
@@ -10,12 +8,8 @@
         <%= link_to "Déconnexion", destroy_user_session_path, class: "btn-delete", html5: true, data: { turbo_method: :delete, turbo_confirm: "Voulez-vous vous déconnecter ?" } %>
       <% else %>
         <div class= "btn-capsule">
-          <%= button_to "Connexion", new_user_session_path, class: "btn-devise" %>
+<%= link_to "Connexion avec Google", user_google_oauth2_omniauth_authorize_path, class: "btn-devise" %>
         </div>
       <% end %>
-
-    </div>
-
-
   </div>
 </div>

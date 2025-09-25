@@ -87,6 +87,7 @@ label span:hover {
 
 .label_add {
   display: flex;
+  flex-direction: column;
   align-items: baseline;
   label {
     width: 35%;
@@ -154,4 +155,11 @@ label span:hover {
   font-family: 'Press Start 2P', cursive;
   font-size: 0.8rem !important;
   padding: 0.6rem 1.2rem !important;
+}
+
+.item-copy-fields {
+  border: none;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
 }

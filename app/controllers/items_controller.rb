@@ -150,7 +150,8 @@ class ItemsController < ApplicationController
   def item_params
     p = params.require(:item).permit(:name, :possession, :state, :type, :barcode, :source, :source_id, :price,
       metadata: {},
-    photos: [])
+      photos: [],
+      item_copies_attributes: [:id, :state, :price, :purchase_date, :notes, :_destroy])
     p[:metadata] = JSON.parse(p[:metadata]) rescue {} if p[:metadata].is_a?(String)
     p
   end
