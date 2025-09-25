@@ -1,7 +1,6 @@
 .container-scrollable {
   height: 100vh;
   overflow-y: auto;
-  padding: 1rem;
   padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
   width: 100%;
 }

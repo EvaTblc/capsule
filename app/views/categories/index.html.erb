@@ -1,54 +1,75 @@
-<h2 class="style-title"><%= @collection.name %></h2>
-<div class="category-actions">
-  <%= link_to "← Retour", collections_path, class: "btn-action" %>
-  <%= link_to "Modifier", edit_collection_path(@collection), data: { turbo_frame: "modal_content" }, class: "btn-action" %>
-  <%= link_to "🗑️ Supprimer", collection_path(@collection),
-      data: { turbo_method: :delete, turbo_confirm: "Supprimer cette collection ?" }, class: "btn-action delete" %>
-</div>
-<% if @collection.categories.empty? %>
-  <div class= "mt-4">
-    <%= render "shared/empty_cat", collection: @collection, category: @category %>
-  </div>
-<% else %>
-  <div class="cards-wrapper">
-    <% @categories.each do |category| %>
+<div class="home-banner">
+  <div class="cyber-container">
 
-
-      <%= link_to "", collection_category_items_path(@collection, category),
-                  class: "stretched-link",
-                  aria: { label: "Voir la catégorie" } %>
-
-      <div class="collection-overlay-categories" data-controller="toggle">
-        <div class="categories-title">
-          <%= link_to collection_category_items_path(@collection, category) do %>
-            <h2 data-toggle-target="name"><%= category.name %></h2>
-          <% end %>
-
-          <button type="button"
-                  class="btn-action"
-                  data-toggle-target="button"
-                  data-action="click->toggle#toggle">
-            <i class="fa-regular fa-xl fa-pen-to-square" style="color: #f2f0f3ff; margin-top: 2%;"></i>
-          </button>
-
-
-          <div data-toggle-target="div" class="d-none" style="position: relative; z-index: 3;">
-            <%= form_with model: [@collection, category], class: "form-capsule" do |f| %>
-              <%= f.text_field :name, class: "input-form" %>
-              <div class="actions-save">
-                <%= link_to "← Retour", :back, class: "btn-action" %>
-                <%= f.submit "Sauvegarder", class: "btn-action" %>
-              </div>
-            <% end %>
-          </div>
-        </div>
+    <!-- Terminal Header -->
+    <div class="terminal-header">
+      <div class="terminal-dots">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
       </div>
+      <div class="terminal-title">categories.exe</div>
+    </div>
 
+    <!-- Collection Title -->
+    <h1 class="cyber-page-title glitch-text" data-text="<%= @collection.name %>"><%= @collection.name %></h1>
+    <p class="cyber-subtitle typing-effect">Gestion des catégories</p>
 
+    <!-- Actions cyberpunk -->
+    <div class="cyber-actions">
+      <%= link_to collections_path, class: "cyber-btn secondary" do %>
+        <i class="fas fa-arrow-left"></i>
+        Retour
+      <% end %>
+      <%= link_to edit_collection_path(@collection), data: { turbo_frame: "modal_content" }, class: "cyber-btn primary" do %>
+        <i class="fas fa-edit"></i>
+        Modifier
+      <% end %>
+      <%= link_to collection_path(@collection), data: { turbo_method: :delete, turbo_confirm: "Supprimer cette collection ?" }, class: "cyber-btn danger" do %>
+        <i class="fas fa-trash"></i>
+        Supprimer
+      <% end %>
+    </div>
+
+    <!-- Categories Grid -->
+    <% if @collection.categories.empty? %>
+      <div class="cyber-empty-state">
+        <%= render "shared/empty_cat", collection: @collection, category: @category %>
+      </div>
+    <% else %>
+      <div class="cyber-grid">
+        <% @categories.each do |category| %>
+          <div class="grid-item category-cyber" data-controller="toggle">
+            <div class="scan-line"></div>
+
+            <!-- Category Header -->
+            <div class="category-header">
+              <%= link_to collection_category_items_path(@collection, category), class: "category-link" do %>
+                <i class="fas fa-layer-group"></i>
+                <span class="card-title" data-toggle-target="name"><%= category.name %></span>
+              <% end %>
+
+              <button type="button" class="cyber-edit-btn" data-toggle-target="button" data-action="click->toggle#toggle">
+                <i class="fas fa-edit"></i>
+              </button>
+            </div>
+
+            <!-- Edit Form -->
+            <div data-toggle-target="div" class="category-edit-form d-none">
+              <%= form_with model: [@collection, category], class: "cyber-form-inline" do |f| %>
+                <div class="form-group">
+                  <%= f.text_field :name, class: "cyber-input" %>
+                </div>
+                <div class="form-actions">
+                  <%= link_to "Annuler", "#", class: "cyber-btn secondary", data: { action: "click->toggle#toggle" } %>
+                  <%= f.submit "Sauvegarder", class: "cyber-btn success" %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
     <% end %>
 
-
   </div>
-
 </div>
-<% end %>

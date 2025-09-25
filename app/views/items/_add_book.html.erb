@@ -1,9 +1,32 @@
-<div data-controller="image-preview">
+<div class="cyber-card creation-terminal">
+  <div class="card-title">Book Scanner Protocol</div>
+  <div class="terminal-output">
+    <p class="terminal-line">$ initialize_book_creation --type="literary_archive"</p>
+    <p class="terminal-line success">// System ready for book data input</p>
+    <p class="terminal-line">$ scanning_mode: [CAMERA|GALLERY|MANUAL]</p>
+  </div>
+</div>
+
+<div class="cyber-form" data-controller="image-preview">
   <%= form_with model: item,
                 url: collection_category_items_path(collection, category),
                 scope: :item,
-                class: "form-capsule",
+                class: "cyber-form-inner",
                 data: { turbo_frame: "_top" } do |f| %>
+
+    <!-- Messages d'erreur cyberpunk -->
+    <% if item.errors.any? %>
+      <div class="cyber-card" style="border-color: var(--cyber-red); margin-bottom: 2rem;">
+        <div class="card-title" style="color: var(--cyber-red);">
+          Data Corruption: <%= pluralize(item.errors.count, "erreur") %>
+        </div>
+        <ul style="color: var(--cyber-red); font-family: 'Courier New', monospace;">
+          <% item.errors.full_messages.each do |message| %>
+            <li>// <%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
 
     <!-- Champs cachés -->
     <%= f.hidden_field :type %>
@@ -11,136 +34,217 @@
     <%= f.hidden_field :source_id %>
     <%= f.hidden_field :barcode %>
 
-    <!-- Input maître caché (seul utilisé par Rails) -->
+    <!-- Input maître caché -->
     <%= f.file_field :photos,
           multiple: true,
           accept: "image/*",
           class: "hidden",
           data: { image_preview_target: "master" } %>
 
-    <!-- Boutons séparés -->
-    <div class="action-buttons">
-      <div class="buttons-upload action-buttons">
-        <label class="image-upload-label">
-          Prendre une photo
+    <!-- Section Photo Cyberpunk -->
+    <div class="cyber-card photo-scanner">
+      <div class="card-title">Image Capture Module</div>
+      <div class="scanner-actions">
+        <label class="cyber-btn primary photo-btn">
+          <i class="fas fa-camera"></i>
+          Scanner Cam
           <input type="file"
                 accept="image/*"
                 capture="environment"
-                class="hidden"
+                style="display: none;"
                 data-action="change->image-preview#addFiles">
         </label>
 
-        <label class="image-upload-label">
-          Choisir depuis la galerie
+        <label class="cyber-btn secondary photo-btn">
+          <i class="fas fa-images"></i>
+          Archives
           <input type="file"
                 accept="image/*"
                 multiple
-                class="hidden"
+                style="display: none;"
                 data-action="change->image-preview#addFiles">
         </label>
       </div>
+
+      <!-- Prévisualisation cyberpunk -->
+      <div class="preview-grid new-grid" data-image-preview-target="list"></div>
     </div>
 
-    <!-- Prévisualisation -->
-    <div class="preview-grid new-grid mb-3" data-image-preview-target="list"></div>
+    <!-- Nom du livre -->
+    <div class="form-group">
+      <%= f.label :name, "Titre du livre" %>
+      <%= f.text_field :name, placeholder: "Le_Guide_Du_Voyageur_Galactique.txt" %>
+    </div>
 
-    <!-- Champ Nom -->
-    <%= f.text_field :name, class: "input-form" %>
+    <!-- Exemplaires possédés cyberpunk -->
+    <div class="cyber-card copies-manager">
+      <div class="card-title">Physical Copies Database</div>
+      <div class="terminal-output">
+        <p class="terminal-line">$ ls book_copies/</p>
+        <p class="terminal-line" style="color: var(--cyber-yellow);">// Managing physical instances...</p>
+      </div>
 
-    <!-- Exemplaires possédés -->
-    <div class="label_add">
-      <h4>Mes exemplaires</h4>
-      <div id="item-copies">
+      <div id="item-copies" class="copies-container">
         <%= f.fields_for :item_copies do |copy_form| %>
-          <div class="item-copy-fields">
-            <div class="copy-header" style="display: flex; justify-content: between;">
-              <h5>Exemplaire</h5>
+          <div class="item-copy-fields cyber-card copy-item">
+            <div class="copy-header">
+              <span class="copy-title">Copy Instance</span>
               <%= copy_form.check_box :_destroy, style: "display:none;" %>
-              <button type="button" onclick="removeCopy(this)" class="btn-danger" style="margin-left: auto;">Supprimer</button>
+              <button type="button" onclick="removeCopy(this)" class="cyber-btn danger copy-remove">
+                <i class="fas fa-trash"></i>
+              </button>
             </div>
 
             <div class="copy-fields">
-              <div>
-                <%= copy_form.label :state, "État" %>
-                <%= copy_form.select :state, options_for_select(ItemCopy::STATE.map { |s| [s, s] }), { prompt: "Choisir un état" }, { class: "input-form" } %>
+              <div class="form-group">
+                <%= copy_form.label :state, "État physique" %>
+                <%= copy_form.select :state, options_for_select(ItemCopy::STATE.map { |s| [s, s] }), { prompt: "Sélectionner..." }, { class: "cyber-select" } %>
               </div>
 
-              <div>
-                <%= copy_form.label :price, "Prix d'achat" %>
-                <%= copy_form.number_field :price, step: 0.01, class: "input-form" %>
+              <div class="form-group">
+                <%= copy_form.label :price, "Prix d'acquisition" %>
+                <%= copy_form.number_field :price, step: 0.01, placeholder: "0.00", class: "cyber-input" %>
               </div>
 
-              <div>
-                <%= copy_form.label :purchase_date, "Date d'achat" %>
-                <%= copy_form.date_field :purchase_date, class: "input-form" %>
+              <div class="form-group">
+                <%= copy_form.label :purchase_date, "Date d'acquisition" %>
+                <%= copy_form.date_field :purchase_date, class: "cyber-input" %>
               </div>
 
-              <div>
-                <%= copy_form.label :notes, "Notes" %>
-                <%= copy_form.text_area :notes, rows: 2, class: "input-form" %>
+              <div class="form-group">
+                <%= copy_form.label :notes, "Notes archivage" %>
+                <%= copy_form.text_area :notes, rows: 2, placeholder: "Annotations, état détaillé...", class: "cyber-textarea" %>
               </div>
             </div>
           </div>
         <% end %>
       </div>
 
-      <button type="button" onclick="addCopy()" class="btn-primary">Ajouter un exemplaire</button>
+      <button type="button" onclick="addCopy()" class="cyber-btn success add-copy-btn">
+        <i class="fas fa-plus"></i>
+        Ajouter Instance
+      </button>
+    </div>
+
+    <!-- Métadonnées cyberpunk -->
+    <div class="cyber-card metadata-section">
+      <div class="card-title">Book Metadata Archive</div>
+
+      <div class="metadata-grid">
+        <div class="form-group">
+          <%= f.label :metadata_authors, "Author(s)" %>
+          <%= text_field_tag "item[metadata][authors]", item.metadata["authors"], placeholder: "Isaac_Asimov", class: "cyber-input" %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :metadata_publisher, "Publisher" %>
+          <%= text_field_tag "item[metadata][publisher]", item.metadata["publisher"], placeholder: "Editions_Gallimard", class: "cyber-input" %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :metadata_language, "Language Protocol" %>
+          <%= select_tag "item[metadata][language]",
+                options_for_select(ItemsHelper::LANGUAGE_NAMES.map { |k,v| [v, k] }, item.metadata["language"]),
+                { prompt: "Sélectionner langue...", class: "cyber-select" } %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :metadata_published_date, "Publication Date" %>
+          <%= text_field_tag "item[metadata][published_date]",
+                            (Date.parse(item.metadata["published_date"]).strftime("%d-%m-%Y") rescue item.metadata["published_date"]),
+                            placeholder: "01-01-1950",
+                            class: "cyber-input" %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :metadata_description, "Synopsis Database" %>
+        <%= text_area_tag "item[metadata][description]", item.metadata["description"],
+              rows: 6,
+              placeholder: "Description complète du contenu littéraire...",
+              class: "cyber-textarea" %>
+      </div>
+    </div>
+
+    <!-- Submit cyberpunk -->
+    <div class="form-actions" style="text-align: center; margin: 2rem 0;">
+      <%= f.submit "ARCHIVER LIVRE", class: "cyber-btn success submit-book" %>
     </div>
 
     <script>
       function addCopy() {
         const container = document.getElementById('item-copies');
-        const index = Date.now(); // Simple unique identifier
+        const index = Date.now();
 
         const copyHtml = `
-          <div class="item-copy-fields">
-            <div class="copy-header" style="display: flex; justify-content: between;">
-              <h5>Exemplaire</h5>
+          <div class="item-copy-fields cyber-card copy-item">
+            <div class="copy-header">
+              <span class="copy-title">Copy Instance</span>
               <input type="hidden" name="item[item_copies_attributes][${index}][_destroy]" value="false">
-              <button type="button" onclick="removeCopy(this)" class="btn-danger" style="margin-left: auto;">Supprimer</button>
+              <button type="button" onclick="removeCopy(this)" class="cyber-btn danger copy-remove">
+                <i class="fas fa-trash"></i>
+              </button>
             </div>
 
             <div class="copy-fields">
-              <div>
-                <label>État</label>
-                <select name="item[item_copies_attributes][${index}][state]" class="input-form">
-                  <option value="">Choisir un état</option>
+              <div class="form-group">
+                <label>État physique</label>
+                <select name="item[item_copies_attributes][${index}][state]" class="cyber-select">
+                  <option value="">Sélectionner...</option>
                   <% ItemCopy::STATE.each do |state| %>
                     <option value="<%= state %>"><%= state %></option>
                   <% end %>
                 </select>
               </div>
 
-              <div>
-                <label>Prix d'achat</label>
-                <input type="number" step="0.01" name="item[item_copies_attributes][${index}][price]" class="input-form">
+              <div class="form-group">
+                <label>Prix d'acquisition</label>
+                <input type="number" step="0.01" name="item[item_copies_attributes][${index}][price]" class="cyber-input" placeholder="0.00">
               </div>
 
-              <div>
-                <label>Date d'achat</label>
-                <input type="date" name="item[item_copies_attributes][${index}][purchase_date]" class="input-form">
+              <div class="form-group">
+                <label>Date d'acquisition</label>
+                <input type="date" name="item[item_copies_attributes][${index}][purchase_date]" class="cyber-input">
               </div>
 
-              <div>
-                <label>Notes</label>
-                <textarea rows="2" name="item[item_copies_attributes][${index}][notes]" class="input-form"></textarea>
+              <div class="form-group">
+                <label>Notes archivage</label>
+                <textarea rows="2" name="item[item_copies_attributes][${index}][notes]" class="cyber-textarea" placeholder="Annotations, état détaillé..."></textarea>
               </div>
             </div>
           </div>
         `;
 
         container.insertAdjacentHTML('beforeend', copyHtml);
+
+        // Animation d'apparition
+        const newCopy = container.lastElementChild;
+        newCopy.style.opacity = '0';
+        newCopy.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          newCopy.style.transition = 'all 0.3s ease';
+          newCopy.style.opacity = '1';
+          newCopy.style.transform = 'translateY(0)';
+        }, 10);
       }
 
       function removeCopy(button) {
         const copyDiv = button.closest('.item-copy-fields');
         const destroyField = copyDiv.querySelector('input[name*="_destroy"]');
-        if (destroyField) {
-          destroyField.value = "1";
-          copyDiv.style.display = 'none';
-        } else {
-          copyDiv.remove();
-        }
+
+        // Animation de suppression
+        copyDiv.style.transition = 'all 0.3s ease';
+        copyDiv.style.opacity = '0';
+        copyDiv.style.transform = 'translateX(-20px)';
+
+        setTimeout(() => {
+          if (destroyField) {
+            destroyField.value = "1";
+            copyDiv.style.display = 'none';
+          } else {
+            copyDiv.remove();
+          }
+        }, 300);
       }
 
       // Add one copy by default if none exist
@@ -152,37 +256,5 @@
       });
     </script>
 
-    <!-- Champs metadata -->
-    <div class="label_add">
-      <%= f.label :metadata_authors, "Auteur(s)" %>
-      <%= text_field_tag "item[metadata][authors]", item.metadata["authors"], class: "input-form" %>
-    </div>
-
-    <div class="label_add">
-      <%= f.label :metadata_publisher, "Éditeur" %>
-      <%= text_field_tag "item[metadata][publisher]", item.metadata["publisher"], class: "input-form" %>
-    </div>
-
-    <div class="label_add">
-      <%= f.label :metadata_language, "Langue" %>
-      <%= select_tag "item[metadata][language]",
-            options_for_select(ItemsHelper::LANGUAGE_NAMES.map { |k,v| [v, k] }, item.metadata["language"]),
-            class: "input-form" %>
-    </div>
-
-    <div class="label_add">
-      <%= f.label :metadata_published_date, "Année de publication" %>
-      <%= text_field_tag "item[metadata][published_date]",
-                        (Date.parse(item.metadata["published_date"]).strftime("%d-%m-%Y") rescue item.metadata["published_date"]),
-                        class: "input-form" %>
-    </div>
-
-    <div class="label_add">
-      <%= f.label :metadata_description, "Résumé" %>
-      <%= text_area_tag "item[metadata][description]", item.metadata["description"], rows: 6, class: "input-form" %>
-    </div>
-
-    <!-- Bouton submit -->
-    <%= f.submit "Créer l’objet", class: "submit-form mb-5" %>
   <% end %>
 </div>

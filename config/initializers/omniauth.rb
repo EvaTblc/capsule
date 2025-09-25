@@ -3,6 +3,6 @@ Rails.application.config.to_prepare do
   OmniAuth.config.allowed_request_methods = [:get, :post]
   OmniAuth.config.silence_get_warning = true
 
-  # Proper CSRF protection configuration
-  OmniAuth.config.request_validation_phase = OmniAuth::AuthenticityTokenProtection.new
+  # Let Devise handle CSRF protection
+  OmniAuth.config.request_validation_phase = nil
 end

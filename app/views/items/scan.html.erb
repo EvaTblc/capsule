@@ -1,70 +1,143 @@
-<h2 class="style-title"><%= @collection.name %> - <%= @category.name %></h2>
-<div class="item-actions">
-  <%= link_to "← Retour", collection_categories_path, class: "btn-action" %>
-  <%= link_to "🗑️ Supprimer", collection_path(@collection),
-      method: :delete, data: { turbo_confirm: "Supprimer cette collection ?" }, class: "btn-action delete" %>
-</div>
-
-<div data-controller="toggle barcode" data-barcode-intake-url-value="<%= intake_collection_category_items_path(@collection, @category) %>"
+<div class="home-banner" data-controller="toggle barcode" data-barcode-intake-url-value="<%= intake_collection_category_items_path(@collection, @category) %>"
     data-barcode-new-url-value="<%= new_collection_category_item_path(@collection, @category) %>">
+  <div class="cyber-container">
 
-
-
-  <h2 class="add-title">J'ajoute un livre</h2>
-
-  <div class="action-group d-none" data-toggle-target="oups">
-    <div class="buttons-select action-buttons">
-      <div class="d-flex m-2 align-items-baseline">
-        <button class="image-upload-label-nrm d-none" data-toggle-target="oupsHaveIt">Oups... Je l'ai déjà</button>
+    <!-- Terminal Header -->
+    <div class="terminal-header">
+      <div class="terminal-dots">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
       </div>
-      <div class="d-flex m-2 align-items-baseline">
-        <button class="image-upload-label-nrm d-none" data-toggle-target="oupsFindIt">Oups... Je le recherche</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="action-group" data-toggle-target="controls">
-    <div class="buttons-select action-buttons">
-      <div class="d-flex m-2 align-items-baseline">
-        <button class="image-upload-label-nrm" data-toggle-target="checkPossess" data-action="click->toggle#toggleCheckbox click->barcode#startScan">Que j'ai déjà</button>
-      </div>
-      <div class="d-flex m-2 align-items-baseline">
-        <button class="image-upload-label-nrm" data-toggle-target="checkSearch" data-action="click->toggle#toggleCheckbox">Que je recherche</button>
-      </div>
-    </div>
-  </div>
-
-
-  <div
-    data-toggle-target="scan"
-    class="scanner-container d-none mt-3"
-  >
-    <video data-barcode-target="video" playsinline muted autoplay style="width:100%;max-width:520px;border-radius:12px;"></video>
-
-    <div class="stop-scan">
-      <button type="button" class="image-upload-stop" data-action="click->barcode#stopScan">⏹️ Stop</button>
-      <%# <button type="button" class="image-upload-label" data-action="click->barcode#submit" data-barcode-target="submitButton" disabled>
-        Envoyer vers intake (POST)
-      </button> %>
+      <div class="terminal-title">barcode_scanner.exe</div>
     </div>
 
-    <input type="file" accept="image/*" capture="environment" data-action="change->barcode#decodeFile">
+    <!-- Collection & Category Title -->
+    <h1 class="cyber-page-title glitch-text" data-text="<%= @collection.name %> - <%= @category.name %>"><%= @collection.name %> - <%= @category.name %></h1>
+    <p class="cyber-subtitle typing-effect">Scanner de codes-barres quantique</p>
 
-    <%# <pre data-barcode-target="output" style="white-space:pre-wrap;margin-top:12px;">En attente…</pre> %>
-    <div class="form-scan">
-      <%= form_with url: intake_collection_category_items_path(@collection, @category),
-                  method: :post, local: true, data: { turbo: false } do %>
-        <em><%= label_tag :barcode, "Si le scan ne reconnait pas le livre, entrez un code-barre ici", class: "label-form" %></em>
-        <div class="d-flex">
-          <%= text_field_tag :barcode, nil, placeholder: "9782070368228", class: "input-form" %>
-          <%= submit_tag "Ajouter", class: "image-upload-label h-50 ms-2" %>
-        </div>
+    <!-- Actions cyberpunk -->
+    <div class="cyber-actions">
+      <%= link_to collection_categories_path, class: "cyber-btn secondary" do %>
+        <i class="fas fa-arrow-left"></i>
+        Retour
+      <% end %>
+      <%= link_to collection_path(@collection), method: :delete, data: { turbo_confirm: "Supprimer cette collection ?" }, class: "cyber-btn danger" do %>
+        <i class="fas fa-trash"></i>
+        Supprimer Collection
       <% end %>
     </div>
 
-  </div>
+    <!-- Scanner Protocol Interface -->
+    <div class="cyber-card scanner-protocol">
+      <div class="card-title">Book Detection Protocol</div>
+      <div class="terminal-output">
+        <p class="terminal-line">$ initialize_barcode_scanner --mode="quantum_detection"</p>
+        <p class="terminal-line success">// Scanner ready for ISBN detection</p>
+        <p class="terminal-line">$ select_scan_mode: [POSSESS|SEARCH]</p>
+      </div>
+    </div>
 
-  <div class="add-books d-none" data-toggle-target="addBook" data-controller="add-book">
-    <%= render "add_book", collection: @collection, category: @category, item: Item.new %>
+    <!-- Mode Selection Cyberpunk -->
+    <div class="cyber-card scan-modes" data-toggle-target="controls">
+      <div class="card-title">Scan Mode Selection</div>
+
+      <div class="mode-buttons">
+        <button class="cyber-btn primary scan-mode-btn" data-toggle-target="checkPossess" data-action="click->toggle#toggleCheckbox click->barcode#startScan">
+          <i class="fas fa-check-circle"></i>
+          <div class="btn-content">
+            <span class="btn-title">POSSESS MODE</span>
+            <span class="btn-desc">Livre que j'ai déjà</span>
+          </div>
+        </button>
+
+        <button class="cyber-btn secondary scan-mode-btn" data-toggle-target="checkSearch" data-action="click->toggle#toggleCheckbox">
+          <i class="fas fa-search"></i>
+          <div class="btn-content">
+            <span class="btn-title">SEARCH MODE</span>
+            <span class="btn-desc">Livre que je recherche</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Recovery Actions (hidden) -->
+    <div class="cyber-card recovery-actions d-none" data-toggle-target="oups">
+      <div class="card-title" style="color: var(--cyber-yellow);">Recovery Protocol</div>
+      <div class="mode-buttons">
+        <button class="cyber-btn danger small d-none" data-toggle-target="oupsHaveIt">
+          <i class="fas fa-undo"></i>
+          Annuler - Je l'ai déjà
+        </button>
+        <button class="cyber-btn secondary small d-none" data-toggle-target="oupsFindIt">
+          <i class="fas fa-search"></i>
+          Recherche manuelle
+        </button>
+      </div>
+    </div>
+
+
+    <!-- Scanner Interface Cyberpunk -->
+    <div class="cyber-card scanner-interface d-none" data-toggle-target="scan">
+      <div class="card-title">Quantum Barcode Reader</div>
+
+      <!-- Debug Output -->
+      <div class="terminal-output">
+        <p class="terminal-line" data-barcode-target="output">En attente d'initialisation...</p>
+      </div>
+
+      <!-- Video Scanner -->
+      <div class="scanner-viewport">
+        <video data-barcode-target="video" playsinline muted autoplay class="cyber-video"></video>
+        <div class="scanner-overlay">
+          <div class="scan-line"></div>
+          <div class="scan-corners">
+            <div class="corner top-left"></div>
+            <div class="corner top-right"></div>
+            <div class="corner bottom-left"></div>
+            <div class="corner bottom-right"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scanner Controls -->
+      <div class="scanner-controls">
+        <button type="button" class="cyber-btn danger" data-action="click->barcode#stopScan">
+          <i class="fas fa-stop"></i>
+          Arrêter Scan
+        </button>
+
+        <label class="cyber-btn secondary file-scan-btn">
+          <i class="fas fa-image"></i>
+          Scanner Image
+          <input type="file" accept="image/*" capture="environment" data-action="change->barcode#decodeFile" style="display: none;">
+        </label>
+      </div>
+
+      <!-- Manual Barcode Entry -->
+      <div class="manual-entry">
+        <div class="terminal-output">
+          <p class="terminal-line">$ manual_barcode_input --fallback</p>
+          <p class="terminal-line" style="color: var(--cyber-yellow);">// Entrez le code ISBN manuellement</p>
+        </div>
+
+        <%= form_with url: intake_collection_category_items_path(@collection, @category),
+                    method: :post, local: true, data: { turbo: false }, class: "cyber-form-inline" do %>
+          <div class="form-group">
+            <%= label_tag :barcode, "Code ISBN/EAN", class: "form-label" %>
+            <%= text_field_tag :barcode, nil, placeholder: "9782070368228", class: "cyber-input barcode-input" %>
+          </div>
+          <div class="form-actions">
+            <%= submit_tag "ANALYSER CODE", class: "cyber-btn success" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Manual Book Entry (hidden by default) -->
+    <div class="add-books d-none" data-toggle-target="addBook" data-controller="add-book">
+      <%= render "add_book", collection: @collection, category: @category, item: Item.new %>
+    </div>
+
   </div>
 </div>

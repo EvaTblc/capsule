@@ -10,9 +10,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   # POST /resource
-  # def create
-  #   super
-  # end
+  def create
+    super do |resource|
+      if resource.persisted?
+        # Force sign in the user after successful registration
+        sign_in(resource)
+        set_flash_message! :notice, :signed_up if is_flashing_format?
+        return redirect_to after_sign_up_path_for(resource)
+      end
+    end
+  end
 
   # GET /resource/edit
   # def edit
@@ -51,9 +58,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   # The path used after sign up.
-  # def after_sign_up_path_for(resource)
-  #   super(resource)
-  # end
+  def after_sign_up_path_for(resource)
+    collections_path
+  end
 
   # The path used after sign up for inactive accounts.
   # def after_inactive_sign_up_path_for(resource)

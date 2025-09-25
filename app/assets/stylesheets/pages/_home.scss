@@ -1,12 +1,408 @@
-// Specific CSS for your home-page
+// Cyberpunk Geek Homepage
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Courier+New&display=swap');
 
 .home-infos {
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
+  font-family: 'Orbitron', monospace;
+  position: relative;
 
-  button {
-    width: 30vh;
-    padding: 16px 18px 16px;
+  // Terminal header
+  .terminal-header {
+    background: linear-gradient(145deg, rgba(26, 26, 26, 0.9), rgba(51, 51, 51, 0.9));
+    border-radius: 8px 8px 0 0;
+    padding: 10px 20px;
+    margin-bottom: -5px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border: 1px solid #a9118d;
+    box-shadow: 0 0 20px rgba(169, 17, 141, 0.3);
+
+    .terminal-dots {
+      display: flex;
+      gap: 6px;
+
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+
+        &.red { background: #ff5f56; }
+        &.yellow { background: #ffbd2e; }
+        &.green { background: #27ca3f; }
+      }
+    }
+
+    .terminal-title {
+      color: #00ff88;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+  }
+
+  // Glitch effect title
+  .glitch-title {
+    font-size: 4rem;
+    font-weight: 900;
+    margin: 2rem 0 1rem;
+    position: relative;
+    color: #ffffff;
+    text-shadow:
+      0 0 10px #a9118d,
+      0 0 20px #a9118d,
+      0 0 40px #a9118d;
+
+    &::before,
+    &::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    &::before {
+      animation: glitch-1 2s infinite;
+      color: #ff974c;
+      z-index: -1;
+    }
+
+    &::after {
+      animation: glitch-2 2s infinite;
+      color: #f78be2;
+      z-index: -2;
+    }
+  }
+
+  // Typing effect
+  .typing-subtitle {
+    .home-subtitle {
+      font-family: 'Courier New', monospace;
+      font-size: 1.2rem;
+      color: #00ff88;
+      margin-bottom: 3rem;
+
+      .cursor { color: #a9118d; }
+      .typing-text {
+        color: #ffffff;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      }
+      .blinking-cursor {
+        animation: blink 1s infinite;
+        color: #ff974c;
+      }
+    }
+  }
+
+  // User dashboard (when logged in)
+  .user-dashboard {
+    .neon-card {
+      background: linear-gradient(145deg, rgba(26, 26, 26, 0.8), rgba(51, 51, 51, 0.8));
+      border: 2px solid #a9118d;
+      border-radius: 15px;
+      padding: 2rem;
+      margin: 2rem 0;
+      position: relative;
+      overflow: hidden;
+      box-shadow:
+        0 0 30px rgba(169, 17, 141, 0.4),
+        inset 0 0 30px rgba(169, 17, 141, 0.1);
+
+      .card-glow {
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: conic-gradient(transparent, rgba(169, 17, 141, 0.3), transparent 30%);
+        animation: rotate 4s linear infinite;
+      }
+
+      .user-avatar {
+        position: relative;
+        z-index: 2;
+        margin-bottom: 1rem;
+
+        .avatar-img {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          border: 3px solid #ff974c;
+          box-shadow: 0 0 20px rgba(255, 151, 76, 0.5);
+        }
+      }
+
+      .user-info {
+        position: relative;
+        z-index: 2;
+
+        h3 {
+          color: #ffffff;
+          margin-bottom: 0.5rem;
+
+          .username {
+            background: linear-gradient(145deg, #a9118d, #ff974c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+          }
+        }
+
+        .status-text {
+          color: #888;
+          font-size: 0.9rem;
+
+          .online {
+            color: #00ff88;
+            text-shadow: 0 0 10px #00ff88;
+          }
+        }
+      }
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }
+
+  // Matrix style description
+  .matrix-description {
+    margin: 2rem 0;
+
+    p {
+      font-family: 'Courier New', monospace;
+      font-size: 1.1rem;
+      color: #00ff88;
+      text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+
+      .matrix-bracket {
+        color: #ff974c;
+        font-weight: bold;
+      }
+    }
+  }
+
+  // Holographic buttons
+  .holographic-buttons {
+    display: flex;
+    gap: 2rem;
+    margin-top: 3rem 0;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .holo-btn {
+    position: relative;
+    padding: 1rem 2rem;
+    background: transparent;
+    border: 2px solid;
+    border-radius: 8px;
+    text-decoration: none;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-family: 'Orbitron', monospace;
+
+    &.login-btn {
+      border-color: #a9118d;
+      color: #a9118d;
+
+      &:hover {
+        color: #ffffff;
+        box-shadow: 0 0 30px rgba(169, 17, 141, 0.6);
+      }
+    }
+
+    &.register-btn {
+      border-color: #ff974c;
+      color: #ff974c;
+
+      &:hover {
+        color: #ffffff;
+        box-shadow: 0 0 30px rgba(255, 151, 76, 0.6);
+      }
+    }
+
+    .holo-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .holo-glow {
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    &:hover .holo-glow {
+      left: 100%;
+    }
+  }
+
+  // Cyberpunk grid
+  .cyber-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1.5rem;
+    margin: 3rem 0;
+    max-width: 600px;
+
+    .grid-item {
+      position: relative;
+      background: linear-gradient(145deg, rgba(26, 26, 26, 0.8), rgba(51, 51, 51, 0.8));
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      overflow: hidden;
+
+      &:hover {
+        border-color: #a9118d;
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(169, 17, 141, 0.3);
+
+        .grid-scanline {
+          animation: scan 2s linear infinite;
+        }
+      }
+
+      .grid-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .grid-label {
+        font-family: 'Orbitron', monospace;
+        font-size: 0.8rem;
+        color: #ffffff;
+        font-weight: bold;
+        letter-spacing: 1px;
+      }
+
+      .grid-scanline {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #00ff88, transparent);
+        opacity: 0;
+      }
+    }
+  }
+
+  // Cyber buttons
+  .cyber-btn {
+    position: relative;
+    display: inline-block;
+    padding: 1rem 2rem;
+    margin: 0.5rem;
+    background: transparent;
+    border: 2px solid;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-family: 'Orbitron', monospace;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+
+    &.primary {
+      border-color: #a9118d;
+
+      .btn-text {
+        color: #a9118d;
+      }
+
+      &:hover {
+        background: linear-gradient(145deg, #a9118d, #ff974c);
+        box-shadow: 0 0 30px rgba(169, 17, 141, 0.6);
+
+        .btn-text {
+          color: #ffffff;
+        }
+      }
+    }
+
+    &.secondary {
+      border-color: #666;
+
+      .btn-text {
+        color: #666;
+      }
+
+      &:hover {
+        border-color: #ff974c;
+
+        .btn-text {
+          color: #ff974c;
+        }
+      }
+    }
+
+    .btn-text {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+}
+
+// Animations
+@keyframes glitch-1 {
+  0%, 14%, 15%, 49%, 50%, 99%, 100% { transform: translateX(0); }
+  15%, 49% { transform: translateX(-2px); }
+}
+
+@keyframes glitch-2 {
+  0%, 20%, 21%, 62%, 63%, 99%, 100% { transform: translateX(0); }
+  21%, 62% { transform: translateX(2px); }
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes scan {
+  0% {
+    top: 0;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
   }
 }

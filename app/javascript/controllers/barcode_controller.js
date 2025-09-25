@@ -26,21 +26,39 @@ export default class extends Controller {
     if (this.running) return
     this.running = true
     this.output("Initialisation caméra…")
+
+    // S'assurer que la vidéo est visible
+    this.videoTarget.style.display = 'block'
+    this.videoTarget.style.visibility = 'visible'
+
     try {
+      // Demander permission caméra d'abord
       await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } } })
+      this.output("✅ Permission caméra accordée")
+
       try {
+        // Essayer avec contraintes facingMode
         await this.reader.decodeFromConstraints(
           { video: { facingMode: "environment" } },
           this.videoTarget,
           (res, err) => this._onDecode(res, err)
         )
+        this.output("✅ Scanner démarré avec caméra arrière")
         return
-      } catch (_) {}
+      } catch (e) {
+        this.output(`⚠️ Fallback: ${e.message}`)
+      }
 
+      // Fallback: lister les devices
       const devices = await this.reader.listVideoInputDevices()
       if (!devices.length) throw new Error("Pas de caméra détectée")
+
       const back = devices.find(d => /back|rear|environment|arrière/i.test(d.label)) || devices[0]
-      this.reader.decodeFromVideoDevice(back.deviceId, this.videoTarget, (res, err) => this._onDecode(res, err))
+      this.output(`📹 Utilisation: ${back.label}`)
+
+      await this.reader.decodeFromVideoDevice(back.deviceId, this.videoTarget, (res, err) => this._onDecode(res, err))
+      this.output("✅ Scanner démarré avec succès")
+
     } catch (e) {
       this.output(`❌ Caméra: ${e.message}`)
       this.running = false

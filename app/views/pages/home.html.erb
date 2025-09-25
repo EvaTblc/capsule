@@ -1,15 +1,106 @@
 <div class="home-banner">
   <div class="home-infos">
-    <h1>CAPSULE</h1>
-      <% if current_user  %>
-        <div class= "btn-capsule">
-          <%= link_to "Commencer", collections_path, class: "btn-devise" %>
+    <!-- Terminal-style header -->
+    <div class="terminal-header">
+      <div class="terminal-dots">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+      </div>
+      <div class="terminal-title">capsule.exe</div>
+    </div>
+
+    <!-- Glitchy title -->
+    <h1 class="glitch-title" data-text="CAPSULE">CAPSULE</h1>
+    <div class="typing-subtitle">
+      <p class="home-subtitle">
+        <span class="cursor">></span>
+        <span class="typing-text">Organisez vos collections avec style</span>
+        <span class="blinking-cursor">_</span>
+      </p>
+    </div>
+
+    <% if current_user %>
+      <div class="user-dashboard">
+        <div class="neon-card">
+          <div class="card-glow"></div>
+          <div class="user-avatar">
+            <%= image_tag "https://via.placeholder.com/60x60/a9118d/ffffff?text=#{current_user.username&.first&.upcase || current_user.email.first.upcase}", class: "avatar-img" %>
+          </div>
+          <div class="user-info">
+            <h3>Bienvenue, <span class="username"><%= current_user.username || current_user.email.split('@').first %></span> !</h3>
+            <p class="status-text">Status: <span class="online">ONLINE</span></p>
+          </div>
         </div>
-        <%= link_to "Déconnexion", destroy_user_session_path, class: "btn-delete", html5: true, data: { turbo_method: :delete, turbo_confirm: "Voulez-vous vous déconnecter ?" } %>
-      <% else %>
-        <div class= "btn-capsule">
-<%= link_to "Connexion avec Google", user_google_oauth2_omniauth_authorize_path, class: "btn-devise", data: { turbo: false } %>
+
+        <div class="action-buttons">
+          <%= link_to collections_path, class: "cyber-btn primary" do %>
+            <span class="btn-text">
+              <i class="fas fa-rocket"></i>
+              ACCÉDER AU DASHBOARD
+            </span>
+            <div class="cyber-btn-bg"></div>
+          <% end %>
+
+          <%= link_to destroy_user_session_path, class: "cyber-btn secondary", data: { turbo_method: :delete, turbo_confirm: "Déconnexion confirmée ?" } do %>
+            <span class="btn-text">
+              <i class="fas fa-sign-out-alt"></i>
+              LOGOUT
+            </span>
+            <div class="cyber-btn-bg"></div>
+          <% end %>
         </div>
-      <% end %>
+      </div>
+    <% else %>
+      <div class="matrix-description">
+        <p>
+          <span class="matrix-bracket">[</span>
+          Créez et gérez vos collections geek
+          <span class="matrix-bracket">]</span>
+        </p>
+      </div>
+
+      <div class="holographic-buttons">
+        <%= link_to new_user_session_path, class: "holo-btn login-btn" do %>
+          <div class="holo-content">
+            <i class="fas fa-terminal"></i>
+            <span>CONNECT</span>
+          </div>
+          <div class="holo-glow"></div>
+        <% end %>
+
+        <%= link_to new_user_registration_path, class: "holo-btn register-btn" do %>
+          <div class="holo-content">
+            <i class="fas fa-user-plus"></i>
+            <span>REGISTER</span>
+          </div>
+          <div class="holo-glow"></div>
+        <% end %>
+      </div>
+
+      <!-- Cyberpunk collection grid -->
+      <div class="cyber-grid">
+        <div class="grid-item" data-category="books">
+          <div class="grid-icon">📚</div>
+          <div class="grid-label">BOOKS</div>
+          <div class="grid-scanline"></div>
+        </div>
+        <div class="grid-item" data-category="movies">
+          <div class="grid-icon">🎬</div>
+          <div class="grid-label">MOVIES</div>
+          <div class="grid-scanline"></div>
+        </div>
+        <div class="grid-item" data-category="games">
+          <div class="grid-icon">🎮</div>
+          <div class="grid-label">GAMES</div>
+          <div class="grid-scanline"></div>
+        </div>
+        <div class="grid-item" data-category="toys">
+          <div class="grid-icon">🧸</div>
+          <div class="grid-label">TOYS</div>
+          <div class="grid-scanline"></div>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>

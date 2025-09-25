@@ -34,7 +34,7 @@ Rails.application.configure do
     p.style_src   :self, :unsafe_inline, "https://fonts.googleapis.com"
     p.font_src    :self, :data, "https://fonts.gstatic.com"
     p.worker_src  :self, :blob
-    p.frame_ancestors :self
+    p.frame_ancestors :self, "https://accounts.google.com"
     p.object_src  :none
     p.base_uri    :self
     p.img_src :self, :https, :data, "res.cloudinary.com"

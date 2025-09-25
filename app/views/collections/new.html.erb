@@ -1,8 +1,82 @@
-<h2 class="style-title">Nouvelle collection</h2>
-<%= form_with model:@collection do |f| %>
-  <%= f.text_field :name, label: false, class: "input-form" %>
-  <div class="actions-save">
-    <%= link_to "← Retour", collections_path, class: "btn-action" %>
-    <%= f.submit "Sauvegarder", class: "btn-action" %>
+<div class="home-banner">
+  <div class="cyber-container">
+
+    <!-- Terminal Header -->
+    <div class="terminal-header">
+      <div class="terminal-dots">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+      </div>
+      <div class="terminal-title">collection_creator.exe</div>
+    </div>
+
+    <!-- Titre -->
+    <h1 class="cyber-page-title glitch-text" data-text="NOUVELLE COLLECTION">NOUVELLE COLLECTION</h1>
+    <p class="cyber-subtitle typing-effect">Initialisation d'un nouveau conteneur de données</p>
+
+    <!-- Formulaire cyberpunk -->
+    <div class="cyber-form">
+      <%= form_with model: @collection, class: "cyber-form-inner" do |f| %>
+
+        <!-- Messages d'erreur cyberpunk -->
+        <% if @collection.errors.any? %>
+          <div class="cyber-card" style="border-color: var(--cyber-red); margin-bottom: 2rem;">
+            <div class="card-title" style="color: var(--cyber-red);">
+              System Error: <%= pluralize(@collection.errors.count, "erreur") %>
+            </div>
+            <ul style="color: var(--cyber-red); font-family: 'Courier New', monospace;">
+              <% @collection.errors.full_messages.each do |message| %>
+                <li>// <%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <!-- Terminal de création -->
+        <div class="cyber-card creation-terminal">
+          <div class="terminal-output">
+            <p class="terminal-line">$ mkdir new_collection</p>
+            <p class="terminal-line">$ cd new_collection</p>
+            <p class="terminal-line input-prompt">$ echo "<span class="cursor-blink">_</span>" > collection_name.txt</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :name, "Nom de la collection" %>
+          <%= f.text_field :name,
+                required: true,
+                autofocus: true,
+                placeholder: "Ma_Super_Collection_2024",
+                data: {
+                  action: "input->collection-preview#updatePreview",
+                  "collection-preview-target": "input"
+                } %>
+        </div>
+
+        <!-- Preview en temps réel -->
+        <div class="cyber-card preview-card" data-controller="collection-preview">
+          <div class="card-title">Preview Terminal</div>
+          <div class="terminal-output">
+            <p class="terminal-line">$ ls collections/</p>
+            <p class="terminal-line success" data-collection-preview-target="preview">// Nouvelle collection: [En attente...]</p>
+            <p class="terminal-line">$ collection.status</p>
+            <p class="terminal-line" style="color: var(--cyber-yellow);">// Ready for initialization...</p>
+          </div>
+        </div>
+
+        <div class="form-actions" style="text-align: center; margin-top: 2rem;">
+          <%= link_to collections_path, class: "cyber-btn secondary" do %>
+            <i class="fas fa-arrow-left"></i>
+            Annuler
+          <% end %>
+          <%= f.submit "CRÉER COLLECTION", class: "cyber-btn success" do %>
+            <i class="fas fa-rocket"></i>
+          <% end %>
+        </div>
+
+      <% end %>
+    </div>
+
   </div>
-<% end %>
+</div>

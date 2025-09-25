@@ -1,124 +1,241 @@
-<div data-controller="toggle">
-  <div class="style-title">
-    <h2><%= @item.name %></h2>
-    <div class="infos-item">
+<div class="home-banner" data-controller="toggle">
+  <div class="cyber-container">
 
-      <div class="info-pill">
-        <i class="fas fa-layer-group"></i>
-        <span><%= @item.category.name %></span>
+    <!-- Terminal Header -->
+    <div class="terminal-header">
+      <div class="terminal-dots">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
       </div>
+      <div class="terminal-title">item_details.exe</div>
+    </div>
 
-      <div class="info-pill" >
-        <button class="btn-pill" data-toggle-target="numberCopies" data-action="click->toggle#displayInfosCopies">
+    <!-- Item Header Cyberpunk -->
+    <div class="item-hero">
+      <h1 class="cyber-page-title glitch-text" data-text="<%= @item.name %>"><%= @item.name %></h1>
+      <p class="cyber-subtitle typing-effect">Archives numériques de la collection</p>
+
+      <!-- Item Info Pills -->
+      <div class="item-info-bar">
+        <div class="cyber-tag category-tag">
+          <i class="fas fa-layer-group"></i>
+          <%= @item.category.name %>
+        </div>
+
+        <button class="cyber-tag copies-tag" data-toggle-target="numberCopies" data-action="click->toggle#displayInfosCopies">
           <i class="fas fa-cube"></i>
-          <span>x<%= @item.total_copies %></span>
+          <span class="copies-count">x<%= @item.total_copies %></span>
+          <span class="copies-label">instances</span>
         </button>
       </div>
     </div>
-  </div>
 
+    <!-- Actions cyberpunk -->
+    <div class="cyber-actions">
+      <%= link_to collection_category_items_path(@collection, @category), class: "cyber-btn secondary" do %>
+        <i class="fas fa-arrow-left"></i>
+        Retour
+      <% end %>
+      <%= link_to edit_collection_category_item_path(@collection, @category, @item), class: "cyber-btn primary" do %>
+        <i class="fas fa-edit"></i>
+        Modifier
+      <% end %>
+      <%= link_to collection_category_item_path(@collection, @category, @item), data: { turbo_method: :delete, turbo_confirm: "Supprimer cet item ?" }, class: "cyber-btn danger" do %>
+        <i class="fas fa-trash"></i>
+        Supprimer
+      <% end %>
+    </div>
 
-  <div class="item-actions">
-    <%= link_to "← Retour", collection_category_items_path(@collection, @category), class: "btn-action" %>
-    <%= link_to "✏️ Modifier", edit_collection_category_item_path(@collection, @category, @item), class: "btn-action" %>
-    <%= link_to "🗑️ Supprimer", collection_category_item_path(@collection, @category, @item),
-        data: { turbo_method: :delete, turbo_confirm: "Supprimer cet item ?" }, class: "btn-action delete" %>
-  </div>
+    <!-- Item Copies Section Cyberpunk -->
+    <div class="cyber-card copies-database d-none" data-toggle-target="displayCopies">
+      <% if @item.item_copies.any? %>
+        <div class="card-title">Physical Instances Database</div>
+        <div class="terminal-output">
+          <p class="terminal-line">$ ls item_copies/ | wc -l</p>
+          <p class="terminal-line success">// <%= @item.total_copies %> physical instances detected</p>
+        </div>
 
-  <!-- Item Copies Section -->
-  <div class="d-none" data-toggle-target="displayCopies">
-    <% if @item.item_copies.any? %>
-      <div class="item-copies-section" style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-        <h3>Mes exemplaires (<%= @item.total_copies %>)</h3>
-
-        <div class="copies-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-top: 15px;">
+        <div class="cyber-grid copies-grid">
           <% @item.item_copies.each_with_index do |copy, index| %>
-            <div class="copy-card" style="background: white; padding: 15px; border-radius: 6px; border: 1px solid #dee2e6;">
-              <h4 style="margin: 0 0 10px 0; color: #495057;">Exemplaire #<%= index + 1 %></h4>
+            <div class="grid-item copy-instance">
+              <div class="scan-line"></div>
+              <div class="instance-header">
+                <i class="fas fa-microchip"></i>
+                <span class="card-title">Instance #<%= "%02d" % (index + 1) %></span>
+              </div>
 
-              <div class="copy-details">
-                <div style="display: flex; align-items: center; margin-bottom: 8px;">
-                  <i class="fas fa-star-half-alt" style="width: 20px; color: #6c757d;"></i>
-                  <strong>État:</strong>&nbsp;<span style="color: #28a745;"><%= copy.state %></span>
+              <div class="instance-data">
+                <div class="data-field">
+                  <i class="fas fa-shield-alt"></i>
+                  <span class="field-label">Status:</span>
+                  <span class="field-value status-<%= copy.state&.downcase %>"><%= copy.state %></span>
                 </div>
 
                 <% if copy.price.present? %>
-                  <div style="display: flex; align-items: center; margin-bottom: 8px;">
-                    <i class="fas fa-coins" style="width: 20px; color: #6c757d;"></i>
-                    <strong>Prix d'achat:</strong>&nbsp;<span><%= number_to_currency(copy.price, unit: "€") %></span>
+                  <div class="data-field">
+                    <i class="fas fa-coins"></i>
+                    <span class="field-label">Acquisition:</span>
+                    <span class="field-value price"><%= number_to_currency(copy.price, unit: "€") %></span>
                   </div>
                 <% end %>
 
                 <% if copy.purchase_date.present? %>
-                  <div style="display: flex; align-items: center; margin-bottom: 8px;">
-                    <i class="fas fa-calendar" style="width: 20px; color: #6c757d;"></i>
-                    <strong>Acheté le:</strong>&nbsp;<span><%= copy.purchase_date.strftime("%d/%m/%Y") %></span>
+                  <div class="data-field">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span class="field-label">Date:</span>
+                    <span class="field-value date"><%= copy.purchase_date.strftime("%d.%m.%Y") %></span>
                   </div>
                 <% end %>
 
                 <% if copy.notes.present? %>
-                  <div style="display: flex; align-items: flex-start; margin-bottom: 8px;">
-                    <i class="fas fa-sticky-note" style="width: 20px; color: #6c757d; margin-top: 2px;"></i>
-                    <div>
-                      <strong>Notes:</strong><br>
-                      <span style="font-style: italic; color: #6c757d;"><%= copy.notes %></span>
-                    </div>
+                  <div class="data-field notes-field">
+                    <i class="fas fa-file-alt"></i>
+                    <span class="field-label">Log:</span>
+                    <div class="field-value notes"><%= copy.notes %></div>
                   </div>
                 <% end %>
               </div>
             </div>
           <% end %>
         </div>
-      </div>
-    <% end %>
-  </div>
+      <% end %>
+    </div>
 
-  <div data-controller="photo-modal">
-    <% photos = @item.photos.to_a %>
+    <!-- Photo Gallery Cyberpunk -->
+    <div class="cyber-card photo-archive" data-controller="photo-modal">
+      <% photos = @item.photos.to_a %>
 
-    <% if photos.any? %>
-      <!-- Première photo en grand -->
-      <div class="photo-hero">
-        <%= cl_image_tag photos.first.key,
-              alt: @item.name,
-              class: "photo-hero-img",
-              data: {
-                action: "click->photo-modal#show",
-                photo_modal_url_value: cl_image_path(photos.first.key)
-              } %>
-      </div>
+      <% if photos.any? %>
+        <div class="card-title">Visual Archive System</div>
+        <div class="terminal-output">
+          <p class="terminal-line">$ ls photos/ | wc -l</p>
+          <p class="terminal-line success">// <%= photos.count %> visual records found</p>
+        </div>
 
-      <!-- Galerie avec le reste -->
-      <% if photos.many? %>
-        <div class="photo-gallery">
-          <% photos.drop(1).each do |photo| %>
-            <%= cl_image_tag photo.key,
-                  alt: @item.name,
-                  class: "photo-gallery-thumb",
-                  data: {
-                    action: "click->photo-modal#show",
-                    photo_modal_url_value: cl_image_path(photo.key)
-                  } %>
-          <% end %>
+        <!-- Hero Photo -->
+        <div class="photo-hero-cyber">
+          <%= cl_image_tag photos.first.key,
+                alt: @item.name,
+                class: "hero-image",
+                data: {
+                  action: "click->photo-modal#show",
+                  photo_modal_url_value: cl_image_path(photos.first.key)
+                } %>
+          <div class="image-overlay">
+            <div class="image-info">
+              <i class="fas fa-expand"></i>
+              <span>Agrandir</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gallery Grid -->
+        <% if photos.many? %>
+          <div class="photo-grid-cyber">
+            <% photos.drop(1).each_with_index do |photo, index| %>
+              <div class="photo-thumb-cyber">
+                <%= cl_image_tag photo.key,
+                      alt: @item.name,
+                      class: "thumb-image",
+                      data: {
+                        action: "click->photo-modal#show",
+                        photo_modal_url_value: cl_image_path(photo.key)
+                      } %>
+                <div class="thumb-overlay">
+                  <span class="thumb-index">#<%= "%02d" % (index + 2) %></span>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="card-title">Visual Archive System</div>
+        <div class="terminal-output">
+          <p class="terminal-line error">$ ls photos/</p>
+          <p class="terminal-line error">// No visual records found</p>
+          <p class="terminal-line">// Upload images to populate archive</p>
         </div>
       <% end %>
-    <% end %>
 
-    <!-- Modal -->
-    <div data-photo-modal-target="overlay" class="modal hidden">
-      <div class="modal-content">
-        <img data-photo-modal-target="image" src="" alt="Photo agrandie">
-        <button data-action="click->photo-modal#hide" class="modal-close">Fermer</button>
+      <!-- Modal Cyberpunk -->
+      <div data-photo-modal-target="overlay" class="cyber-modal hidden">
+        <div class="modal-content-cyber">
+          <img data-photo-modal-target="image" src="" alt="Photo agrandie" class="modal-image">
+          <button data-action="click->photo-modal#hide" class="cyber-btn danger modal-close">
+            <i class="fas fa-times"></i>
+            Fermer
+          </button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <% if @item.metadata.present? %>
-    <p><strong><i class="fa-solid fa-book-open"></i></strong> <%= @item.metadata["description"] %></p>
-    <p><strong><i class="fa-solid fa-users"></i></strong> <%= @item.metadata["authors"] %></p>
-    <p><strong><i class="fa-solid fa-square-pen"></i></strong> <%= @item.metadata["publisher"] %></p>
-    <p><strong><i class="fa-solid fa-language"></i></strong> <%= format_language(@item.metadata["language"]) %></p>
-    <% raw_date = @item.metadata["published_date"] %>
-    <p><strong><i class="fa-solid fa-calendar"></i></strong> <%= Date.parse(raw_date).strftime("%d-%m-%Y") rescue raw_date %></p>
-  <% end %>
+    <!-- Metadata Archive Cyberpunk -->
+    <% if @item.metadata.present? %>
+      <div class="cyber-card metadata-archive">
+        <div class="card-title">Metadata Archive</div>
+        <div class="terminal-output">
+          <p class="terminal-line">$ cat item_metadata.json</p>
+        </div>
+
+        <div class="metadata-grid">
+          <% if @item.metadata["description"].present? %>
+            <div class="metadata-field synopsis">
+              <div class="field-header">
+                <i class="fas fa-file-text"></i>
+                <span class="field-title">Synopsis</span>
+              </div>
+              <div class="field-content"><%= @item.metadata["description"] %></div>
+            </div>
+          <% end %>
+
+          <div class="metadata-row">
+            <% if @item.metadata["authors"].present? %>
+              <div class="metadata-field">
+                <div class="field-header">
+                  <i class="fas fa-user-edit"></i>
+                  <span class="field-title">Author(s)</span>
+                </div>
+                <div class="field-content"><%= @item.metadata["authors"] %></div>
+              </div>
+            <% end %>
+
+            <% if @item.metadata["publisher"].present? %>
+              <div class="metadata-field">
+                <div class="field-header">
+                  <i class="fas fa-building"></i>
+                  <span class="field-title">Publisher</span>
+                </div>
+                <div class="field-content"><%= @item.metadata["publisher"] %></div>
+              </div>
+            <% end %>
+          </div>
+
+          <div class="metadata-row">
+            <% if @item.metadata["language"].present? %>
+              <div class="metadata-field">
+                <div class="field-header">
+                  <i class="fas fa-globe"></i>
+                  <span class="field-title">Language</span>
+                </div>
+                <div class="field-content"><%= format_language(@item.metadata["language"]) %></div>
+              </div>
+            <% end %>
+
+            <% if @item.metadata["published_date"].present? %>
+              <div class="metadata-field">
+                <div class="field-header">
+                  <i class="fas fa-calendar-alt"></i>
+                  <span class="field-title">Publication</span>
+                </div>
+                <% raw_date = @item.metadata["published_date"] %>
+                <div class="field-content"><%= Date.parse(raw_date).strftime("%d.%m.%Y") rescue raw_date %></div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+  </div>
 </div>

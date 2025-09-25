@@ -1,65 +1,64 @@
-<nav class="navbar-capsule">
-  <div class="nav-group">
-    <%= link_to root_path, class: "nav-icon" do %>
-      <i class="fas fa-home"></i>
-      <span class="tooltip">Accueil</span>
+<nav class="cyber-nav-bottom">
+  <div class="nav-grid">
+    <!-- Accueil -->
+    <%= link_to root_path, class: "nav-item" do %>
+      <div class="nav-icon-cyber">
+        <i class="fas fa-home"></i>
+        <div class="cyber-glow-effect"></div>
+      </div>
+      <span class="nav-label">Accueil</span>
     <% end %>
 
-    <%= link_to collections_path, class: "nav-icon" do %>
-      <i class="fas fa-book-bookmark"></i>
-      <span class="tooltip">Collections</span>
+    <!-- Collections -->
+    <%= link_to collections_path, class: "nav-item" do %>
+      <div class="nav-icon-cyber">
+        <i class="fas fa-layer-group"></i>
+        <div class="cyber-glow-effect"></div>
+      </div>
+      <span class="nav-label">Collections</span>
     <% end %>
 
-    <div class="nav-icon spacer"></div>
+    <!-- Central Add Button -->
+    <div class="nav-center">
+      <% if (controller_name == 'collections' && action_name == 'index') %>
+        <%= link_to new_collection_path, class: "cyber-add-btn" do %>
+          <i class="fas fa-plus"></i>
+          <div class="pulse-ring"></div>
+        <% end %>
+      <% elsif (controller_name == 'categories' && action_name == 'index') %>
+        <%= link_to new_collection_category_path(@collection), class: "cyber-add-btn" do %>
+          <i class="fas fa-plus"></i>
+          <div class="pulse-ring"></div>
+        <% end %>
+      <% elsif (controller_name == 'items' && action_name == 'index') %>
+        <%= link_to new_collection_category_item_path(@collection, @category), class: "cyber-add-btn" do %>
+          <i class="fas fa-plus"></i>
+          <div class="pulse-ring"></div>
+        <% end %>
+      <% else %>
+        <%= link_to "#", class: "cyber-add-btn" do %>
+          <i class="fas fa-plus"></i>
+          <div class="pulse-ring"></div>
+        <% end %>
+      <% end %>
+    </div>
 
-    <%= link_to "/", class: "nav-icon" do %>
-      <i class="fas fa-user"></i>
-      <span class="tooltip">Profil</span>
+    <!-- Profil -->
+    <%= link_to "/", class: "nav-item" do %>
+      <div class="nav-icon-cyber">
+        <i class="fas fa-user"></i>
+        <div class="cyber-glow-effect"></div>
+      </div>
+      <span class="nav-label">Profil</span>
     <% end %>
 
-    <%= link_to destroy_user_session_path, data: { turbo_method: :delete, turbo_confirm: "Se déconnecter ?" }, class: "nav-icon logout" do %>
-      <i class="fas fa-sign-out-alt"></i>
-      <span class="tooltip">Quitter</span>
-    <% end %>
-  </div>
-
-  <div class="nav-center-button">
-    <% if (controller_name == 'collections' && action_name == 'index') %>
-      <%= link_to new_collection_path, class: "nav-icon central-add" do %>
-        <i class="fas fa-plus"></i>
-      <% end %>
-    <% elsif (controller_name == 'categories' && action_name == 'index') %>
-      <%= link_to new_collection_category_path(@collection), class: "nav-icon central-add" do %>
-        <i class="fas fa-plus"></i>
-      <% end %>
-    <% elsif (controller_name == 'items' && action_name == 'index') %>
-      <% case @category.name %>
-      <% when "Livre" %>
-        <%= link_to new_collection_category_item_path(@collection, @category), class: "nav-icon central-add" do %>
-          <i class="fas fa-plus"></i>
-        <% end %>
-      <% when "Jouet" %>
-        <%= link_to "/", class: "nav-icon central-add" do  %>
-          <i class="fas fa-plus"></i>
-        <% end %>
-      <% when "Film" %>
-        <%= link_to "/", class: "nav-icon central-add" do  %>
-          <i class="fas fa-plus"></i>
-        <% end %>
-      <% when "Jeux Vidéo" %>
-        <%= link_to "/", class: "nav-icon central-add" do  %>
-          <i class="fas fa-plus"></i>
-        <% end %>
-      <% when "Autres" %>
-        <%= link_to "/", class: "nav-icon central-add" do  %>
-          <i class="fas fa-plus"></i>
-        <% end %>
-      <% end %>
-    <% else %>
-    <%# PREVOIR UNE PAGE LISTING DES AJOUTS AU CAS OU %>
-      <%= link_to "/", class: "nav-icon central-add" do %>
-        <i class="fas fa-plus"></i>
-      <% end %>
+    <!-- Déconnexion -->
+    <%= link_to destroy_user_session_path, data: { turbo_method: :delete, turbo_confirm: "Se déconnecter ?" }, class: "nav-item logout" do %>
+      <div class="nav-icon-cyber">
+        <i class="fas fa-power-off"></i>
+        <div class="cyber-glow-effect"></div>
+      </div>
+      <span class="nav-label">Quitter</span>
     <% end %>
   </div>
 </nav>

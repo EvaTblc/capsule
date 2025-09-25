@@ -18,6 +18,10 @@ class ApplicationController < ActionController::Base
     stored_location_for(user) || collections_path
   end
 
+  def after_sign_up_path_for(resource)
+    collections_path
+  end
+
   def default_url_options
     { host: ENV["DOMAIN"] || "localhost:3000" }
   end

@@ -1,71 +1,109 @@
 <div class="home-banner" data-controller="image-preview">
-  <h2 class="style-title"><%= t(".sign_up") %></h2>
+  <div class="cyber-container">
 
-<%= form_with model: resource,
-              scope: resource_name,
-              url: registration_path(resource_name),
-              local: true,
-              authenticity_token: true,
-              class: "form-capsule" do |f| %>
-
-  <% if resource.errors.any? %>
-    <div class="error-messages">
-      <h2><%= pluralize(resource.errors.count, "erreur") %> :</h2>
-      <ul>
-        <% resource.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+    <!-- Terminal Header -->
+    <div class="terminal-header">
+      <div class="terminal-dots">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+      </div>
+      <div class="terminal-title">user_register.exe</div>
     </div>
-  <% end %>
 
-  <div class="form-inputs">
-    <%= f.text_field :username,
-          required: true,
-          autofocus: true,
-          class: "input-form",
-          autocomplete: "first name",
-          placeholder: "Nom d’utilisateur" %>
+    <!-- Titre -->
+    <h1 class="cyber-page-title glitch-text" data-text="INSCRIPTION">INSCRIPTION</h1>
+    <p class="cyber-subtitle typing-effect">Création d'un nouveau profil utilisateur</p>
 
-    <%= f.email_field :email,
-          required: true,
-          autofocus: true,
-          class: "input-form",
-          autocomplete: "email",
-          placeholder: "Email" %>
+    <!-- Formulaire cyberpunk -->
+    <div class="cyber-form">
+      <%= form_with model: resource,
+                    scope: resource_name,
+                    url: registration_path(resource_name),
+                    local: true,
+                    authenticity_token: true,
+                    class: "cyber-form-inner" do |f| %>
 
-    <%= f.password_field :password,
-          required: true,
-          class: "input-form",
-          autocomplete: "new-password",
-          placeholder: "Mot de passe" %>
-    <% if @minimum_password_length %>
-      <p class="hint"><%= t("devise.shared.minimum_password_length", count: @minimum_password_length) %></p>
-    <% end %>
+        <!-- Messages d'erreur cyberpunk -->
+        <% if resource.errors.any? %>
+          <div class="cyber-card" style="border-color: var(--cyber-red); margin-bottom: 2rem;">
+            <div class="card-title" style="color: var(--cyber-red);">
+              System Error: <%= pluralize(resource.errors.count, "erreur") %>
+            </div>
+            <ul style="color: var(--cyber-red); font-family: 'Courier New', monospace;">
+              <% resource.errors.full_messages.each do |message| %>
+                <li>// <%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
 
-    <%= f.password_field :password_confirmation,
-          required: true,
-          class: "input-form",
-          autocomplete: "new-password",
-          placeholder: "Confirmation du mot de passe" %>
+        <div class="form-group">
+          <%= f.label :username, "Username" %>
+          <%= f.text_field :username,
+                required: true,
+                autofocus: true,
+                autocomplete: "username",
+                placeholder: "hackerman_2024" %>
+        </div>
 
-    <label class="image-upload-label">
-      Choisir un avatar
-      <%= f.file_field :avatar,
-            required: true,
-            class: "hidden",
-            data: {image_preview_target: "master", action:"change->image-preview#addFiles"} %>
-    </label>
+        <div class="form-group">
+          <%= f.label :email, "Email Address" %>
+          <%= f.email_field :email,
+                required: true,
+                autocomplete: "email",
+                placeholder: "user@capsule.com" %>
+        </div>
 
-    <div class="preview-grid new-grid mb-3" data-image-preview-target="list"></div>
+        <div class="form-group">
+          <%= f.label :password, "Security Key" %>
+          <%= f.password_field :password,
+                required: true,
+                autocomplete: "new-password",
+                placeholder: "••••••••••" %>
+          <% if @minimum_password_length %>
+            <small style="color: var(--cyber-gray); font-family: 'Courier New', monospace;">
+              // Minimum <%= @minimum_password_length %> caractères requis
+            </small>
+          <% end %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :password_confirmation, "Confirm Security Key" %>
+          <%= f.password_field :password_confirmation,
+                required: true,
+                autocomplete: "new-password",
+                placeholder: "••••••••••" %>
+        </div>
+
+        <div class="form-group">
+          <label style="color: var(--cyber-green); font-family: 'Orbitron', monospace;">
+            // Avatar Selection
+          </label>
+          <div class="cyber-card" style="padding: 1rem; margin-top: 0.5rem;">
+            <label class="cyber-btn secondary" for="user_avatar" style="cursor: pointer; width: 100%; text-align: center;">
+              <i class="fas fa-upload"></i>
+              Upload Avatar
+            </label>
+            <%= f.file_field :avatar,
+                  id: "user_avatar",
+                  required: true,
+                  style: "display: none;",
+                  data: {image_preview_target: "master", action:"change->image-preview#addFiles"} %>
+            <div class="preview-grid new-grid" data-image-preview-target="list" style="margin-top: 1rem;"></div>
+          </div>
+        </div>
+
+        <div class="form-actions" style="text-align: center; margin-top: 2rem;">
+          <%= f.submit "CRÉER COMPTE", class: "cyber-btn primary" %>
+        </div>
+
+      <% end %>
+
+      <!-- Navigation Links -->
+      <div style="text-align: center; margin-top: 2rem;">
+        <%= render "devise/shared/links" %>
+      </div>
+    </div>
   </div>
-
-  <div class="form-actions">
-    <%= f.submit t(".sign_up"), class: "submit-form" %>
-  </div>
-<% end %>
-
-
-<%= render "devise/shared/links" %>
-
 </div>

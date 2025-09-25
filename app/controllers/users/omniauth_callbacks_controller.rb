@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  skip_before_action :verify_authenticity_token, only: [:passthru, :google_oauth2, :failure]
+  skip_before_action :verify_authenticity_token
+  protect_from_forgery except: :google_oauth2
   # You should configure your model like this:
   # devise :omniauthable, omniauth_providers: [:twitter]
 
@@ -23,12 +24,28 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   # end
 
 def google_oauth2
+  Rails.logger.info "=== OAuth Callback Debug ==="
+  Rails.logger.info "Auth object present: #{auth.present?}"
+  Rails.logger.info "Auth info: #{auth.info.email rescue 'N/A'}"
+
   user = User.from_omniauth(auth)
+  Rails.logger.info "User found: #{user.present?}"
+  Rails.logger.info "User persisted: #{user&.persisted?}"
 
   if user.present? && user.persisted?
-    sign_in_and_redirect user, event: :authentication
-    set_flash_message(:notice, :success, kind: "Google") if is_navigational_format?
+    Rails.logger.info "Attempting sign in for user: #{user.email}"
+
+    # Force session persistence before sign in
+    session[:user_id] = user.id
+    warden.set_user(user, scope: :user, store: true)
+
+    Rails.logger.info "User signed in: #{user_signed_in?}"
+    Rails.logger.info "Current user: #{current_user&.email}"
+
+    # Directly redirect to collections instead of using after_sign_in_path_for
+    redirect_to collections_path, notice: "Connecté avec succès via Google!"
   else
+    Rails.logger.info "User creation failed or not found"
     session[:omniauth_auth] = auth.except('extra')
     flash[:alert] = "Veuillez compléter votre inscription"
     redirect_to new_user_registration_path

@@ -1,0 +1,1607 @@
+// 🤖 CYBERPUNK DESIGN SYSTEM - Capsule App
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Courier+New&display=swap');
+
+// 🎨 Variables couleurs cyberpunk
+:root {
+  --cyber-primary: #a9118d;
+  --cyber-secondary: #ff974c;
+  --cyber-tertiary: #f78be2;
+  --cyber-quaternary: #ffb078;
+  --cyber-green: #00ff88;
+  --cyber-white: #ffffff;
+  --cyber-dark: #1a1a1a;
+  --cyber-dark-soft: #333333;
+  --cyber-gray: #666666;
+  --cyber-red: #ff5f56;
+  --cyber-yellow: #ffbd2e;
+  --cyber-blue: #27ca3f;
+}
+
+// 🚀 Mixins réutilisables
+@mixin cyber-glow($color) {
+  box-shadow: 0 0 20px rgba($color, 0.4);
+}
+
+@mixin cyber-border($color: var(--cyber-primary)) {
+  border: 2px solid $color;
+  border-radius: 8px;
+}
+
+@mixin cyber-gradient-text {
+  background: linear-gradient(145deg, var(--cyber-primary), var(--cyber-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@mixin cyber-background {
+  background: linear-gradient(145deg, rgba(26, 26, 26, 0.9), rgba(51, 51, 51, 0.9));
+}
+
+@mixin cyber-card {
+  @include cyber-background;
+  @include cyber-border;
+  @include cyber-glow(var(--cyber-primary));
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+// 🎯 Classes utilitaires cyberpunk
+.cyber-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+// 🏠 Banner principal (comme homepage)
+.home-banner {
+  min-height: 100vh;
+  background: linear-gradient(145deg, #0a0a0a, #1a1a1a);
+  color: var(--cyber-white);
+  padding: 2rem 0;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+      radial-gradient(circle at 20% 50%, rgba(169, 17, 141, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255, 151, 76, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 80%, rgba(247, 139, 226, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+}
+
+// 💻 Terminal Header cyberpunk
+.terminal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(26, 26, 26, 0.95);
+  border: 1px solid var(--cyber-gray);
+  border-radius: 8px 8px 0 0;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0;
+  font-family: 'Courier New', monospace;
+
+  .terminal-dots {
+    display: flex;
+    gap: 6px;
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+
+      &.red { background: var(--cyber-red); }
+      &.yellow { background: var(--cyber-yellow); }
+      &.green { background: var(--cyber-blue); }
+    }
+  }
+
+  .terminal-title {
+    color: var(--cyber-green);
+    font-size: 0.9rem;
+    font-weight: bold;
+
+    &::before {
+      content: "~/$ ";
+      color: var(--cyber-primary);
+    }
+  }
+}
+
+.cyber-page-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 2.5rem;
+  font-weight: 900;
+  text-align: center;
+  margin: 2rem 0;
+  @include cyber-gradient-text;
+  text-shadow: 0 0 20px rgba(169, 17, 141, 0.5);
+  position: relative;
+
+  &::before {
+    content: "//";
+    color: var(--cyber-green);
+    font-size: 1rem;
+    position: absolute;
+    left: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Courier New', monospace;
+  }
+
+  &::after {
+    content: "";
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyber-primary), transparent);
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.cyber-subtitle {
+  font-family: 'Courier New', monospace;
+  color: var(--cyber-green);
+  text-align: center;
+  margin-bottom: 2rem;
+
+  &::before {
+    content: "> ";
+    color: var(--cyber-primary);
+  }
+}
+
+// 🔘 Boutons cyberpunk universels
+.cyber-btn {
+  font-family: 'Orbitron', monospace;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 12px 24px;
+  border: 2px solid;
+  background: transparent;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  position: relative;
+  overflow: hidden;
+
+  &.primary {
+    border-color: var(--cyber-primary);
+    color: var(--cyber-primary);
+
+    &:hover {
+      background: linear-gradient(145deg, var(--cyber-primary), var(--cyber-secondary));
+      color: var(--cyber-white);
+      @include cyber-glow(var(--cyber-primary));
+      transform: translateY(-2px);
+    }
+  }
+
+  &.secondary {
+    border-color: var(--cyber-secondary);
+    color: var(--cyber-secondary);
+
+    &:hover {
+      background: linear-gradient(145deg, var(--cyber-secondary), var(--cyber-tertiary));
+      color: var(--cyber-white);
+      @include cyber-glow(var(--cyber-secondary));
+      transform: translateY(-2px);
+    }
+  }
+
+  &.danger {
+    border-color: var(--cyber-red);
+    color: var(--cyber-red);
+
+    &:hover {
+      background: var(--cyber-red);
+      color: var(--cyber-white);
+      @include cyber-glow(var(--cyber-red));
+    }
+  }
+
+  &.success {
+    border-color: var(--cyber-green);
+    color: var(--cyber-green);
+
+    &:hover {
+      background: var(--cyber-green);
+      color: var(--cyber-dark);
+      @include cyber-glow(var(--cyber-green));
+    }
+  }
+
+  // Effet de scan au hover
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  &:hover::before {
+    left: 100%;
+  }
+}
+
+// 📱 Cards cyberpunk
+.cyber-card {
+  @include cyber-card;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--cyber-primary), var(--cyber-secondary), var(--cyber-tertiary));
+  }
+
+  .card-title {
+    font-family: 'Orbitron', monospace;
+    font-weight: bold;
+    color: var(--cyber-white);
+    margin-bottom: 1rem;
+
+    &::before {
+      content: "[";
+      color: var(--cyber-green);
+    }
+
+    &::after {
+      content: "]";
+      color: var(--cyber-green);
+    }
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+    @include cyber-glow(var(--cyber-primary));
+  }
+}
+
+// 📝 Formulaires cyberpunk
+.cyber-form {
+  @include cyber-card;
+  padding: 2rem;
+
+  .form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+
+    label {
+      font-family: 'Orbitron', monospace;
+      color: var(--cyber-green);
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      display: block;
+
+      &::before {
+        content: "// ";
+        color: var(--cyber-primary);
+      }
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px 16px;
+      @include cyber-border(var(--cyber-gray));
+      @include cyber-background;
+      color: var(--cyber-white);
+      font-family: 'Courier New', monospace;
+      transition: all 0.3s ease;
+
+      &:focus {
+        outline: none;
+        border-color: var(--cyber-primary);
+        @include cyber-glow(var(--cyber-primary));
+        color: var(--cyber-white);
+      }
+
+      &::placeholder {
+        color: var(--cyber-gray);
+      }
+    }
+
+    // Scan line effect on focus
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--cyber-primary);
+      transition: width 0.3s ease;
+    }
+
+    &:focus-within::after {
+      width: 100%;
+    }
+  }
+}
+
+// 🗂️ Grid cyberpunk
+.cyber-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+
+  .grid-item {
+    @include cyber-card;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-8px) scale(1.02);
+      @include cyber-glow(var(--cyber-secondary));
+
+      .scan-line {
+        animation: scan 2s linear infinite;
+      }
+    }
+
+    .scan-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyber-green), transparent);
+      opacity: 0;
+    }
+  }
+}
+
+// 🚪 Navigation cyberpunk
+.cyber-nav {
+  @include cyber-background;
+  border-bottom: 2px solid var(--cyber-primary);
+  padding: 1rem 0;
+  backdrop-filter: blur(10px);
+
+  .nav-brand {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 1.5rem;
+    @include cyber-gradient-text;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+
+    a {
+      color: var(--cyber-white);
+      text-decoration: none;
+      font-family: 'Orbitron', monospace;
+      font-weight: bold;
+      padding: 8px 16px;
+      border: 1px solid transparent;
+      transition: all 0.3s ease;
+
+      &:hover {
+        border-color: var(--cyber-primary);
+        @include cyber-glow(var(--cyber-primary));
+      }
+    }
+  }
+}
+
+// ⚡ Effets spéciaux
+.glitch-text {
+  position: relative;
+  color: var(--cyber-white);
+
+  &::before,
+  &::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  &::before {
+    animation: glitch-1 2s infinite;
+    color: var(--cyber-secondary);
+    z-index: -1;
+  }
+
+  &::after {
+    animation: glitch-2 2s infinite;
+    color: var(--cyber-tertiary);
+    z-index: -2;
+  }
+}
+
+.typing-effect {
+  font-family: 'Courier New', monospace;
+  color: var(--cyber-green);
+
+  &::after {
+    content: "_";
+    animation: blink 1s infinite;
+    color: var(--cyber-primary);
+  }
+}
+
+// 🔄 Animations
+@keyframes glitch-1 {
+  0%, 14%, 15%, 49%, 50%, 99%, 100% { transform: translateX(0); }
+  15%, 49% { transform: translateX(-2px); }
+}
+
+@keyframes glitch-2 {
+  0%, 20%, 21%, 62%, 63%, 99%, 100% { transform: translateX(0); }
+  21%, 62% { transform: translateX(2px); }
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+@keyframes scan {
+  0% { top: 0; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(169, 17, 141, 0.4); }
+  50% { box-shadow: 0 0 40px rgba(169, 17, 141, 0.8); }
+}
+
+// 👤 User header cyberpunk
+.cyber-user-header {
+  text-align: center;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+
+  .cyber-avatar {
+    margin-top: 1rem;
+
+    .avatar-cyber {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      @include cyber-border(var(--cyber-secondary));
+      @include cyber-glow(var(--cyber-secondary));
+      object-fit: cover;
+    }
+  }
+}
+
+// 📁 Collections cyberpunk
+.collection-cyber {
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+
+  .collection-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1rem;
+
+    i {
+      font-size: 1.5rem;
+      color: var(--cyber-secondary);
+    }
+  }
+
+  .collection-stats {
+    .cyber-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(169, 17, 141, 0.1);
+      border: 1px solid var(--cyber-primary);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      color: var(--cyber-green);
+      font-family: 'Courier New', monospace;
+
+      i {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+// 🚫 Empty state cyberpunk
+.cyber-empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+
+  .cyber-card {
+    margin-top: 10vh;
+    max-width: 500px;
+    text-align: center;
+
+    .terminal-output {
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      text-align: left;
+      margin: 1.5rem 0;
+
+      .terminal-line {
+        margin: 0.5rem 0;
+        color: var(--cyber-white);
+
+        &.error {
+          color: var(--cyber-red);
+        }
+
+        &.success {
+          color: var(--cyber-green);
+        }
+
+        .cyber-highlight {
+          background: var(--cyber-primary);
+          color: var(--cyber-white);
+          padding: 2px 6px;
+          border-radius: 3px;
+          font-weight: bold;
+        }
+      }
+    }
+
+    .mascotte-cyber {
+      margin-top: 2rem;
+
+      .cyber-mascotte {
+        max-width: 120px;
+        filter: drop-shadow(0 0 10px rgba(169, 17, 141, 0.5));
+      }
+    }
+  }
+}
+
+// ⚡ Actions cyberpunk
+.cyber-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+// 📂 Categories cyberpunk
+.category-cyber {
+  position: relative;
+
+  .category-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+
+    .category-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      flex-grow: 1;
+
+      i {
+        font-size: 1.5rem;
+        color: var(--cyber-secondary);
+      }
+    }
+
+    .cyber-edit-btn {
+      background: transparent;
+      border: 1px solid var(--cyber-gray);
+      color: var(--cyber-gray);
+      padding: 8px 12px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+
+      &:hover {
+        border-color: var(--cyber-primary);
+        color: var(--cyber-primary);
+        @include cyber-glow(var(--cyber-primary));
+      }
+
+      i {
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  .category-edit-form {
+    .cyber-form-inline {
+      .form-group {
+        margin-bottom: 1rem;
+
+        .cyber-input {
+          width: 100%;
+          padding: 8px 12px;
+          @include cyber-border(var(--cyber-gray));
+          @include cyber-background;
+          color: var(--cyber-white);
+          font-family: 'Courier New', monospace;
+
+          &:focus {
+            outline: none;
+            border-color: var(--cyber-primary);
+            @include cyber-glow(var(--cyber-primary));
+          }
+        }
+      }
+
+      .form-actions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+
+        .cyber-btn {
+          padding: 6px 12px;
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+}
+
+// 📱 Responsive
+@media (max-width: 768px) {
+  .cyber-page-title {
+    font-size: 2rem;
+  }
+
+  .cyber-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cyber-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .cyber-user-header {
+    .cyber-avatar .avatar-cyber {
+      width: 60px;
+      height: 60px;
+    }
+  }
+
+  .cyber-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+// 📦 Items cyberpunk
+.item-cyber {
+  text-decoration: none;
+  display: block;
+  overflow: hidden;
+
+  .item-image {
+    width: 100%;
+    height: 150px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px 8px 0 0;
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(145deg, rgba(169, 17, 141, 0.1), rgba(255, 151, 76, 0.1));
+    }
+  }
+
+  .item-content {
+    padding: 1rem;
+
+    .item-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 0.5rem;
+
+      i {
+        color: var(--cyber-tertiary);
+        font-size: 1rem;
+      }
+    }
+
+    .item-stats {
+      .cyber-tag {
+        font-size: 0.7rem;
+      }
+    }
+  }
+
+  &:hover {
+    transform: translateY(-8px) scale(1.02);
+
+    .item-image::after {
+      background: linear-gradient(145deg, rgba(169, 17, 141, 0.3), rgba(255, 151, 76, 0.3));
+    }
+  }
+}
+
+// ➕ Add section cyberpunk
+.cyber-add-section {
+  @include cyber-card;
+  padding: 2rem;
+  margin: 2rem 0;
+  text-align: center;
+}
+
+// 🧭 Navigation cyberpunk
+.cyber-nav-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  @include cyber-background;
+  border-top: 2px solid var(--cyber-primary);
+  padding: 1rem 0;
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+
+  .nav-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto 1fr 1fr;
+    align-items: center;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: var(--cyber-gray);
+    transition: all 0.3s ease;
+    padding: 0.5rem;
+
+    .nav-icon-cyber {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      margin-bottom: 0.25rem;
+      transition: all 0.3s ease;
+
+      i {
+        font-size: 1.2rem;
+        z-index: 2;
+      }
+
+      .cyber-glow-effect {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 50%;
+        background: transparent;
+        transition: all 0.3s ease;
+        z-index: 1;
+      }
+    }
+
+    .nav-label {
+      font-size: 0.7rem;
+      font-family: 'Courier New', monospace;
+      text-transform: uppercase;
+    }
+
+    &:hover {
+      color: var(--cyber-primary);
+      transform: translateY(-2px);
+
+      .nav-icon-cyber .cyber-glow-effect {
+        background: rgba(169, 17, 141, 0.2);
+        @include cyber-glow(var(--cyber-primary));
+      }
+    }
+
+    &.logout {
+      &:hover {
+        color: var(--cyber-red);
+
+        .nav-icon-cyber .cyber-glow-effect {
+          background: rgba(255, 95, 86, 0.2);
+          @include cyber-glow(var(--cyber-red));
+        }
+      }
+    }
+  }
+
+  .nav-center {
+    display: flex;
+    justify-content: center;
+
+    .cyber-add-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, var(--cyber-primary), var(--cyber-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: var(--cyber-white);
+      position: relative;
+      transition: all 0.3s ease;
+      @include cyber-glow(var(--cyber-primary));
+
+      i {
+        font-size: 1.5rem;
+        z-index: 3;
+      }
+
+      .pulse-ring {
+        position: absolute;
+        border: 2px solid var(--cyber-primary);
+        border-radius: 50%;
+        width: 80px;
+        height: 80px;
+        animation: pulse 2s infinite;
+        opacity: 0.6;
+      }
+
+      &:hover {
+        transform: scale(1.1);
+        @include cyber-glow(var(--cyber-secondary));
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+// Padding pour le contenu avec navbar
+.container-scrollable {
+  padding-bottom: 100px; // Espace pour la navbar
+}
+
+// 🆕 Creation form cyberpunk
+.creation-terminal {
+  margin: 2rem 0;
+  background: rgba(0, 0, 0, 0.8) !important;
+
+  .terminal-output {
+    .input-prompt {
+      position: relative;
+
+      .cursor-blink {
+        animation: blink 1s infinite;
+        color: var(--cyber-green);
+      }
+    }
+  }
+}
+
+.preview-card {
+  margin: 2rem 0;
+  transition: all 0.3s ease;
+
+  &.active {
+    border-color: var(--cyber-green) !important;
+    @include cyber-glow(var(--cyber-green));
+  }
+}
+
+// 📷 Photo scanner cyberpunk
+.photo-scanner {
+  margin: 2rem 0;
+
+  .scanner-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin: 1rem 0;
+    flex-wrap: wrap;
+
+    .photo-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+  }
+}
+
+// 📚 Copies manager cyberpunk
+.copies-manager {
+  margin: 2rem 0;
+
+  .copies-container {
+    margin: 1rem 0;
+
+    .copy-item {
+      margin: 1rem 0;
+      position: relative;
+
+      .copy-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+
+        .copy-title {
+          color: var(--cyber-secondary);
+          font-family: 'Orbitron', monospace;
+          font-weight: bold;
+
+          &::before {
+            content: "[";
+            color: var(--cyber-green);
+          }
+
+          &::after {
+            content: "]";
+            color: var(--cyber-green);
+          }
+        }
+
+        .copy-remove {
+          padding: 6px 10px;
+          font-size: 0.8rem;
+        }
+      }
+
+      .copy-fields {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+    }
+  }
+
+  .add-copy-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 1rem auto;
+  }
+}
+
+// 📖 Metadata section cyberpunk
+.metadata-section {
+  margin: 2rem 0;
+
+  .metadata-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+
+// 🎛️ Form controls cyberpunk
+.cyber-input, .cyber-select, .cyber-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  @include cyber-border(var(--cyber-gray));
+  @include cyber-background;
+  color: var(--cyber-white);
+  font-family: 'Courier New', monospace;
+  transition: all 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--cyber-primary);
+    @include cyber-glow(var(--cyber-primary));
+    color: var(--cyber-white);
+  }
+
+  &::placeholder {
+    color: var(--cyber-gray);
+  }
+}
+
+.cyber-select {
+  cursor: pointer;
+
+  option {
+    background: var(--cyber-dark);
+    color: var(--cyber-white);
+  }
+}
+
+.cyber-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+// 📷 Scanner cyberpunk
+.scanner-protocol {
+  margin: 2rem 0;
+}
+
+.scan-modes {
+  margin: 2rem 0;
+
+  .mode-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 1rem 0;
+
+    .scan-mode-btn {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.5rem;
+      text-align: left;
+      min-height: 80px;
+      transition: all 0.3s ease;
+
+      i {
+        font-size: 2rem;
+        opacity: 0.8;
+      }
+
+      .btn-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+
+        .btn-title {
+          font-family: 'Orbitron', monospace;
+          font-weight: bold;
+          font-size: 1rem;
+        }
+
+        .btn-desc {
+          font-family: 'Courier New', monospace;
+          font-size: 0.8rem;
+          opacity: 0.8;
+        }
+      }
+
+      &:hover {
+        transform: translateY(-5px);
+
+        i {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
+
+.recovery-actions {
+  margin: 1rem 0;
+
+  .mode-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    .small {
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+    }
+  }
+}
+
+// 📱 Scanner interface cyberpunk
+.scanner-interface {
+  margin: 2rem 0;
+
+  .scanner-viewport {
+    position: relative;
+    margin: 1rem 0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.9);
+
+    .cyber-video {
+      width: 100%;
+      max-width: 520px;
+      height: auto;
+      min-height: 300px;
+      border-radius: 12px;
+      display: block;
+      margin: 0 auto;
+      background: rgba(0, 0, 0, 0.8);
+      object-fit: cover;
+    }
+
+    .scanner-overlay {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 520px;
+      height: 100%;
+      pointer-events: none;
+
+      .scan-line {
+        position: absolute;
+        top: 50%;
+        left: 10%;
+        right: 10%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--cyber-green), transparent);
+        animation: scanLine 2s linear infinite;
+        box-shadow: 0 0 10px var(--cyber-green);
+      }
+
+      .scan-corners {
+        position: absolute;
+        top: 20%;
+        left: 20%;
+        right: 20%;
+        bottom: 20%;
+
+        .corner {
+          position: absolute;
+          width: 20px;
+          height: 20px;
+          border: 2px solid var(--cyber-primary);
+
+          &.top-left {
+            top: 0;
+            left: 0;
+            border-right: none;
+            border-bottom: none;
+          }
+
+          &.top-right {
+            top: 0;
+            right: 0;
+            border-left: none;
+            border-bottom: none;
+          }
+
+          &.bottom-left {
+            bottom: 0;
+            left: 0;
+            border-right: none;
+            border-top: none;
+          }
+
+          &.bottom-right {
+            bottom: 0;
+            right: 0;
+            border-left: none;
+            border-top: none;
+          }
+        }
+      }
+    }
+  }
+
+  .scanner-controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin: 1rem 0;
+    flex-wrap: wrap;
+
+    .file-scan-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+  }
+
+  .manual-entry {
+    margin: 2rem 0;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    border: 1px solid var(--cyber-gray);
+
+    .cyber-form-inline {
+      .form-group {
+        margin-bottom: 1rem;
+
+        .form-label {
+          color: var(--cyber-green);
+          font-family: 'Orbitron', monospace;
+          font-size: 0.9rem;
+          margin-bottom: 0.5rem;
+          display: block;
+
+          &::before {
+            content: "// ";
+            color: var(--cyber-primary);
+          }
+        }
+
+        .barcode-input {
+          font-family: 'Courier New', monospace;
+          text-align: center;
+          letter-spacing: 2px;
+          font-size: 1.1rem;
+        }
+      }
+
+      .form-actions {
+        text-align: center;
+      }
+    }
+  }
+}
+
+@keyframes scanLine {
+  0% { top: 20%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 80%; opacity: 0; }
+}
+
+// 📋 Item Show cyberpunk
+.item-hero {
+  text-align: center;
+  margin: 2rem 0;
+
+  .item-info-bar {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin: 1rem 0;
+    flex-wrap: wrap;
+
+    .category-tag {
+      background: rgba(255, 151, 76, 0.1);
+      border-color: var(--cyber-secondary);
+      color: var(--cyber-secondary);
+    }
+
+    .copies-tag {
+      background: rgba(0, 255, 136, 0.1);
+      border-color: var(--cyber-green);
+      color: var(--cyber-green);
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      .copies-count {
+        font-weight: bold;
+        margin-right: 0.25rem;
+      }
+
+      .copies-label {
+        font-size: 0.8rem;
+        opacity: 0.8;
+      }
+
+      &:hover {
+        background: rgba(0, 255, 136, 0.2);
+        @include cyber-glow(var(--cyber-green));
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+// 💾 Copies database cyberpunk
+.copies-database {
+  margin: 2rem 0;
+
+  .copies-grid {
+    .copy-instance {
+      .instance-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 1rem;
+
+        i {
+          color: var(--cyber-tertiary);
+          font-size: 1.2rem;
+        }
+      }
+
+      .instance-data {
+        .data-field {
+          display: flex;
+          align-items: flex-start;
+          gap: 8px;
+          margin-bottom: 0.75rem;
+          font-family: 'Courier New', monospace;
+          font-size: 0.9rem;
+
+          i {
+            color: var(--cyber-gray);
+            width: 16px;
+            margin-top: 2px;
+          }
+
+          .field-label {
+            color: var(--cyber-green);
+            min-width: 80px;
+            font-weight: bold;
+          }
+
+          .field-value {
+            color: var(--cyber-white);
+
+            &.status-neuf { color: var(--cyber-green); }
+            &.status-bon { color: var(--cyber-secondary); }
+            &.status-correct { color: var(--cyber-yellow); }
+            &.status-mauvais { color: var(--cyber-red); }
+
+            &.price {
+              color: var(--cyber-secondary);
+              font-weight: bold;
+            }
+
+            &.date {
+              color: var(--cyber-tertiary);
+            }
+
+            &.notes {
+              font-style: italic;
+              opacity: 0.8;
+              line-height: 1.4;
+            }
+          }
+
+          &.notes-field {
+            flex-direction: column;
+            align-items: flex-start;
+
+            .field-value {
+              margin-left: 24px;
+              margin-top: 0.25rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// 📸 Photo archive cyberpunk
+.photo-archive {
+  margin: 2rem 0;
+
+  .photo-hero-cyber {
+    position: relative;
+    margin: 1rem 0;
+    border-radius: 12px;
+    overflow: hidden;
+
+    .hero-image {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      display: block;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .image-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: all 0.3s ease;
+
+      .image-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--cyber-white);
+        font-family: 'Orbitron', monospace;
+
+        i {
+          font-size: 1.5rem;
+        }
+      }
+    }
+
+    &:hover {
+      .hero-image {
+        transform: scale(1.05);
+      }
+
+      .image-overlay {
+        opacity: 1;
+      }
+    }
+  }
+
+  .photo-grid-cyber {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+
+    .photo-thumb-cyber {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+
+      .thumb-image {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .thumb-overlay {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: rgba(169, 17, 141, 0.9);
+        color: var(--cyber-white);
+        padding: 4px 8px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.8rem;
+        border-bottom-left-radius: 4px;
+      }
+
+      &:hover .thumb-image {
+        transform: scale(1.1);
+        @include cyber-glow(var(--cyber-primary));
+      }
+    }
+  }
+}
+
+// 🖼️ Modal cyberpunk
+.cyber-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 2rem;
+
+  &.hidden {
+    display: none;
+  }
+
+  .modal-content-cyber {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    text-align: center;
+
+    .modal-image {
+      max-width: 100%;
+      max-height: 80vh;
+      border-radius: 12px;
+      @include cyber-glow(var(--cyber-primary));
+    }
+
+    .modal-close {
+      position: absolute;
+      top: -50px;
+      right: 0;
+    }
+  }
+}
+
+// 📊 Metadata archive cyberpunk
+.metadata-archive {
+  margin: 2rem 0;
+
+  .metadata-grid {
+    .synopsis {
+      grid-column: 1 / -1;
+      margin-bottom: 1.5rem;
+
+      .field-content {
+        line-height: 1.6;
+        font-size: 1rem;
+      }
+    }
+
+    .metadata-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .metadata-field {
+      .field-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 0.5rem;
+
+        i {
+          color: var(--cyber-secondary);
+          width: 20px;
+        }
+
+        .field-title {
+          font-family: 'Orbitron', monospace;
+          font-weight: bold;
+          color: var(--cyber-green);
+          text-transform: uppercase;
+          font-size: 0.9rem;
+        }
+      }
+
+      .field-content {
+        color: var(--cyber-white);
+        font-family: 'Courier New', monospace;
+        padding-left: 28px;
+        line-height: 1.4;
+      }
+    }
+  }
+}

@@ -1,31 +1,55 @@
-<div class="user-head">
-  <h2 class="style-title">Hello <%= current_user.username.nil? ? current_user.full_name : current_user.full_name %></h2>
+<div class="home-banner">
+  <div class="cyber-container">
 
-    <%#= image_tag(current_user.avatar_url) %>
-
-  <%= cl_image_tag current_user.avatar.key, class:"avatar" if current_user.avatar.present? %>
-</div>
-
-<div class="cards-wrapper">
-  <% @collections.each do |collection| %>
-    <%= link_to collection_categories_path(collection) do %>
-    <div class="collection-card" style="background-image: url(<%= asset_path('default_collection.jpg') %>)">
-      <div class="collection-overlay">
-        <h2><%= collection.name %></h2>
+    <!-- Terminal Header -->
+    <div class="terminal-header">
+      <div class="terminal-dots">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
       </div>
+      <div class="terminal-title">collections.exe</div>
     </div>
+
+    <!-- Collections Grid -->
+    <% if @collections.any? %>
+      <div class="cyber-grid">
+        <% @collections.each do |collection| %>
+          <%= link_to collection_categories_path(collection), class: "grid-item collection-cyber" do %>
+            <div class="scan-line"></div>
+            <div class="collection-header">
+              <i class="fas fa-folder-open"></i>
+              <span class="card-title"><%= collection.name %></span>
+            </div>
+            <div class="collection-stats">
+              <span class="cyber-tag">
+                <i class="fas fa-cube"></i>
+                <%= collection.categories.sum { |c| c.items.count } %> items
+              </span>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
     <% end %>
-  <% end %>
 
-<% if @collections.empty? %>
-  <div class="empty-state">
-    <div class="mascotte-wrapper">
-      <%= image_tag "mascotte.png", class: "empty-robot", alt: "Mascotte robot" %>
-      <p class="empty-text">Ta capsule est vide…</p>
-      <p class="empty-sub">Clique sur <span class="plus-sign">+</span> pour créer ta première collection</p>
 
-    </div>
+    <!-- Empty State Cyberpunk -->
+    <% if @collections.empty? %>
+      <div class="cyber-empty-state">
+        <div class="cyber-card">
+          <div class="card-title">System Status</div>
+          <div class="terminal-output">
+            <p class="terminal-line">$ ls collections/</p>
+            <p class="terminal-line error">// Aucune collection trouvée</p>
+            <p class="terminal-line">$ initialize_new_collection --interactive</p>
+            <p class="terminal-line success">// Cliquez sur <span class="cyber-highlight">+</span> pour démarrer</p>
+          </div>
+          <div class="mascotte-cyber">
+            <%= image_tag "mascotte.png", class: "cyber-mascotte", alt: "Mascotte robot" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
   </div>
-<% end %>
-
 </div>

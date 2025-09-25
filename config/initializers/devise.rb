@@ -44,8 +44,7 @@ Devise.setup do |config|
     ENV["GOOGLE_CLIENT_ID"],
     ENV["GOOGLE_CLIENT_SECRET"],
     {
-      scope: "email,profile",
-      prompt: "select_account"
+      scope: "email,profile"
     }
   # ==> Configuration for any authentication mechanism
   # Configure which keys are used when authenticating a user. The default is
