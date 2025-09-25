@@ -15,6 +15,9 @@ Rails.application.routes.draw do
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
+  # Debug route
+  get "debug/auth" => "application#debug_auth" if Rails.env.development?
+
   # Defines the root path route ("/")
   root "pages#home"
   resources :collections do

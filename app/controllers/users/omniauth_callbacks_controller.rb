@@ -23,31 +23,12 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   # end
 
 def google_oauth2
-  # Prevent duplicate processing
-  return if performed?
-
-  # Check if user is already signed in from a previous successful request
-  if user_signed_in?
-    redirect_to after_sign_in_path_for(current_user)
-    return
-  end
-
-  # First try to find existing user
-  user = User.find_by(provider: auth.provider, uid: auth.uid)
-
-  # If not found, create new user
-  if user.nil?
-    user = User.from_omniauth(auth)
-  end
+  user = User.from_omniauth(auth)
 
   if user.present? && user.persisted?
-    # Clear any existing sessions to prevent conflicts
-    reset_session
-    sign_in(user, event: :authentication)
-    redirect_to after_sign_in_path_for(user)
-    set_flash_message(:notice, :success, kind: 'Google') if is_navigational_format?
+    sign_in_and_redirect user, event: :authentication
+    set_flash_message(:notice, :success, kind: "Google") if is_navigational_format?
   else
-    # Only redirect to registration if the user creation actually failed
     session[:omniauth_auth] = auth.except('extra')
     flash[:alert] = "Veuillez compléter votre inscription"
     redirect_to new_user_registration_path
