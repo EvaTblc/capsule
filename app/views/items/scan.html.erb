@@ -28,22 +28,15 @@
       <% end %>
     </div>
 
-    <!-- Scanner Protocol Interface -->
-    <div class="cyber-card scanner-protocol">
-      <div class="card-title">Book Detection Protocol</div>
-      <div class="terminal-output">
-        <p class="terminal-line">$ initialize_barcode_scanner --mode="quantum_detection"</p>
-        <p class="terminal-line success">// Scanner ready for ISBN detection</p>
-        <p class="terminal-line">$ select_scan_mode: [POSSESS|SEARCH]</p>
-      </div>
-    </div>
-
     <!-- Mode Selection Cyberpunk -->
     <div class="cyber-card scan-modes" data-toggle-target="controls">
       <div class="card-title">Scan Mode Selection</div>
 
       <div class="mode-buttons">
-        <button class="cyber-btn primary scan-mode-btn" data-toggle-target="checkPossess" data-action="click->toggle#toggleCheckbox click->barcode#startScan">
+        <button class="cyber-btn primary scan-mode-btn"
+                data-toggle-target="checkPossess"
+                data-action="click->toggle#toggleCheckbox"
+                data-barcode-auto-start="true">
           <i class="fas fa-check-circle"></i>
           <div class="btn-content">
             <span class="btn-title">POSSESS MODE</span>
@@ -51,7 +44,9 @@
           </div>
         </button>
 
-        <button class="cyber-btn secondary scan-mode-btn" data-toggle-target="checkSearch" data-action="click->toggle#toggleCheckbox">
+        <button class="cyber-btn secondary scan-mode-btn"
+                data-toggle-target="checkSearch"
+                data-action="click->toggle#toggleCheckbox">
           <i class="fas fa-search"></i>
           <div class="btn-content">
             <span class="btn-title">SEARCH MODE</span>
@@ -65,10 +60,6 @@
     <div class="cyber-card recovery-actions d-none" data-toggle-target="oups">
       <div class="card-title" style="color: var(--cyber-yellow);">Recovery Protocol</div>
       <div class="mode-buttons">
-        <button class="cyber-btn danger small d-none" data-toggle-target="oupsHaveIt">
-          <i class="fas fa-undo"></i>
-          Annuler - Je l'ai déjà
-        </button>
         <button class="cyber-btn secondary small d-none" data-toggle-target="oupsFindIt">
           <i class="fas fa-search"></i>
           Recherche manuelle
@@ -79,7 +70,16 @@
 
     <!-- Scanner Interface Cyberpunk -->
     <div class="cyber-card scanner-interface d-none" data-toggle-target="scan">
-      <div class="card-title">Quantum Barcode Reader</div>
+      <div class="card-title">
+        Quantum Barcode Reader
+        <button class="cyber-btn secondary small switch-mode-btn"
+                data-toggle-target="checkSearch"
+                data-action="click->toggle#switchMode"
+                style="float: right; padding: 4px 8px; font-size: 0.7rem;">
+          <i class="fas fa-exchange-alt"></i>
+          Switch to SEARCH
+        </button>
+      </div>
 
       <!-- Debug Output -->
       <div class="terminal-output">
@@ -136,6 +136,18 @@
 
     <!-- Manual Book Entry (hidden by default) -->
     <div class="add-books d-none" data-toggle-target="addBook" data-controller="add-book">
+      <div class="cyber-card">
+        <div class="card-title">
+          Manual Book Entry
+          <button class="cyber-btn primary small switch-mode-btn"
+                  data-toggle-target="checkPossess"
+                  data-action="click->toggle#switchMode"
+                  style="float: right; padding: 4px 8px; font-size: 0.7rem;">
+            <i class="fas fa-exchange-alt"></i>
+            Switch to POSSESS
+          </button>
+        </div>
+      </div>
       <%= render "add_book", collection: @collection, category: @category, item: Item.new %>
     </div>
 

@@ -31,9 +31,16 @@
           <div class="pulse-ring"></div>
         <% end %>
       <% elsif (controller_name == 'items' && action_name == 'index') %>
-        <%= link_to new_collection_category_item_path(@collection, @category), class: "cyber-add-btn" do %>
-          <i class="fas fa-plus"></i>
-          <div class="pulse-ring"></div>
+        <% if @category.name == "Livre" %>
+          <%= link_to scan_collection_category_items_path(@collection, @category), class: "cyber-add-btn" do %>
+            <i class="fas fa-plus"></i>
+            <div class="pulse-ring"></div>
+          <% end %>
+        <% else %>
+          <%= link_to new_collection_category_item_path(@collection, @category), class: "cyber-add-btn" do %>
+            <i class="fas fa-plus"></i>
+            <div class="pulse-ring"></div>
+          <% end %>
         <% end %>
       <% else %>
         <%= link_to "#", class: "cyber-add-btn" do %>

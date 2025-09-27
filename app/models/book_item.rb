@@ -20,7 +20,7 @@ class BookItem < Item
   end
 
   def check_metadata_keys
-    allowed = [:authors, :publisher, :language, :published_date, :description, :currency]
+    allowed = [ :authors, :publisher, :language, :published_date, :description, :currency ]
     unless metadata.keys.all? { |key| allowed.include?(key.to_sym) }
       errors.add(:metadata, "clés non autorisées")
     end

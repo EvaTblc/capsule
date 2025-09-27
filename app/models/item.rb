@@ -9,7 +9,7 @@ class Item < ApplicationRecord
   accepts_nested_attributes_for :item_copies, allow_destroy: true, reject_if: :all_blank
 
   has_many_attached :photos do |attachable|
-    attachable.variant :small, resize_to_limit: [1920, 1080], saver: { quality: 80 }
+    attachable.variant :small, resize_to_limit: [ 1920, 1080 ], saver: { quality: 80 }
   end
 
   enum status: { owned: 0, wanted: 1 }

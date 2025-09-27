@@ -12,7 +12,7 @@ Rails.application.configure do
 
   config.hosts << "www.example.com"
   config.hosts << "localhost"
-  
+
   # Do not eager load code on boot.
   config.eager_load = true
 

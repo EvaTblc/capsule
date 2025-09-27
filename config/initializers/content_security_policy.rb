@@ -42,7 +42,7 @@ Rails.application.configure do
 
   # ✅ indispensable pour l’importmap inline
   config.content_security_policy_nonce_generator  = ->(request) { SecureRandom.base64(16) }
-  config.content_security_policy_nonce_directives = %w(script-src)
+  config.content_security_policy_nonce_directives = %w[script-src]
   config.permissions_policy do |p|
     p.camera :self
   end

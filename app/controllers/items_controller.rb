@@ -14,7 +14,6 @@ class ItemsController < ApplicationController
     if @category.items.empty? && @category.name == "Livre"
       redirect_to scan_collection_category_items_path(@collection, @category)
     end
-
   end
   def show
     @collection = Collection.find(params[:collection_id])
@@ -55,7 +54,7 @@ class ItemsController < ApplicationController
     barcode = barcode.strip
     return render(json: { error: "Barcode manquant" }, status: :unprocessable_entity) if barcode.blank?
 
-    klass = (barcode.start_with?("978","979") && barcode.length == 13) ? BookItem : Item
+    klass = (barcode.start_with?("978", "979") && barcode.length == 13) ? BookItem : Item
 
     item = klass.find_or_initialize_by(
       collection_id: @collection.id,
@@ -89,7 +88,6 @@ class ItemsController < ApplicationController
       prefill = Base64.strict_encode64(payload.to_json)
       redirect_to new_collection_category_item_path(@collection, @category, prefill: prefill)
     end
-
   end
 
   def new
@@ -109,7 +107,6 @@ class ItemsController < ApplicationController
       source_id: prefill["source_id"],
       metadata:  prefill["metadata"] || {}
     )
-
   end
 
   def create
@@ -151,7 +148,7 @@ class ItemsController < ApplicationController
     p = params.require(:item).permit(:name, :possession, :state, :type, :barcode, :source, :source_id, :price,
       metadata: {},
       photos: [],
-      item_copies_attributes: [:id, :state, :price, :purchase_date, :notes, :_destroy])
+      item_copies_attributes: [ :id, :state, :price, :purchase_date, :notes, :_destroy ])
     p[:metadata] = JSON.parse(p[:metadata]) rescue {} if p[:metadata].is_a?(String)
     p
   end

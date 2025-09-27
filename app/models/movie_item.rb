@@ -1,3 +1,2 @@
 class MovieItem < Item
-
 end

@@ -1,5 +1,5 @@
 class CategoriesController < ApplicationController
-  before_action :set_category, except: [:index, :create, :new]
+  before_action :set_category, except: [ :index, :create, :new ]
   before_action :set_collection
 
   def index

@@ -1,5 +1,5 @@
 class CollectionsController < ApplicationController
-  before_action :set_collection, except: [:index, :create, :new]
+  before_action :set_collection, except: [ :index, :create, :new ]
   def index
     @collections = Collection.all.where(user: current_user)
   end

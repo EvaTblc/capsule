@@ -45,7 +45,7 @@
   </head>
 
   <body>
-    <div class="container-scrollable">
+    <div class="<%= controller_path.include?('users/sessions') || controller_path.include?('users/registrations') ? '' : 'container-scrollable' %>">
       <%= yield %>
       <% if current_user && !(controller_name == 'pages' && action_name == 'home') && controller_path.exclude?('devise') %>
         <%= render "shared/navbar" %>

@@ -42,11 +42,11 @@ gem "sassc-rails"
 gem "font-awesome-sass", "~> 6.1"
 gem "dotenv-rails"
 gem "cloudinary"
-gem 'faker'
+gem "faker"
 
 gem "devise"
 gem "omniauth"
-gem "omniauth-google-oauth2" 
+gem "omniauth-google-oauth2"
 # gem "omniauth-rails_csrf_protection"  # Disabled - causing CSRF conflicts
 
 group :development, :test do

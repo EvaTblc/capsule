@@ -17,39 +17,45 @@
 
     <!-- Formulaire cyberpunk -->
     <div class="cyber-form">
-      <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "cyber-form-inner" }) do |f| %>
+      <%= form_with(model: resource, as: resource_name, url: session_path(resource_name), local: true, html: { class: "cyber-form-inner" }) do |f| %>
 
         <div class="form-group">
           <%= f.label :email, "Email Address" %>
-          <%= f.input_field :email,
+          <%= f.email_field :email,
                             required: false,
                             autofocus: true,
                             placeholder: "user@capsule.com",
-                            input_html: { autocomplete: "email" } %>
+                            autocomplete: "email",
+                            class: "cyber-input" %>
         </div>
 
         <div class="form-group">
           <%= f.label :password, "Access Key" %>
-          <%= f.input_field :password,
-                            required: false,
-                            placeholder: "••••••••••",
-                            input_html: { autocomplete: "current-password" } %>
+          <%= f.password_field :password,
+                               required: false,
+                               placeholder: "••••••••••",
+                               autocomplete: "current-password",
+                               class: "cyber-input" %>
         </div>
 
         <% if devise_mapping.rememberable? %>
-          <div class="form-group">
-            <label>
-              <%= f.input_field :remember_me, as: :boolean %>
+          <div class="form-group" data-controller="remember-toggle" style="text-align: left; margin-bottom: 1rem;">
+            <button type="button"
+                    class="cyber-btn toggle inactive"
+                    data-toggle="false"
+                    data-remember-toggle-target="button"
+                    data-action="click->remember-toggle#toggle">
+              <i class="fas fa-power-off"></i>
               <span>Maintenir la connexion</span>
-            </label>
+            </button>
+            <%= f.hidden_field :remember_me,
+                               value: "0",
+                               data: { "remember-toggle-target": "hiddenField" } %>
           </div>
         <% end %>
 
-        <div class="form-actions" style="text-align: center; margin-top: 2rem;">
-          <%= f.button :submit, class: "cyber-btn primary" do %>
-            <i class="fas fa-sign-in-alt"></i>
-            INITIER CONNEXION
-          <% end %>
+        <div class="form-actions" style="text-align: center; margin-top: 3rem;">
+          <%= f.submit "INITIER CONNEXION", class: "cyber-btn primary cyber-btn-main" %>
         </div>
 
       <% end %>

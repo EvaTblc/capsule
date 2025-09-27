@@ -12,11 +12,9 @@
 @import "pages/index";
 
 body {
-  height: 100vh;
-  background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), image-url("home-min.JPG");
+  background: linear-gradient(145deg, #0a0a0a, #1a1a1a);
   display: flex;
   justify-content: space-around;
-  background-color: black;
   align-items: center;
   background-size: cover;
   background-position: center;

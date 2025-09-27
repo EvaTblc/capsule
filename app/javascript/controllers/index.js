@@ -17,3 +17,6 @@ application.register("scanner-loader", ScannerLoaderController)
 
 import ToggleController from "controllers/toggle_controller"
 application.register("toggle", ToggleController)
+
+import RememberToggleController from "controllers/remember_toggle_controller"
+application.register("remember-toggle", RememberToggleController)

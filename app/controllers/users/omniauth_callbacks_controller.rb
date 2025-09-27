@@ -18,10 +18,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     super
   end
 
-  # GET|POST /users/auth/twitter/callback
-  # def failure
-  #   super
-  # end
+# GET|POST /users/auth/twitter/callback
+# def failure
+#   super
+# end
 
 def google_oauth2
   Rails.logger.info "=== OAuth Callback Debug ==="
@@ -46,7 +46,7 @@ def google_oauth2
     redirect_to collections_path, notice: "Connecté avec succès via Google!"
   else
     Rails.logger.info "User creation failed or not found"
-    session[:omniauth_auth] = auth.except('extra')
+    session[:omniauth_auth] = auth.except("extra")
     flash[:alert] = "Veuillez compléter votre inscription"
     redirect_to new_user_registration_path
   end
@@ -66,6 +66,6 @@ end
   private
 
   def auth
-    @auth ||= request.env['omniauth.auth']
+    @auth ||= request.env["omniauth.auth"]
   end
 end

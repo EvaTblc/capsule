@@ -161,6 +161,10 @@
   }
 }
 
+.cyber-btn-user {
+  font-size: 12px;
+}
+
 // 🔘 Boutons cyberpunk universels
 .cyber-btn {
   font-family: 'Orbitron', monospace;
@@ -285,7 +289,7 @@
 // 📝 Formulaires cyberpunk
 .cyber-form {
   @include cyber-card;
-  padding: 2rem;
+  padding: 1rem;
 
   .form-group {
     margin-bottom: 1.5rem;
@@ -1604,4 +1608,134 @@
       }
     }
   }
+}
+
+// 🔘 Toggle button cyberpunk (discret)
+.cyber-btn.toggle {
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  border-width: 1px;
+  clip-path: none;
+  border-radius: 4px;
+
+  &.inactive {
+    border-color: var(--cyber-gray);
+    color: var(--cyber-gray);
+    background: transparent;
+    opacity: 0.7;
+
+    i {
+      opacity: 0.5;
+    }
+
+    &:hover {
+      border-color: var(--cyber-primary);
+      color: var(--cyber-primary);
+      background: rgba(169, 17, 141, 0.05);
+      opacity: 1;
+
+      i {
+        opacity: 0.8;
+      }
+    }
+  }
+
+  &.active {
+    border-color: var(--cyber-green);
+    color: var(--cyber-green);
+    background: rgba(0, 255, 136, 0.1);
+
+    i {
+      color: var(--cyber-green);
+      opacity: 1;
+    }
+
+    &:hover {
+      background: rgba(0, 255, 136, 0.2);
+    }
+  }
+
+  // Animation du power icon
+  i {
+    transition: all 0.3s ease;
+    font-size: 0.7rem;
+  }
+
+  span {
+    font-size: 0.75rem;
+  }
+
+  // Pas d'effet scan pour ce bouton
+  &::before {
+    display: none;
+  }
+}
+
+// 🚀 Bouton principal de connexion (très voyant)
+.cyber-btn-main {
+  font-size: 1.1rem !important;
+  padding: 16px 32px !important;
+  font-weight: 900 !important;
+  text-transform: uppercase;
+  position: relative;
+  animation: pulse-glow 2s infinite;
+  transform: scale(1.05);
+
+  &:hover {
+    transform: scale(1.1) translateY(-3px) !important;
+    animation: pulse-glow 1s infinite;
+    box-shadow:
+      0 0 30px rgba(169, 17, 141, 0.6),
+      0 0 60px rgba(169, 17, 141, 0.4),
+      0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, var(--cyber-primary), var(--cyber-secondary), var(--cyber-tertiary), var(--cyber-primary));
+    background-size: 400% 400%;
+    border-radius: inherit;
+    z-index: -1;
+    animation: gradient-border 3s ease infinite;
+  }
+}
+
+@keyframes gradient-border {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+// 🔄 Bouton de switch de mode
+.switch-mode-btn {
+  transition: all 0.3s ease;
+  position: relative;
+  border-radius: 4px !important;
+  clip-path: none !important;
+
+  &:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 0 10px rgba(169, 17, 141, 0.4) !important;
+  }
+
+  i {
+    margin-right: 4px;
+    animation: rotate 2s linear infinite;
+  }
+
+  &::before {
+    display: none !important;
+  }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

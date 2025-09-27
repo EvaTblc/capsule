@@ -16,7 +16,7 @@ class AddTypedItemsFields < ActiveRecord::Migration[7.2]
 
     add_index :items, :type
     add_index :items, :barcode
-    add_index :items, [:collection_id, :barcode]
+    add_index :items, [ :collection_id, :barcode ]
     add_index :items, :metadata, using: :gin
   end
 end
