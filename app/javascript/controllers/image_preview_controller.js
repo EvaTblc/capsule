@@ -34,6 +34,12 @@ function compressImage(file, quality = 0.7, maxWidth = 1920, maxHeight = 1080) {
 export default class extends Controller {
   static targets = ["master", "list"]
 
+  debugConnect() {
+    console.log("🟢 Image Preview Controller Connected!", this.element)
+    console.log("🎯 Master target:", this.hasMasterTarget ? this.masterTarget : "NOT FOUND")
+    console.log("🎯 List target:", this.hasListTarget ? this.listTarget : "NOT FOUND")
+  }
+
   async addFiles(event) {
     const files = Array.from(event.target.files || [])
     if (!files.length) return

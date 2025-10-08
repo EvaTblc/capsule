@@ -718,16 +718,22 @@
 // 📦 Items cyberpunk
 .item-cyber {
   text-decoration: none;
-  display: block;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
+  position: relative;
+  height: 280px;
+  border-radius: 12px;
 
   .item-image {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 150px;
+    height: 100%;
     background-size: cover;
     background-position: center;
-    border-radius: 8px 8px 0 0;
-    position: relative;
+    z-index: 1;
 
     &::after {
       content: "";
@@ -736,37 +742,65 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: linear-gradient(145deg, rgba(169, 17, 141, 0.1), rgba(255, 151, 76, 0.1));
+      background: linear-gradient(to bottom, transparent 0%, transparent 70%, rgba(0, 0, 0, 0.95) 100%);
+      z-index: 2;
     }
   }
 
   .item-content {
-    padding: 1rem;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0.5rem 0.8rem;
+    z-index: 3;
 
     .item-header {
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 0.5rem;
+      justify-content: center;
+      gap: 6px;
 
       i {
-        color: var(--cyber-tertiary);
-        font-size: 1rem;
+        display: none; // Caché pour un look plus épuré
+      }
+
+      .card-title {
+        font-size: 0.75rem;
+        font-weight: bold;
+        color: #ffffff;
+        text-shadow:
+          0 0 10px rgba(0, 0, 0, 0.8),
+          0 2px 4px rgba(0, 0, 0, 0.9);
+        text-align: center;
+        width: 100%;
+        letter-spacing: 0.5px;
+        line-height: 1.2;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
     }
 
     .item-stats {
-      .cyber-tag {
-        font-size: 0.7rem;
-      }
+      display: none; // Caché pour style carte
     }
   }
 
   &:hover {
-    transform: translateY(-8px) scale(1.02);
+    transform: translateY(-8px) scale(1.05);
+    transition: all 0.3s ease;
 
     .item-image::after {
-      background: linear-gradient(145deg, rgba(169, 17, 141, 0.3), rgba(255, 151, 76, 0.3));
+      background: linear-gradient(to bottom, rgba(169, 17, 141, 0.15) 0%, rgba(255, 151, 76, 0.15) 70%, rgba(0, 0, 0, 0.95) 100%);
+    }
+
+    .item-content .item-header .card-title {
+      text-shadow:
+        0 0 15px rgba(255, 255, 255, 0.8),
+        0 0 10px rgba(0, 0, 0, 0.8),
+        0 2px 4px rgba(0, 0, 0, 0.9);
     }
   }
 }

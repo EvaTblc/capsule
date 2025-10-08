@@ -52,6 +52,7 @@ class ItemsController < ApplicationController
   def intake
     barcode = params[:barcode].presence || params.dig(:item, :barcode).to_s
     barcode = barcode.strip
+    status = params[:status].presence || "owned"
     return render(json: { error: "Barcode manquant" }, status: :unprocessable_entity) if barcode.blank?
 
     klass = (barcode.start_with?("978", "979") && barcode.length == 13) ? BookItem : Item
@@ -77,6 +78,7 @@ class ItemsController < ApplicationController
       type: klass.name,
       source: item.source,
       source_id: item.source_id,
+      status: status,
       metadata: item.metadata.presence || {}
     }
 
@@ -113,7 +115,12 @@ class ItemsController < ApplicationController
     attrs = item_params.dup
     files = attrs.delete(:photos) # on sort les fichiers du hash
 
-    @item = @category.items.new(attrs)
+    # Déterminer le bon type d'item
+    item_type = attrs[:type].present? ? attrs[:type] : 'Item'
+    klass = item_type.constantize
+
+    @item = klass.new(attrs)
+    @item.category = @category
     @item.collection = @collection
 
     if @item.save
@@ -145,7 +152,7 @@ class ItemsController < ApplicationController
   end
 
   def item_params
-    p = params.require(:item).permit(:name, :possession, :state, :type, :barcode, :source, :source_id, :price,
+    p = params.require(:item).permit(:name, :possession, :state, :type, :barcode, :source, :source_id, :price, :status,
       metadata: {},
       photos: [],
       item_copies_attributes: [ :id, :state, :price, :purchase_date, :notes, :_destroy ])

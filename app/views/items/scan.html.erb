@@ -68,17 +68,26 @@
     </div>
 
 
+    <!-- Switch to Search Mode (hidden by default) -->
+    <div class="switch-mode d-none" data-toggle-target="switchToSearch">
+      <div class="cyber-card">
+        <div class="card-title">
+          Mode Switcher
+          <button class="cyber-btn secondary small switch-mode-btn"
+                  data-toggle-target="checkSearch"
+                  data-action="click->toggle#switchMode"
+                  style="float: right; padding: 4px 8px; font-size: 0.7rem;">
+            <i class="fas fa-exchange-alt"></i>
+            Switch to SEARCH
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Scanner Interface Cyberpunk -->
     <div class="cyber-card scanner-interface d-none" data-toggle-target="scan">
       <div class="card-title">
         Quantum Barcode Reader
-        <button class="cyber-btn secondary small switch-mode-btn"
-                data-toggle-target="checkSearch"
-                data-action="click->toggle#switchMode"
-                style="float: right; padding: 4px 8px; font-size: 0.7rem;">
-          <i class="fas fa-exchange-alt"></i>
-          Switch to SEARCH
-        </button>
       </div>
 
       <!-- Debug Output -->
@@ -123,6 +132,7 @@
 
         <%= form_with url: intake_collection_category_items_path(@collection, @category),
                     method: :post, local: true, data: { turbo: false }, class: "cyber-form-inline" do %>
+          <%= hidden_field_tag :status, "owned", id: "barcode-status-field" %>
           <div class="form-group">
             <%= label_tag :barcode, "Code ISBN/EAN", class: "form-label" %>
             <%= text_field_tag :barcode, nil, placeholder: "9782070368228", class: "cyber-input barcode-input" %>
@@ -149,6 +159,23 @@
         </div>
       </div>
       <%= render "add_book", collection: @collection, category: @category, item: Item.new %>
+    </div>
+
+    <!-- Manual Book Search (hidden by default) -->
+    <div class="search-books d-none" data-toggle-target="searchBook" data-controller="search-book">
+      <div class="cyber-card">
+        <div class="card-title">
+          Manual Book Search
+          <button class="cyber-btn secondary small switch-mode-btn"
+                  data-toggle-target="checkSearch"
+                  data-action="click->toggle#switchMode"
+                  style="float: right; padding: 4px 8px; font-size: 0.7rem;">
+            <i class="fas fa-exchange-alt"></i>
+            Switch to SEARCH
+          </button>
+        </div>
+      </div>
+      <%= render "search_book", collection: @collection, category: @category, item: Item.new %>
     </div>
 
   </div>

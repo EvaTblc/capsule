@@ -33,15 +33,6 @@
           </div>
         <% end %>
 
-        <!-- Terminal de création -->
-        <div class="cyber-card creation-terminal">
-          <div class="terminal-output">
-            <p class="terminal-line">$ mkdir new_collection</p>
-            <p class="terminal-line">$ cd new_collection</p>
-            <p class="terminal-line input-prompt">$ echo "<span class="cursor-blink">_</span>" > collection_name.txt</p>
-          </div>
-        </div>
-
         <div class="form-group">
           <%= f.label :name, "Nom de la collection" %>
           <%= f.text_field :name,
@@ -52,17 +43,6 @@
                   action: "input->collection-preview#updatePreview",
                   "collection-preview-target": "input"
                 } %>
-        </div>
-
-        <!-- Preview en temps réel -->
-        <div class="cyber-card preview-card" data-controller="collection-preview">
-          <div class="card-title">Preview Terminal</div>
-          <div class="terminal-output">
-            <p class="terminal-line">$ ls collections/</p>
-            <p class="terminal-line success" data-collection-preview-target="preview">// Nouvelle collection: [En attente...]</p>
-            <p class="terminal-line">$ collection.status</p>
-            <p class="terminal-line" style="color: var(--cyber-yellow);">// Ready for initialization...</p>
-          </div>
         </div>
 
         <div class="form-actions" style="text-align: center; margin-top: 2rem;">

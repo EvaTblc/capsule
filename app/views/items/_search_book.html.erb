@@ -1,0 +1,147 @@
+<div class="cyber-form" data-controller="image-preview">
+  <%= form_with model: item,
+                url: collection_category_items_path(collection, category),
+                scope: :item,
+                class: "cyber-form-inner",
+                data: { turbo_frame: "_top" } do |f| %>
+
+    <!-- Messages d'erreur cyberpunk -->
+    <% if item.errors.any? %>
+      <div class="cyber-card" style="border-color: var(--cyber-red); margin-bottom: 2rem;">
+        <div class="card-title" style="color: var(--cyber-red);">
+          Data Corruption: <%= pluralize(item.errors.count, "erreur") %>
+        </div>
+        <ul style="color: var(--cyber-red); font-family: 'Courier New', monospace;">
+          <% item.errors.full_messages.each do |message| %>
+            <li>// <%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <!-- Champs cachés -->
+    <%= f.hidden_field :type, value: "BookItem" %>
+    <%= f.hidden_field :source %>
+    <%= f.hidden_field :source_id %>
+    <%= f.hidden_field :barcode %>
+    <%= f.hidden_field :status, value: "wanted" %>
+
+    <!-- Input maître caché -->
+    <%= f.file_field :photos,
+          multiple: true,
+          accept: "image/*",
+          class: "hidden",
+          data: { image_preview_target: "master" } %>
+
+    <!-- Section Photo Cyberpunk -->
+    <div class="cyber-card photo-scanner">
+      <div class="card-title">Image Capture Module</div>
+      <div class="scanner-actions">
+        <label class="cyber-btn primary photo-btn">
+          <i class="fas fa-camera"></i>
+          Scanner Cam
+          <input type="file"
+                accept="image/*"
+                capture="environment"
+                style="display: none;"
+                data-action="change->image-preview#addFiles">
+        </label>
+
+        <label class="cyber-btn secondary photo-btn">
+          <i class="fas fa-images"></i>
+          Archives
+          <input type="file"
+                accept="image/*"
+                multiple
+                style="display: none;"
+                data-action="change->image-preview#addFiles">
+        </label>
+      </div>
+
+      <!-- Prévisualisation cyberpunk -->
+      <div class="preview-grid new-grid" data-image-preview-target="list"></div>
+    </div>
+
+    <!-- Nom du livre -->
+    <div class="form-group">
+      <%= f.label :name, "Titre recherché" %>
+      <%= f.text_field :name, placeholder: "Le_Guide_Du_Voyageur_Galactique.txt" %>
+    </div>
+
+    <!-- Statut de recherche cyberpunk -->
+    <div class="cyber-card search-status">
+      <div class="card-title">Search Status Database</div>
+      <div class="terminal-output">
+        <p class="terminal-line">$ status book_search/</p>
+        <p class="terminal-line" style="color: var(--cyber-yellow);">// Tracking search progress...</p>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :search_priority, "Priorité de recherche" %>
+        <%= f.select :search_priority,
+            options_for_select([
+              ["Basse priorité", "low"],
+              ["Priorité normale", "normal"],
+              ["Priorité élevée", "high"],
+              ["Urgent", "urgent"]
+            ]),
+            { prompt: "Sélectionner priorité..." },
+            { class: "cyber-select" } %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :search_notes, "Notes de recherche" %>
+        <%= f.text_area :search_notes,
+            rows: 3,
+            placeholder: "Où chercher, prix max, conditions spéciales...",
+            class: "cyber-textarea" %>
+      </div>
+    </div>
+
+    <!-- Métadonnées cyberpunk -->
+    <div class="cyber-card metadata-section">
+      <div class="card-title">Book Metadata Archive</div>
+
+      <div class="metadata-grid">
+        <div class="form-group">
+          <%= f.label :metadata_authors, "Author(s)" %>
+          <%= text_field_tag "item[metadata][authors]", item.metadata["authors"], placeholder: "Isaac_Asimov", class: "cyber-input" %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :metadata_publisher, "Publisher" %>
+          <%= text_field_tag "item[metadata][publisher]", item.metadata["publisher"], placeholder: "Editions_Gallimard", class: "cyber-input" %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :metadata_language, "Language Protocol" %>
+          <%= select_tag "item[metadata][language]",
+                options_for_select(ItemsHelper::LANGUAGE_NAMES.map { |k,v| [v, k] }, item.metadata["language"]),
+                { prompt: "Sélectionner langue...", class: "cyber-select" } %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :metadata_published_date, "Publication Date" %>
+          <%= text_field_tag "item[metadata][published_date]",
+                            (Date.parse(item.metadata["published_date"]).strftime("%d-%m-%Y") rescue item.metadata["published_date"]),
+                            placeholder: "01-01-1950",
+                            class: "cyber-input" %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :metadata_description, "Synopsis Database" %>
+        <%= text_area_tag "item[metadata][description]", item.metadata["description"],
+              rows: 6,
+              placeholder: "Description complète du contenu littéraire...",
+              class: "cyber-textarea" %>
+      </div>
+    </div>
+
+    <!-- Submit cyberpunk -->
+    <div class="form-actions" style="text-align: center; margin: 2rem 0;">
+      <%= f.submit "AJOUTER À RECHERCHE", class: "cyber-btn secondary submit-book" %>
+    </div>
+
+  <% end %>
+</div>

@@ -1,4 +1,4 @@
-<div class="cyber-form" data-controller="image-preview">
+<div class="cyber-form" data-controller="image-preview" data-action="connected->image-preview#debugConnect">
   <%= form_with model: item,
                 url: collection_category_items_path(collection, category),
                 scope: :item,
@@ -20,10 +20,11 @@
     <% end %>
 
     <!-- Champs cachés -->
-    <%= f.hidden_field :type %>
+    <%= f.hidden_field :type, value: "BookItem" %>
     <%= f.hidden_field :source %>
     <%= f.hidden_field :source_id %>
     <%= f.hidden_field :barcode %>
+    <%= f.hidden_field :status, value: "owned" %>
 
     <!-- Input maître caché -->
     <%= f.file_field :photos,

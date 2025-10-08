@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["checkSearch", "checkPossess", "scan", "addBook", "controls", "oups", "oupsFindIt", "numberCopies", "displayCopies"]
+  static targets = ["checkSearch", "checkPossess", "scan", "addBook", "searchBook", "controls", "oups", "oupsFindIt", "numberCopies", "displayCopies", "switchToSearch"]
 
   connect() {
   }
@@ -11,10 +11,21 @@ export default class extends Controller {
     const targetName = button.dataset.toggleTarget;
 
     if (targetName === "checkPossess") {
-      // Mode POSSESS: afficher le scanner
+      // Mode POSSESS: afficher le scanner et le switch to search
       this.scanTarget.classList.remove("d-none")
+      if (this.hasSwitchToSearchTarget) {
+        this.switchToSearchTarget.classList.remove("d-none")
+      }
       if (this.hasAddBookTarget) {
         this.addBookTarget.classList.add("d-none")
+      }
+      if (this.hasSearchBookTarget) {
+        this.searchBookTarget.classList.add("d-none")
+      }
+      // Mettre à jour le status pour le formulaire barcode
+      const statusField = document.getElementById("barcode-status-field")
+      if (statusField) {
+        statusField.value = "owned"
       }
       // Cacher les boutons de sélection de mode
       if (this.hasControlsTarget) {
@@ -32,9 +43,12 @@ export default class extends Controller {
       }
 
     } else if (targetName === "checkSearch") {
-      // Mode SEARCH: afficher le formulaire d'ajout
+      // Mode SEARCH: afficher le formulaire de recherche
+      if (this.hasSearchBookTarget) {
+        this.searchBookTarget.classList.remove("d-none")
+      }
       if (this.hasAddBookTarget) {
-        this.addBookTarget.classList.remove("d-none")
+        this.addBookTarget.classList.add("d-none")
       }
       // Arrêter le scanner s'il est en cours avant de cacher
       const barcodeController = this.application.getControllerForElementAndIdentifier(this.element, "barcode")
@@ -42,6 +56,14 @@ export default class extends Controller {
         barcodeController.stopScan()
       }
       this.scanTarget.classList.add("d-none")
+      if (this.hasSwitchToSearchTarget) {
+        this.switchToSearchTarget.classList.add("d-none")
+      }
+      // Mettre à jour le status pour le formulaire barcode
+      const statusField = document.getElementById("barcode-status-field")
+      if (statusField) {
+        statusField.value = "wanted"
+      }
       // Cacher les boutons de sélection de mode
       if (this.hasControlsTarget) {
         this.controlsTarget.classList.add("d-none")
