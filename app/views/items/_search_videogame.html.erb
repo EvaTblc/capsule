@@ -5,60 +5,114 @@
                 class: "cyber-form-inner",
                 data: { turbo_frame: "_top" } do |f| %>
 
+    <!-- Champs cachés -->
     <%= f.hidden_field :type, value: "VideoGameItem" %>
     <%= f.hidden_field :source %>
     <%= f.hidden_field :source_id %>
     <%= f.hidden_field :barcode %>
-    <%= f.hidden_field :status, value: "owned" %>
+    <%= f.hidden_field :status, value: "wanted" %>
 
+    <!-- Input maître caché -->
     <%= f.file_field :photos,
           multiple: true,
           accept: "image/*",
           class: "hidden",
           data: { image_preview_target: "master" } %>
 
+    <!-- Section Photo Cyberpunk -->
     <div class="cyber-card photo-scanner">
       <div class="card-title">Image Capture Module</div>
       <div class="scanner-actions">
         <label class="cyber-btn primary photo-btn">
           <i class="fas fa-camera"></i>
           Scanner Cam
-          <input type="file" accept="image/*" capture="environment" style="display: none;" data-action="change->image-preview#addFiles">
+          <input type="file"
+                accept="image/*"
+                capture="environment"
+                style="display: none;"
+                data-action="change->image-preview#addFiles">
         </label>
+
         <label class="cyber-btn secondary photo-btn">
           <i class="fas fa-images"></i>
           Archives
-          <input type="file" accept="image/*" multiple style="display: none;" data-action="change->image-preview#addFiles">
+          <input type="file"
+                accept="image/*"
+                multiple
+                style="display: none;"
+                data-action="change->image-preview#addFiles">
         </label>
       </div>
+
+      <!-- Prévisualisation cyberpunk -->
       <div class="preview-grid new-grid" data-image-preview-target="list"></div>
     </div>
 
+    <!-- Nom du jeu -->
     <div class="form-group">
-      <%= f.label :name, "Titre du jeu" %>
+      <%= f.label :name, "Titre recherché" %>
       <%= f.text_field :name, placeholder: "The_Legend_of_Zelda_BOTW.exe" %>
     </div>
 
+    <!-- Statut de recherche cyberpunk -->
+    <div class="cyber-card search-status">
+      <div class="card-title">Search Status Database</div>
+      <div class="terminal-output">
+        <p class="terminal-line">$ status game_search/</p>
+        <p class="terminal-line" style="color: var(--cyber-yellow);">// Tracking search progress...</p>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :search_priority, "Priorité de recherche" %>
+        <%= f.select :search_priority,
+            options_for_select([
+              ["Basse priorité", "low"],
+              ["Priorité normale", "normal"],
+              ["Priorité élevée", "high"],
+              ["Urgent", "urgent"]
+            ]),
+            { prompt: "Sélectionner priorité..." },
+            { class: "cyber-select" } %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :search_notes, "Notes de recherche" %>
+        <%= f.text_area :search_notes,
+            rows: 3,
+            placeholder: "Où chercher, prix max, édition spéciale...",
+            class: "cyber-textarea" %>
+      </div>
+    </div>
+
+    <!-- Métadonnées jeu vidéo -->
     <div class="cyber-card metadata-section">
       <div class="card-title">Game Metadata Archive</div>
+
       <div class="metadata-grid">
         <div class="form-group">
           <%= f.label :metadata_platforms, "Plateforme(s)" %>
           <%= text_field_tag "item[metadata][platforms]", item.metadata["platforms"], placeholder: "Nintendo Switch, PS5...", class: "cyber-input" %>
         </div>
+
         <div class="form-group">
           <%= f.label :metadata_genres, "Genre(s)" %>
           <%= text_field_tag "item[metadata][genres]", item.metadata["genres"], placeholder: "Action, Adventure, RPG...", class: "cyber-input" %>
         </div>
+
         <div class="form-group">
           <%= f.label :metadata_release_date, "Date de sortie" %>
           <%= text_field_tag "item[metadata][release_date]", item.metadata["release_date"], placeholder: "2017-03-03", class: "cyber-input" %>
         </div>
       </div>
+
       <div class="form-group">
         <%= f.label :metadata_summary, "Description" %>
-        <%= text_area_tag "item[metadata][summary]", item.metadata["summary"], rows: 6, placeholder: "Description complete du jeu...", class: "cyber-textarea" %>
+        <%= text_area_tag "item[metadata][summary]", item.metadata["summary"],
+              rows: 6,
+              placeholder: "Description complète du jeu...",
+              class: "cyber-textarea" %>
       </div>
+
       <% if item.metadata["cover_url"].present? %>
         <div class="form-group">
           <label>Cover IGDB</label>
@@ -68,8 +122,10 @@
       <% end %>
     </div>
 
+    <!-- Submit cyberpunk -->
     <div class="form-actions" style="text-align: center; margin: 2rem 0;">
-      <%= f.submit "ARCHIVER JEU", class: "cyber-btn success submit-book" %>
+      <%= f.submit "AJOUTER À RECHERCHE", class: "cyber-btn secondary submit-book" %>
     </div>
+
   <% end %>
 </div>

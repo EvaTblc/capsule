@@ -11,7 +11,9 @@ class ItemsController < ApplicationController
     @items = Item.where(collection: @collection, category: @category)
     @item = Item.new
 
-    if @category.items.empty? && @category.name == "Livre"
+    # Rediriger vers scan si la catégorie est vide et supporte le scan
+    scannable_categories = ["Livre", "Jeux Vidéo", "Film"]
+    if @category.items.empty? && scannable_categories.include?(@category.name)
       redirect_to scan_collection_category_items_path(@collection, @category)
     end
   end
@@ -55,7 +57,8 @@ class ItemsController < ApplicationController
     status = params[:status].presence || "owned"
     return render(json: { error: "Barcode manquant" }, status: :unprocessable_entity) if barcode.blank?
 
-    klass = (barcode.start_with?("978", "979") && barcode.length == 13) ? BookItem : Item
+    # Déterminer le type d'item basé sur la catégorie et le barcode
+    klass = determine_item_type(barcode)
 
     item = klass.find_or_initialize_by(
       collection_id: @collection.id,
@@ -65,7 +68,7 @@ class ItemsController < ApplicationController
 
     if item.new_record?
       begin
-        api_book_item(item) if klass == BookItem
+        enrich_item_from_api(item)
       rescue => e
         Rails.logger.warn("[intake] enrichment failed: #{e.class} #{e.message}")
       end
@@ -125,6 +128,12 @@ class ItemsController < ApplicationController
 
     if @item.save
       @item.photos.attach(files.reject(&:blank?)) if files.present?
+
+      # Télécharger la cover IGDB si disponible dans les metadata
+      if @item.metadata["cover_url"].present? && @item.photos.count == 0
+        download_and_attach_cover(@item, @item.metadata["cover_url"])
+      end
+
       redirect_to collection_category_item_path(@collection, @category, @item)
     else
       render :new, status: :unprocessable_entity
@@ -160,6 +169,42 @@ class ItemsController < ApplicationController
     p
   end
 
+  # Détermine le type d'item basé sur la catégorie et le barcode
+  def determine_item_type(barcode)
+    case @category.name
+    when "Livre"
+      BookItem
+    when "Jeux Vidéo"
+      VideoGameItem
+    when "Film"
+      MovieItem
+    when "Figurine"
+      ToyItem
+    else
+      # Fallback: essayer de deviner par le barcode (ISBN pour livres)
+      if barcode.start_with?("978", "979") && barcode.length == 13
+        BookItem
+      else
+        Item
+      end
+    end
+  end
+
+  # Méthode générique qui délègue à la méthode d'enrichissement appropriée
+  def enrich_item_from_api(item)
+    case item.class.name
+    when "BookItem"
+      api_book_item(item)
+    when "VideoGameItem"
+      api_video_game_item(item)
+    when "MovieItem"
+      api_movie_item(item)
+    when "ToyItem"
+      api_toy_item(item)
+    end
+  end
+
+  # Enrichissement pour les livres (code existant conservé)
   def api_book_item(item)
     url = "https://www.googleapis.com/books/v1/volumes?q=isbn:#{item.barcode}"
     item_serialized = URI.parse(url).read
@@ -182,5 +227,185 @@ class ItemsController < ApplicationController
       description:    info["description"] || snippet
     }.compact  # enlève juste les nil
     item.raw = volume
+  end
+
+  # Enrichissement pour les jeux vidéo (UPCitemdb → IGDB)
+  def api_video_game_item(item)
+    # Étape 1 : Récupérer le nom du jeu via UPCitemdb
+    product_name = fetch_product_name_from_upc(item.barcode)
+    return unless product_name
+
+    Rails.logger.info("[api_video_game_item] Produit trouvé: #{product_name}")
+
+    # Étape 2 : Chercher dans IGDB avec le nom
+    search_igdb_by_name(item, product_name)
+  end
+
+  # Enrichissement pour les films (à implémenter avec une API)
+  def api_movie_item(item)
+    # TODO: Implémenter l'enrichissement via API (ex: TMDB, OMDb, etc.)
+    Rails.logger.info("[api_movie_item] Enrichissement non implémenté pour #{item.barcode}")
+  end
+
+  # Enrichissement pour les figurines (à implémenter avec une API si disponible)
+  def api_toy_item(item)
+    # TODO: Implémenter l'enrichissement si API disponible
+    Rails.logger.info("[api_toy_item] Enrichissement non implémenté pour #{item.barcode}")
+  end
+
+  # Récupère le nom du produit via UPCitemdb (gratuit, illimité)
+  def fetch_product_name_from_upc(barcode)
+    response = HTTParty.get(
+      "https://api.upcitemdb.com/prod/trial/lookup",
+      query: { upc: barcode }
+    )
+
+    if response.code == 200 && response.dig('items', 0)
+      product = response['items'][0]
+      title = product['title']
+
+      # Nettoyer le titre pour avoir juste le nom du jeu
+      # Ex: "The Legend of Zelda Breath of the Wild - Nintendo Switch" → "The Legend of Zelda Breath of the Wild"
+      clean_title = clean_game_title(title)
+
+      Rails.logger.info("[UPCitemdb] Produit trouvé: #{title} → Nettoyé: #{clean_title}")
+      return clean_title
+    end
+
+    Rails.logger.warn("[UPCitemdb] Aucun produit trouvé pour le barcode #{barcode}")
+    nil
+  rescue => e
+    Rails.logger.error("[UPCitemdb] Erreur: #{e.message}")
+    nil
+  end
+
+  # Nettoie le titre du jeu en retirant les mentions de plateforme
+  def clean_game_title(title)
+    # Retirer les mentions de plateforme courantes
+    platforms = [
+      "Nintendo Switch", "PlayStation 5", "PS5", "PlayStation 4", "PS4",
+      "Xbox Series X", "Xbox One", "PC", "Steam", "Nintendo 3DS", "Wii U"
+    ]
+
+    clean = title
+    platforms.each do |platform|
+      clean = clean.gsub(/\s*-\s*#{platform}/i, '')
+      clean = clean.gsub(/\s*\(#{platform}\)/i, '')
+      clean = clean.gsub(/\s*\[#{platform}\]/i, '')
+    end
+
+    clean.strip
+  end
+
+  # Recherche dans IGDB par nom de jeu
+  def search_igdb_by_name(item, game_name)
+    token = IgdbService.access_token
+    return unless token
+
+    response = HTTParty.post(
+      "https://api.igdb.com/v4/games",
+      headers: {
+        'Client-ID' => ENV['IGDB_CLIENT_ID'],
+        'Authorization' => "Bearer #{token}"
+      },
+      body: "fields name,cover.url,platforms.name,summary,genres.name,first_release_date; search \"#{game_name}\"; limit 1;"
+    )
+
+    if response.code == 200 && response.parsed_response.any?
+      game = response.parsed_response.first
+
+      item.name = game['name']
+      item.source = 'igdb'
+      item.source_id = game['id'].to_s
+
+      # Convertir la date de release (timestamp Unix)
+      release_date = nil
+      if game['first_release_date']
+        release_date = Time.at(game['first_release_date']).to_date rescue nil
+      end
+
+      # Récupérer l'URL de la cover
+      cover_url = game.dig('cover', 'url') ? "https:#{game['cover']['url'].gsub('t_thumb', 't_cover_big')}" : nil
+
+      # Traduire le summary en français si présent
+      summary = game['summary']
+      if summary.present?
+        summary = translate_to_french(summary)
+      end
+
+      item.metadata = {
+        platforms: game['platforms']&.map { |p| p['name'] }&.join(', '),
+        summary: summary,
+        cover_url: cover_url,
+        genres: game['genres']&.map { |g| g['name'] }&.join(', '),
+        release_date: release_date&.to_s
+      }.compact
+
+      item.raw = game
+
+      # Télécharger et attacher la cover comme photo
+      if cover_url.present?
+        download_and_attach_cover(item, cover_url)
+      end
+
+      Rails.logger.info("[IGDB] Jeu enrichi: #{item.name}")
+    else
+      Rails.logger.warn("[IGDB] Aucun jeu trouvé pour '#{game_name}'")
+    end
+  rescue => e
+    Rails.logger.error("[IGDB] Erreur: #{e.message}")
+  end
+
+  # Télécharge et attache la cover IGDB comme photo de l'item
+  def download_and_attach_cover(item, cover_url)
+    require 'open-uri'
+
+    # Télécharger l'image
+    downloaded_image = URI.open(cover_url)
+
+    # Générer un nom de fichier
+    filename = "#{item.name.parameterize}-cover.jpg"
+
+    # Attacher l'image à l'item
+    item.photos.attach(
+      io: downloaded_image,
+      filename: filename,
+      content_type: 'image/jpeg'
+    )
+
+    Rails.logger.info("[IGDB] Cover téléchargée et attachée: #{filename}")
+  rescue => e
+    Rails.logger.error("[IGDB] Erreur lors du téléchargement de la cover: #{e.message}")
+  end
+
+  # Traduit un texte en français via LibreTranslate
+  def translate_to_french(text)
+    return text if text.blank?
+
+    response = HTTParty.post(
+      "https://libretranslate.com/translate",
+      body: {
+        q: text,
+        source: "en",
+        target: "fr",
+        format: "text"
+      }.to_json,
+      headers: {
+        'Content-Type' => 'application/json'
+      },
+      timeout: 10
+    )
+
+    if response.code == 200 && response.parsed_response['translatedText'].present?
+      translated = response.parsed_response['translatedText']
+      Rails.logger.info("[LibreTranslate] Texte traduit avec succès")
+      translated
+    else
+      Rails.logger.warn("[LibreTranslate] Traduction échouée, texte original conservé")
+      text
+    end
+  rescue => e
+    Rails.logger.error("[LibreTranslate] Erreur: #{e.message}")
+    text  # Retourner le texte original en cas d'erreur
   end
 end

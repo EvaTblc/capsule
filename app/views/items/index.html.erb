@@ -49,10 +49,9 @@
           <% css_classes = ["grid-item", "item-cyber"]
              css_classes << "item-owned" if item.owned?
              css_classes << "item-wanted" if item.wanted? %>
-          <!-- DEBUG: Item <%= item.name %> - Status: <%= item.status %> - Classes: <%= css_classes.join(" ") %> -->
           <%= link_to collection_category_item_path(@collection, @category, item), class: css_classes.join(" ") do %>
             <div class="scan-line"></div>
-            <div class="item-image" style="background-image: url('<%= item.photos.attached? ? cl_image_path(item.photos.first.key) : asset_path('default_collection.jpg') %>')"></div>
+            <div class="item-image" style="background-image: url('<%= item.photos.attached? ? cl_image_path(item.photos.first.key) : asset_path('livre.png') %>')"></div>
             <div class="item-content">
               <div class="item-header">
                 <i class="fas fa-cube"></i>

@@ -179,17 +179,19 @@
         </div>
 
         <div class="metadata-grid">
-          <% if @item.metadata["description"].present? %>
+          <!-- Description/Summary (livre ou jeu) -->
+          <% if @item.metadata["description"].present? || @item.metadata["summary"].present? %>
             <div class="metadata-field synopsis">
               <div class="field-header">
                 <i class="fas fa-file-text"></i>
                 <span class="field-title">Synopsis</span>
               </div>
-              <div class="field-content"><%= @item.metadata["description"] %></div>
+              <div class="field-content"><%= @item.metadata["description"] || @item.metadata["summary"] %></div>
             </div>
           <% end %>
 
           <div class="metadata-row">
+            <!-- Authors (livres) -->
             <% if @item.metadata["authors"].present? %>
               <div class="metadata-field">
                 <div class="field-header">
@@ -200,6 +202,18 @@
               </div>
             <% end %>
 
+            <!-- Platforms (jeux vidéo) -->
+            <% if @item.metadata["platforms"].present? %>
+              <div class="metadata-field">
+                <div class="field-header">
+                  <i class="fas fa-gamepad"></i>
+                  <span class="field-title">Platform(s)</span>
+                </div>
+                <div class="field-content"><%= @item.metadata["platforms"] %></div>
+              </div>
+            <% end %>
+
+            <!-- Publisher (livres) -->
             <% if @item.metadata["publisher"].present? %>
               <div class="metadata-field">
                 <div class="field-header">
@@ -209,9 +223,21 @@
                 <div class="field-content"><%= @item.metadata["publisher"] %></div>
               </div>
             <% end %>
+
+            <!-- Genres (jeux vidéo) -->
+            <% if @item.metadata["genres"].present? %>
+              <div class="metadata-field">
+                <div class="field-header">
+                  <i class="fas fa-tags"></i>
+                  <span class="field-title">Genre(s)</span>
+                </div>
+                <div class="field-content"><%= @item.metadata["genres"] %></div>
+              </div>
+            <% end %>
           </div>
 
           <div class="metadata-row">
+            <!-- Language (livres) -->
             <% if @item.metadata["language"].present? %>
               <div class="metadata-field">
                 <div class="field-header">
@@ -222,6 +248,7 @@
               </div>
             <% end %>
 
+            <!-- Published date (livres) -->
             <% if @item.metadata["published_date"].present? %>
               <div class="metadata-field">
                 <div class="field-header">
@@ -229,6 +256,18 @@
                   <span class="field-title">Publication</span>
                 </div>
                 <% raw_date = @item.metadata["published_date"] %>
+                <div class="field-content"><%= Date.parse(raw_date).strftime("%d.%m.%Y") rescue raw_date %></div>
+              </div>
+            <% end %>
+
+            <!-- Release date (jeux vidéo) -->
+            <% if @item.metadata["release_date"].present? %>
+              <div class="metadata-field">
+                <div class="field-header">
+                  <i class="fas fa-calendar-alt"></i>
+                  <span class="field-title">Release Date</span>
+                </div>
+                <% raw_date = @item.metadata["release_date"] %>
                 <div class="field-content"><%= Date.parse(raw_date).strftime("%d.%m.%Y") rescue raw_date %></div>
               </div>
             <% end %>
