@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import { BrowserMultiFormatReader, DecodeHintType, BarcodeFormat } from "https://cdn.jsdelivr.net/npm/@zxing/library@0.21.2/+esm"
+import { BrowserMultiFormatReader, DecodeHintType, BarcodeFormat } from "@zxing/library"
 
 export default class extends Controller {
   static values = { intakeUrl: String, newUrl: String }
