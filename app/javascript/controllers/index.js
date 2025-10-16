@@ -3,8 +3,14 @@ import { application } from "controllers/application"
 import BarcodeController from "controllers/barcode_controller"
 application.register("barcode", BarcodeController)
 
+import CollectionPreviewController from "controllers/collection_preview_controller"
+application.register("collection-preview", CollectionPreviewController)
+
 import HelloController from "controllers/hello_controller"
 application.register("hello", HelloController)
+
+import HintController from "controllers/hint_controller"
+application.register("hint", HintController)
 
 import ImagePreviewController from "controllers/image_preview_controller"
 application.register("image-preview", ImagePreviewController)

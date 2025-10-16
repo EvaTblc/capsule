@@ -4,13 +4,17 @@ export default class extends Controller {
   static targets = ["checkSearch", "checkPossess", "scan", "addBook", "searchBook", "controls", "oups", "oupsFindIt", "numberCopies", "displayCopies", "switchToSearch"]
 
   connect() {
+    console.log("[toggle] Controller connected successfully")
   }
 
   toggleCheckbox(event) {
+    console.log("[toggle] toggleCheckbox called", event)
     const button = event.currentTarget;
     const targetName = button.dataset.toggleTarget;
+    console.log("[toggle] Target name:", targetName)
 
     if (targetName === "checkPossess") {
+      console.log("[toggle] Activating POSSESS mode")
       // Mode POSSESS: afficher le scanner et le switch to search
       this.scanTarget.classList.remove("d-none")
       if (this.hasSwitchToSearchTarget) {
@@ -43,6 +47,7 @@ export default class extends Controller {
       }
 
     } else if (targetName === "checkSearch") {
+      console.log("[toggle] Activating SEARCH mode")
       // Mode SEARCH: afficher le formulaire de recherche
       if (this.hasSearchBookTarget) {
         this.searchBookTarget.classList.remove("d-none")

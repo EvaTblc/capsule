@@ -27,9 +27,9 @@
 Rails.application.configure do
   config.content_security_policy do |p|
     p.default_src :self
-    p.script_src  :self, "https://cdn.jsdelivr.net"   # pas d'unsafe-inline ici
-    p.connect_src :self
-    p.img_src     :self, :data, :blob
+    p.script_src  :self, "https://cdn.jsdelivr.net", "https://ga.jspm.io"
+    p.connect_src :self, "https://cdn.jsdelivr.net", "https://ga.jspm.io"
+    p.img_src     :self, :data, :blob, :https, "res.cloudinary.com"
     p.media_src   :self, :blob
     p.style_src   :self, :unsafe_inline, "https://fonts.googleapis.com"
     p.font_src    :self, :data, "https://fonts.gstatic.com"
@@ -37,7 +37,6 @@ Rails.application.configure do
     p.frame_ancestors :self, "https://accounts.google.com"
     p.object_src  :none
     p.base_uri    :self
-    p.img_src :self, :https, :data, "res.cloudinary.com"
   end
 
   # ✅ indispensable pour l’importmap inline
