@@ -51,6 +51,42 @@ class ItemsController < ApplicationController
   def scan
   end
 
+  # Recherche IGDB par nom (pour AJAX)
+  def search_game
+    query = params[:query].to_s.strip
+    return render json: { error: "Query vide" }, status: :unprocessable_entity if query.blank?
+
+    token = IgdbService.access_token
+    return render json: { error: "Token IGDB indisponible" }, status: :service_unavailable unless token
+
+    response = HTTParty.post(
+      "https://api.igdb.com/v4/games",
+      headers: {
+        'Client-ID' => ENV['IGDB_CLIENT_ID'],
+        'Authorization' => "Bearer #{token}"
+      },
+      body: "fields name,cover.url,platforms.name,summary,genres.name,first_release_date; search \"#{query}\"; where platforms = (130); limit 10;"
+    )
+
+    if response.code == 200 && response.parsed_response.any?
+      games = response.parsed_response.map do |game|
+        {
+          id: game['id'],
+          name: game['name'],
+          cover_url: game.dig('cover', 'url') ? "https:#{game['cover']['url'].gsub('t_thumb', 't_thumb')}" : nil,
+          platforms: game['platforms']&.map { |p| p['name'] }&.join(', '),
+          release_date: game['first_release_date'] ? Time.at(game['first_release_date']).year : nil
+        }
+      end
+      render json: { games: games }
+    else
+      render json: { games: [] }
+    end
+  rescue => e
+    Rails.logger.error("[search_game] Erreur: #{e.message}")
+    render json: { error: e.message }, status: :internal_server_error
+  end
+
   def intake
     barcode = params[:barcode].presence || params.dig(:item, :barcode).to_s
     barcode = barcode.strip
@@ -233,12 +269,16 @@ class ItemsController < ApplicationController
   def api_video_game_item(item)
     # Étape 1 : Récupérer le nom du jeu via UPCitemdb
     product_name = fetch_product_name_from_upc(item.barcode)
-    return unless product_name
 
-    Rails.logger.info("[api_video_game_item] Produit trouvé: #{product_name}")
-
-    # Étape 2 : Chercher dans IGDB avec le nom
-    search_igdb_by_name(item, product_name)
+    if product_name
+      Rails.logger.info("[api_video_game_item] Produit trouvé via UPCitemdb: #{product_name}")
+      # Étape 2 : Chercher dans IGDB avec le nom
+      search_igdb_by_name(item, product_name)
+    else
+      # Fallback : chercher directement dans IGDB avec des mots-clés communs
+      Rails.logger.info("[api_video_game_item] Fallback: recherche IGDB directe")
+      search_igdb_fallback(item)
+    end
   end
 
   # Enrichissement pour les films (à implémenter avec une API)
@@ -313,47 +353,59 @@ class ItemsController < ApplicationController
 
     if response.code == 200 && response.parsed_response.any?
       game = response.parsed_response.first
-
-      item.name = game['name']
-      item.source = 'igdb'
-      item.source_id = game['id'].to_s
-
-      # Convertir la date de release (timestamp Unix)
-      release_date = nil
-      if game['first_release_date']
-        release_date = Time.at(game['first_release_date']).to_date rescue nil
-      end
-
-      # Récupérer l'URL de la cover
-      cover_url = game.dig('cover', 'url') ? "https:#{game['cover']['url'].gsub('t_thumb', 't_cover_big')}" : nil
-
-      # Traduire le summary en français si présent
-      summary = game['summary']
-      if summary.present?
-        summary = translate_to_french(summary)
-      end
-
-      item.metadata = {
-        platforms: game['platforms']&.map { |p| p['name'] }&.join(', '),
-        summary: summary,
-        cover_url: cover_url,
-        genres: game['genres']&.map { |g| g['name'] }&.join(', '),
-        release_date: release_date&.to_s
-      }.compact
-
-      item.raw = game
-
-      # Télécharger et attacher la cover comme photo
-      if cover_url.present?
-        download_and_attach_cover(item, cover_url)
-      end
-
+      populate_item_from_igdb(item, game)
       Rails.logger.info("[IGDB] Jeu enrichi: #{item.name}")
     else
       Rails.logger.warn("[IGDB] Aucun jeu trouvé pour '#{game_name}'")
     end
   rescue => e
     Rails.logger.error("[IGDB] Erreur: #{e.message}")
+  end
+
+  # Recherche IGDB en fallback : laisse l'item vide pour saisie manuelle
+  # L'utilisateur pourra saisir le nom manuellement dans le formulaire
+  def search_igdb_fallback(item)
+    # On ne fait rien ici, l'item restera avec name = "Nouvel objet"
+    # et l'utilisateur pourra saisir le nom manuellement
+    # Une amélioration future serait d'offrir une recherche interactive
+    Rails.logger.info("[IGDB Fallback] Aucune donnée trouvée, saisie manuelle requise")
+  end
+
+  # Remplit un item avec les données IGDB (code commun)
+  def populate_item_from_igdb(item, game)
+    item.name = game['name']
+    item.source = 'igdb'
+    item.source_id = game['id'].to_s
+
+    # Convertir la date de release (timestamp Unix)
+    release_date = nil
+    if game['first_release_date']
+      release_date = Time.at(game['first_release_date']).to_date rescue nil
+    end
+
+    # Récupérer l'URL de la cover
+    cover_url = game.dig('cover', 'url') ? "https:#{game['cover']['url'].gsub('t_thumb', 't_cover_big')}" : nil
+
+    # Traduire le summary en français si présent
+    summary = game['summary']
+    if summary.present?
+      summary = translate_to_french(summary)
+    end
+
+    item.metadata = {
+      platforms: game['platforms']&.map { |p| p['name'] }&.join(', '),
+      summary: summary,
+      cover_url: cover_url,
+      genres: game['genres']&.map { |g| g['name'] }&.join(', '),
+      release_date: release_date&.to_s
+    }.compact
+
+    item.raw = game
+
+    # Télécharger et attacher la cover comme photo
+    if cover_url.present?
+      download_and_attach_cover(item, cover_url)
+    end
   end
 
   # Télécharge et attache la cover IGDB comme photo de l'item

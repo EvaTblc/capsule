@@ -25,6 +25,7 @@ Rails.application.routes.draw do
         collection do
           get :scan
           post :intake
+          get :search_game
         end
         resources :items_tags
       end
