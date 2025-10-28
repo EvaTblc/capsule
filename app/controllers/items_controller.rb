@@ -2,8 +2,8 @@ require "open-uri"
 require "json"
 
 class ItemsController < ApplicationController
-  before_action :set_item, except: [ :index, :scan, :intake, :new, :create ]
-  before_action :set_collection_category, only: [ :scan, :intake, :new, :create ]
+  before_action :set_item, except: [ :index, :scan, :intake, :new, :create, :search_game ]
+  before_action :set_collection_category, only: [ :scan, :intake, :new, :create, :search_game ]
 
   def index
     @collection = Collection.find(params[:collection_id])
