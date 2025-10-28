@@ -73,17 +73,23 @@ class ItemsController < ApplicationController
         cover_url = game.dig('cover', 'url') ? "https:#{game['cover']['url'].gsub('t_thumb', 't_cover_big')}" : nil
         release_date = game['first_release_date'] ? Time.at(game['first_release_date']).to_date : nil
 
+        # Traduire le summary en français
+        summary = game['summary']
+        if summary.present?
+          summary = translate_to_french(summary)
+        end
+
         {
           id: game['id'],
           name: game['name'],
           cover_url: cover_url,
           platforms: game['platforms']&.map { |p| p['name'] }&.join(', '),
           release_date: game['first_release_date'] ? Time.at(game['first_release_date']).year : nil,
-          summary: game['summary'],
+          summary: summary,
           genres: game['genres']&.map { |g| g['name'] }&.join(', '),
           metadata: {
             platforms: game['platforms']&.map { |p| p['name'] }&.join(', '),
-            summary: game['summary'],
+            summary: summary,
             cover_url: cover_url,
             genres: game['genres']&.map { |g| g['name'] }&.join(', '),
             release_date: release_date&.to_s
