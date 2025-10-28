@@ -1,10 +1,16 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["checkSearch", "checkPossess", "scan", "addBook", "searchBook", "controls", "oups", "oupsFindIt", "numberCopies", "displayCopies", "switchToSearch"]
+  static targets = ["mainTitle", "formTitle", "linkTitle", "buttonCategory", "checkSearch", "checkPossess", "scan", "addBook", "searchBook", "controls", "oups", "oupsFindIt", "numberCopies", "displayCopies", "switchToSearch"]
 
   connect() {
     console.log("[toggle] Controller connected successfully")
+  }
+
+  toggle() {
+    this.linkTitleTarget.classList.add("d-none")
+    this.formTitleTarget.classList.remove("d-none")
+    this.mainTitleTarget.classList.add("d-none")
   }
 
   toggleCheckbox(event) {

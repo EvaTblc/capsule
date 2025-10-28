@@ -356,6 +356,18 @@
   gap: 1.5rem;
   margin: 2rem 0;
 
+  // Responsive
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+
   .grid-item {
     @include cyber-card;
     padding: 1.5rem;
@@ -609,6 +621,26 @@
 }
 
 // 📂 Categories cyberpunk
+// Grid spécifique pour les catégories (évite qu'une seule carte prenne toute la largeur)
+.cyber-grid.categories-grid {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+
+  .grid-item {
+    max-width: 450px;
+    justify-self: start;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+
+  @media (max-width: 576px) {
+    .grid-item {
+      max-width: 100%;
+    }
+  }
+}
+
 .category-cyber {
   position: relative;
 
@@ -617,18 +649,57 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 1rem;
+    gap: 1rem;
+
+    .category-content {
+      flex-grow: 1;
+      min-width: 0;
+      overflow: hidden;
+    }
 
     .category-link {
       display: flex;
       align-items: center;
       gap: 12px;
       text-decoration: none;
-      flex-grow: 1;
+      width: 100%;
 
-      i {
-        font-size: 1.5rem;
-        color: var(--cyber-secondary);
+      .category-icon {
+        flex-shrink: 0;
+
+        i {
+          font-size: 1.5rem;
+          color: var(--cyber-secondary);
+        }
       }
+
+      .category-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 0;
+        flex-grow: 1;
+
+        .card-title-main {
+          font-size: 1.1rem;
+          font-weight: bold;
+          color: var(--cyber-white);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .card-title-subtitle {
+          font-size: 0.85rem;
+          color: var(--cyber-gray);
+        }
+      }
+    }
+
+    .category-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
     }
 
     .cyber-edit-btn {
@@ -648,6 +719,27 @@
 
       i {
         font-size: 0.9rem;
+      }
+    }
+
+    // Mobile responsive
+    @media (max-width: 576px) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.75rem;
+
+      .category-content {
+        width: 100%;
+      }
+
+      .category-actions {
+        justify-content: flex-end;
+        width: 100%;
+      }
+
+      .cyber-edit-btn {
+        flex: 1;
+        max-width: 120px;
       }
     }
   }
@@ -1103,6 +1195,17 @@
   option {
     background: var(--cyber-dark);
     color: var(--cyber-white);
+  }
+}
+
+// Style pour les select avec la classe cyber-input
+select.cyber-input {
+  cursor: pointer;
+
+  option {
+    background: #ffffff;
+    color: #000000;
+    padding: 8px;
   }
 }
 

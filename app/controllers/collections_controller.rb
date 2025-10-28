@@ -1,7 +1,12 @@
 class CollectionsController < ApplicationController
   before_action :set_collection, except: [ :index, :create, :new ]
+  before_action :authorize_view!, only: [ :show ]
+  before_action :authorize_manage!, only: [ :edit, :update ]
+  before_action :authorize_destroy!, only: [ :destroy ]
+
   def index
-    @collections = Collection.all.where(user: current_user)
+    # Affiche toutes les collections accessibles (owned + collaborated)
+    @collections = current_user.accessible_collections
   end
 
   def new
@@ -42,6 +47,24 @@ class CollectionsController < ApplicationController
 
   def set_collection
     @collection = Collection.find(params[:id])
+  end
+
+  def authorize_view!
+    unless @collection.viewable_by?(current_user)
+      redirect_to collections_path, alert: "Vous n'avez pas accès à cette collection."
+    end
+  end
+
+  def authorize_manage!
+    unless @collection.manageable_by?(current_user)
+      redirect_to collections_path, alert: "Vous ne pouvez pas modifier cette collection."
+    end
+  end
+
+  def authorize_destroy!
+    unless @collection.destroyable_by?(current_user)
+      redirect_to collections_path, alert: "Seul le propriétaire peut supprimer cette collection."
+    end
   end
 
   def collection_params

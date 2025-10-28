@@ -31,20 +31,24 @@
           Archives
           <input type="file" accept="image/*" multiple style="display: none;" data-action="change->image-preview#addFiles">
         </label>
+        <%= link_to collection_categories_path, class: "cyber-btn danger" do %>
+          <i class="fas fa-arrow-left"></i>
+          Retour
+      <% end %>
       </div>
       <div class="preview-grid new-grid" data-image-preview-target="list"></div>
     </div>
 
     <div class="cyber-card search-section">
       <div class="card-title">🔍 Recherche IGDB</div>
-      <div class="form-group">
+      <div class="form-group mb-0">
         <label>Rechercher un jeu</label>
         <input type="text"
                class="cyber-input"
                placeholder="Tapez le nom du jeu (ex: Zelda Echoes of Wisdom)"
                data-game-search-target="query"
                data-action="input->game-search#search">
-        <small class="form-text text-muted">Tapez au moins 3 caractères pour lancer la recherche</small>
+        <small class="form-text small-text">Tapez au moins 3 caractères pour lancer la recherche</small>
       </div>
       <div class="list-group d-none" data-game-search-target="results"></div>
     </div>

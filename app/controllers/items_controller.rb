@@ -51,7 +51,6 @@ class ItemsController < ApplicationController
   def scan
   end
 
-  # Recherche IGDB par nom (pour AJAX)
   def search_game
     query = params[:query].to_s.strip
     return render json: { error: "Query vide" }, status: :unprocessable_entity if query.blank?
@@ -73,10 +72,10 @@ class ItemsController < ApplicationController
         cover_url = game.dig('cover', 'url') ? "https:#{game['cover']['url'].gsub('t_thumb', 't_cover_big')}" : nil
         release_date = game['first_release_date'] ? Time.at(game['first_release_date']).to_date : nil
 
-        # Traduire le summary en français
         summary = game['summary']
         if summary.present?
           summary = translate_to_french(summary)
+          sleep(3)
         end
 
         {

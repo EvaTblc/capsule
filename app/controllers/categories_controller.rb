@@ -32,6 +32,14 @@ class CategoriesController < ApplicationController
     end
   end
 
+  def destroy
+    if @category.destroy
+      redirect_to collection_categories_path(@collection)
+    else
+      render :index, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def set_category

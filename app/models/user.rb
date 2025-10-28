@@ -5,8 +5,17 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :omniauthable, omniauth_providers: [ :google_oauth2 ]
 
   has_many :collections
+  has_many :collaborations
+  has_many :collaborated_collections, through: :collaborations, source: :collection
 
   has_one_attached :avatar
+
+  # Retourne toutes les collections accessibles (owned + collaborated)
+  def accessible_collections
+    Collection.left_joins(:collaborations)
+              .where("collections.user_id = ? OR collaborations.user_id = ?", id, id)
+              .distinct
+  end
 
   def self.from_omniauth(auth)
     # First try to find by provider and uid

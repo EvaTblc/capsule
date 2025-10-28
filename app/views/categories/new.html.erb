@@ -1,6 +1,29 @@
-<h2 class="style-title"><%= @collection.name %></h2>
-<div class="item-actions">
-  <%= link_to "← Retour", collections_path, class: "btn-action" %>
-</div>
+<div class="home-banner">
+  <div class="cyber-container">
 
-<%= render "shared/empty_cat", collection: @collection, category: @category %>
+    <!-- Terminal Header -->
+    <div class="terminal-header">
+      <div class="terminal-dots">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+      </div>
+      <div class="terminal-title">category_creator.exe</div>
+    </div>
+
+    <!-- Page Title -->
+    <h1 class="cyber-page-title glitch-text" data-text="<%= @collection.name %>"><%= @collection.name %></h1>
+
+    <!-- Form -->
+
+      <div class="cyber-form-inner">
+        <div class="cyber-card">
+          <div class="card-title">📁 Nouvelle Catégorie</div>
+
+          <%= render "shared/empty_cat", collection: @collection, category: @category %>
+        </div>
+      </div>
+
+
+  </div>
+</div>

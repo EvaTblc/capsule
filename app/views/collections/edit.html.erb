@@ -1,19 +1,9 @@
-<div class="container-scrollable" data-controller="image-preview" data-image-preview-image-value= <% @collection.image.attached? %>>
+<div class="container-scrollable" data-controller="image-preview">
   <h2 class="style-title"><%= @collection.name %></h2>
   <%= form_with model: @collection, class: "form-capsule" do |f| %>
     <%= f.text_field :name,
                 label: false,
                 class: "input-form" %>
-    <label for="collection_image">
-      <span data-image-preview-target="newImage">Choisir une image</span>
-      <%= f.file_field :image,
-                        id: "collection_image",
-                        label: false,
-                        as: :file,
-                        data: { action: "change->image-preview#update" },
-                        required: true %>
-    </label>
-    <div data-image-preview-target="imagePreview" class="image-preview hidden"></div>
     <div class="actions-save">
       <%= link_to "← Retour", collection_categories_path(@collection), class: "btn-action" %>
       <%= f.submit "Sauvegarder", class: "btn-action" %>

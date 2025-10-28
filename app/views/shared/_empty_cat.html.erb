@@ -1,9 +1,14 @@
 <%= form_with model: [collection, category] do |f| %>
-  <div class="select-form">
-    <%= f.select :name, options_for_select(Category::NAME) %>
+  <div class="form-group">
+    <%= f.label :name, "Type de catégorie" %>
+    <%= f.select :name, options_for_select(Category::NAME), {}, { class: "cyber-input" } %>
   </div>
-  <div class="actions-save">
-    <%= link_to "← Retour", collections_path, class: "btn-action" %>
-    <%= f.submit "Sauvegarder", class: "btn-action" %>
+
+  <div class="form-actions" style="text-align: center; margin: 2rem 0;">
+    <%= link_to collections_path, class: "cyber-btn secondary mb-3" do %>
+      <i class="fas fa-arrow-left"></i>
+      Retour
+    <% end %>
+    <%= f.submit "CRÉER CATÉGORIE", class: "cyber-btn success" %>
   </div>
 <% end %>

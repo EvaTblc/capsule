@@ -14,7 +14,6 @@
 
     <!-- Collection & Category Title -->
     <h1 class="cyber-page-title glitch-text" data-text="<%= @collection.name %> - <%= @category.name %>"><%= @collection.name %> - <%= @category.name %></h1>
-    <p class="cyber-subtitle typing-effect">Scanner de codes-barres quantique</p>
 
     <!-- Actions cyberpunk -->
     <div class="cyber-actions">
@@ -22,7 +21,7 @@
         <i class="fas fa-arrow-left"></i>
         Retour
       <% end %>
-      <%= link_to collection_path(@collection), method: :delete, data: { turbo_confirm: "Supprimer cette collection ?" }, class: "cyber-btn danger" do %>
+      <%= link_to collection_path(@collection), turbo_method: :delete, data: { turbo_confirm: "Supprimer cette collection ?" }, class: "cyber-btn danger" do %>
         <i class="fas fa-trash"></i>
         Supprimer Collection
       <% end %>
