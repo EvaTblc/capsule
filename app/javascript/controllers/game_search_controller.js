@@ -1,7 +1,10 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["query", "results", "nameField", "metadataField", "sourceField", "sourceIdField"]
+  static targets = [
+    "query", "results", "nameField", "sourceField", "sourceIdField",
+    "platformsField", "genresField", "releaseDateField", "summaryField", "coverUrlField"
+  ]
   static values = {
     searchUrl: String,
     collectionId: String,
@@ -103,9 +106,23 @@ export default class extends Controller {
       this.sourceIdFieldTarget.value = game.id
     }
 
-    // Remplir le champ metadata (JSON)
-    if (this.hasMetadataFieldTarget) {
-      this.metadataFieldTarget.value = JSON.stringify(game.metadata)
+    // Remplir les champs metadata individuels
+    if (game.metadata) {
+      if (this.hasPlatformsFieldTarget && game.metadata.platforms) {
+        this.platformsFieldTarget.value = game.metadata.platforms
+      }
+      if (this.hasGenresFieldTarget && game.metadata.genres) {
+        this.genresFieldTarget.value = game.metadata.genres
+      }
+      if (this.hasReleaseDateFieldTarget && game.metadata.release_date) {
+        this.releaseDateFieldTarget.value = game.metadata.release_date
+      }
+      if (this.hasSummaryFieldTarget && game.metadata.summary) {
+        this.summaryFieldTarget.value = game.metadata.summary
+      }
+      if (this.hasCoverUrlFieldTarget && game.metadata.cover_url) {
+        this.coverUrlFieldTarget.value = game.metadata.cover_url
+      }
     }
 
     // Afficher un message de succès

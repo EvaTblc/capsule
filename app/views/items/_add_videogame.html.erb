@@ -11,7 +11,6 @@
     <%= f.hidden_field :source_id, data: { game_search_target: "sourceIdField" } %>
     <%= f.hidden_field :barcode %>
     <%= f.hidden_field :status, value: "owned" %>
-    <%= hidden_field_tag "item[metadata]", "", data: { game_search_target: "metadataField" } %>
 
     <%= f.file_field :photos,
           multiple: true,
@@ -60,28 +59,28 @@
       <div class="metadata-grid">
         <div class="form-group">
           <%= f.label :metadata_platforms, "Plateforme(s)" %>
-          <%= text_field_tag "item[metadata][platforms]", item.metadata["platforms"], placeholder: "Nintendo Switch, PS5...", class: "cyber-input" %>
+          <%= text_field_tag "item[metadata][platforms]", item.metadata["platforms"], placeholder: "Nintendo Switch, PS5...", class: "cyber-input", data: { game_search_target: "platformsField" } %>
         </div>
         <div class="form-group">
           <%= f.label :metadata_genres, "Genre(s)" %>
-          <%= text_field_tag "item[metadata][genres]", item.metadata["genres"], placeholder: "Action, Adventure, RPG...", class: "cyber-input" %>
+          <%= text_field_tag "item[metadata][genres]", item.metadata["genres"], placeholder: "Action, Adventure, RPG...", class: "cyber-input", data: { game_search_target: "genresField" } %>
         </div>
         <div class="form-group">
           <%= f.label :metadata_release_date, "Date de sortie" %>
-          <%= text_field_tag "item[metadata][release_date]", item.metadata["release_date"], placeholder: "2017-03-03", class: "cyber-input" %>
+          <%= text_field_tag "item[metadata][release_date]", item.metadata["release_date"], placeholder: "2017-03-03", class: "cyber-input", data: { game_search_target: "releaseDateField" } %>
         </div>
       </div>
       <div class="form-group">
         <%= f.label :metadata_summary, "Description" %>
-        <%= text_area_tag "item[metadata][summary]", item.metadata["summary"], rows: 6, placeholder: "Description complete du jeu...", class: "cyber-textarea" %>
+        <%= text_area_tag "item[metadata][summary]", item.metadata["summary"], rows: 6, placeholder: "Description complete du jeu...", class: "cyber-textarea", data: { game_search_target: "summaryField" } %>
       </div>
-      <% if item.metadata["cover_url"].present? %>
-        <div class="form-group">
+      <div class="form-group">
+        <%= hidden_field_tag "item[metadata][cover_url]", item.metadata["cover_url"], data: { game_search_target: "coverUrlField" } %>
+        <% if item.metadata["cover_url"].present? %>
           <label>Cover IGDB</label>
           <img src="<%= item.metadata['cover_url'] %>" alt="Cover" style="max-width: 200px; border-radius: 8px;">
-          <%= hidden_field_tag "item[metadata][cover_url]", item.metadata["cover_url"] %>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
     </div>
 
     <div class="form-actions" style="text-align: center; margin: 2rem 0;">
