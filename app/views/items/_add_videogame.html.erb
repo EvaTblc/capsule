@@ -1,4 +1,5 @@
-<div class="cyber-form" data-controller="image-preview">
+<div class="cyber-form" data-controller="image-preview game-search"
+     data-game-search-search-url-value="<%= search_game_collection_category_items_path(collection, category) %>">
   <%= form_with model: item,
                 url: collection_category_items_path(collection, category),
                 scope: :item,
@@ -6,10 +7,11 @@
                 data: { turbo_frame: "_top" } do |f| %>
 
     <%= f.hidden_field :type, value: "VideoGameItem" %>
-    <%= f.hidden_field :source %>
-    <%= f.hidden_field :source_id %>
+    <%= f.hidden_field :source, data: { game_search_target: "sourceField" } %>
+    <%= f.hidden_field :source_id, data: { game_search_target: "sourceIdField" } %>
     <%= f.hidden_field :barcode %>
     <%= f.hidden_field :status, value: "owned" %>
+    <%= hidden_field_tag "item[metadata]", "", data: { game_search_target: "metadataField" } %>
 
     <%= f.file_field :photos,
           multiple: true,
@@ -34,9 +36,23 @@
       <div class="preview-grid new-grid" data-image-preview-target="list"></div>
     </div>
 
+    <div class="cyber-card search-section">
+      <div class="card-title">🔍 Recherche IGDB</div>
+      <div class="form-group">
+        <label>Rechercher un jeu</label>
+        <input type="text"
+               class="cyber-input"
+               placeholder="Tapez le nom du jeu (ex: Zelda Echoes of Wisdom)"
+               data-game-search-target="query"
+               data-action="input->game-search#search">
+        <small class="form-text text-muted">Tapez au moins 3 caractères pour lancer la recherche</small>
+      </div>
+      <div class="list-group d-none" data-game-search-target="results"></div>
+    </div>
+
     <div class="form-group">
       <%= f.label :name, "Titre du jeu" %>
-      <%= f.text_field :name, placeholder: "The_Legend_of_Zelda_BOTW.exe" %>
+      <%= f.text_field :name, placeholder: "The_Legend_of_Zelda_BOTW.exe", data: { game_search_target: "nameField" } %>
     </div>
 
     <div class="cyber-card metadata-section">

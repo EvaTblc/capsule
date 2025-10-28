@@ -70,12 +70,24 @@ class ItemsController < ApplicationController
 
     if response.code == 200 && response.parsed_response.any?
       games = response.parsed_response.map do |game|
+        cover_url = game.dig('cover', 'url') ? "https:#{game['cover']['url'].gsub('t_thumb', 't_cover_big')}" : nil
+        release_date = game['first_release_date'] ? Time.at(game['first_release_date']).to_date : nil
+
         {
           id: game['id'],
           name: game['name'],
-          cover_url: game.dig('cover', 'url') ? "https:#{game['cover']['url'].gsub('t_thumb', 't_thumb')}" : nil,
+          cover_url: cover_url,
           platforms: game['platforms']&.map { |p| p['name'] }&.join(', '),
-          release_date: game['first_release_date'] ? Time.at(game['first_release_date']).year : nil
+          release_date: game['first_release_date'] ? Time.at(game['first_release_date']).year : nil,
+          summary: game['summary'],
+          genres: game['genres']&.map { |g| g['name'] }&.join(', '),
+          metadata: {
+            platforms: game['platforms']&.map { |p| p['name'] }&.join(', '),
+            summary: game['summary'],
+            cover_url: cover_url,
+            genres: game['genres']&.map { |g| g['name'] }&.join(', '),
+            release_date: release_date&.to_s
+          }
         }
       end
       render json: { games: games }

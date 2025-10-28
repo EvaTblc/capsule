@@ -6,6 +6,9 @@ application.register("barcode", BarcodeController)
 import CollectionPreviewController from "controllers/collection_preview_controller"
 application.register("collection-preview", CollectionPreviewController)
 
+import GameSearchController from "controllers/game_search_controller"
+application.register("game-search", GameSearchController)
+
 import HelloController from "controllers/hello_controller"
 application.register("hello", HelloController)
 
